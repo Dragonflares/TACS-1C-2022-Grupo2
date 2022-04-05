@@ -2,7 +2,6 @@ package com.probasteReiniciando.TPTACS.domain;
 
 import lombok.Builder;
 import lombok.Data;
-
 import java.sql.Date;
 import java.util.List;
 
@@ -12,7 +11,7 @@ public class Tournament {
     private Language language;
     private Date startDate;
     private Date endDate;
-    private Boolean isPrivate = false;
+    private Boolean isPrivate;
     private User owner;
     private List<User> participants;
     private List<Position> positions;
