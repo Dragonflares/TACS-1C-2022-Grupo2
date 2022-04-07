@@ -1,3 +1,4 @@
+/*
 package com.probasteReiniciando.TPTACS.config;
 
 import org.springframework.context.annotation.Bean;
@@ -39,4 +40,4 @@ public class SwaggerConfig {
                 Collections.emptyList()
         );
     }
-}
+}*/

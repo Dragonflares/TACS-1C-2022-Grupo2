@@ -1,3 +1,4 @@
+/*
 package com.probasteReiniciando.TPTACS.controllers;
 
 import com.probasteReiniciando.TPTACS.Utils.JwtTokenProvider;
@@ -48,4 +49,4 @@ public class AuthenticationController {
         );
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
-}
+}*/

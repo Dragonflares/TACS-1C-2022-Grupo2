@@ -12,7 +12,6 @@ import java.util.Date;
 
 @Component
 @NoArgsConstructor
-
 public class JwtTokenProvider {
     private final String HEADER = "Authorization";
     private final String PREFIX = "Bearer ";
