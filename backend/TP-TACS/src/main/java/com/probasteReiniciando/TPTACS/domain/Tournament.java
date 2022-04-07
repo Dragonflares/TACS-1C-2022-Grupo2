@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class Tournament {
+    private String name;
     private Language language;
     private Date startDate;
     private Date endDate;
