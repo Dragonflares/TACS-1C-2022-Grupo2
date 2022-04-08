@@ -1,128 +1,17 @@
-TP TACS 2022-C1
 
-Marzo 2022
+# TP-TACS-UTN-GROUP-2
 
-Introduccion
-El objetivo del TP es desarrollar una aplicación que sirva de soporte para jugadores de Wordle.
-
-
-:D
-
-
-Wordle:
-
-En inglés: https://www.nytimes.com/games/wordle/index.html
-En español: https://wordle.danielfrg.com/
-
-La aplicación funcionará de modo stand alone, y estará publicada en la nube para ser accedida.
-
-El TP consta de diversas entregas en las cuales de forma iterativa e incremental se irán agregando funcionalidades a la aplicación.
+![](https://lh6.googleusercontent.com/TfiItFOh6SRQJtWZVUjFImkrwefct9b0SMkYCMn7SNJV-B69CO90Pmp8aoB2WArKoNdhRA=w16383)
 
 
 
 
+###Class Diagram
 
-Recomendaciones Generales
+###Requierments for build up the project
+- Have docker installed
 
-Enfocarse en los requerimientos de cada entrega. (Se puede hacer de más pero no de menos)
-Utilizar al ayudante para validar decisiones de diseño y consultar arquitectura, frameworks, etc.
-Dividir en forma clara en el equipo las historias de cada entrega para atacarlas en paralelo donde sea posible.
-Utilizar alguna herramienta para la gestión de tareas (Scrummy, Trello, Issues de Github)
-Para bajar el riesgo de las futuras entregas aprovechar el tiempo de entregas anteriores para investigar las tecnologías.
-De ser necesario utilizar al ayudante como facilitador, en cuestiones técnicas y de organización → El rol del ayudante NO es simplemente el de corregir, sino dar soporte al equipo durante todo el proceso en cuestiones técnicas y metodológicas.
-Objetivo de la aplicación
-La aplicación será un soporte para jugadores de Wordle que tendrá 3 modos:
-
-Modo puntos y torneo. Permitir llevar registro del desempeño personal en el juego, y competir con otros usuarios en torneos definidos previamente.
-Modo ayuda. Ofrecer al usuario una guía de palabras posibles en base a los resultados parciales que va obteniendo en una partida.
-Modo diccionario. Dada una palabra devolver una definición de la misma.
-Importante: Esto no implica desarrollar el juego, ni permitir jugar a través de la aplicación.
-
-
-User Stories
-Usuarios
-Usuarios: Sign In, Login, Log Out (se debe desarrollar y no integrarse con servicios de 3ros)
-Torneos
-Como usuario quiero crear un torneo y ponerle un nombre. El torneo debe tener definido:
-idioma/s (puedo elegir uno de los 2 o inglés Y español)
-un rango de fechas en el que se jugará
-si el torneo es público o privado.
-Torneos públicos, son visibles por todos y cualquiera se puede sumar.
-Torneos privados, solo son visibles por quien lo creó o quienes se han unido.
-Como usuario quiero poder sumar a otro usuario a un torneo que yo creé.
-Como usuario quiero poder listar los torneos públicos.
-Como usuario quiero poder unirme a un torneo público que no haya comenzado.
-Como usuario quiero poder cargar mis resultados una vez por día para español y para inglés. Por ejemplo, que resolví español en 3, o que resolví inglés en 5 o que no pude resolverlo.
-Como usuario quiero ver la tabla de posiciones de los torneos a los que estoy inscripto. (ver reglas del torneo)
-
-Ayuda
-Como usuario quiero poder decir cómo fueron mis jugadas hasta el momento y obtener una lista de palabras posibles.
-Ejemplo en inglés:
-
-Letras amarillas: AO
-
-Letras grises: HRS
-
-Letras verdes: _L__W
-
-Respuesta de palabras posibles: ALLOW, AGLOW
-
-Recursos
-
-Diccionario
-Como usuario quiero poder consultar una palabra en el diccionario, tanto en inglés como en español y recibir una definición. (Para este punto se deben integrar las APIs externas de diccionarios)
-Reglas del torneo
-Un torneo se juega entre N participantes, con las jugadas de ellos. Un participante juega una vez por día, sus puntos aplican para todos sus torneos.
-
-Los intentos se suman (en caso de no jugar o no resolverlo cuenta como 7). Al finalizar el torneo el participante con menor cantidad de intentos gana..
-
-
-Requerimientos no funcionales
-Los requerimientos no funcionales no solo son importantes para aprobar el TP sino que están directamente relacionados con la filosofía y objetivos de la materia. La calidad no se negocia.
-
-Tecnicos
-
-Se debe utilizar Github/GitLab como SCM.
-Los tests son parte del código. Un caso de uso que no está debidamente testeado, tampoco está completo.
-Todos los métodos no triviales deben tener su correspondiente doc (ej: javadoc) explicando su función, forma de uso y cualquier otra información relevante.
-Se debe incluir en el README.me/Wiki como levantar la aplicación y cualquier decisión respecto del código o las soluciones utilizadas.
-La aplicación debe ser capaz de correrse desde Maven/Gradle/SBT/Node, el comando a correr debe iniciar la aplicación dentro de un Docker container.
-Se debe usar docker-compose para definir el conjunto de aplicacion + db + network de modo tal que se pueda correr todo con un solo comando. Esto es obligatorio para modo local, si en la nube se va a utilizar alguna SaaS DB, entonces para el deploy solo es necesario el Docker container de la main app.
-La APP tiene que cumplir con requerimientos mínimos de seguridad (manejo de contraseñas, recursos externos, etc.)
-Las claves deben ser guardadas de forma correcta.
-En caso de existir, las API keys NUNCA debe ser expuestas al usuario
-La aplicación debe soportar un load test, se utilizara alguna tool como Vegeta, Wrk, etc
-La aplicación debe ser portable, requiriendo solamente de Gradle/Maven/SBT/Node + Docker para su prueba y evaluación.
-La aplicación debe tener una interfaz de usuario fácil de utilizar, a elegir entre frontend o integración por telegram
-UI
-
-Si bien se espera algo sencillo, la aplicación debe tener un frontend amigable. Recomendamos seguir los lineamientos de https://material.io/
-Utilizar algun framework CSS (Bootstrap, etc)
-Condiciones para promoción
-Entregas en fecha
-Realizar frontend e integración con telegram.
-Entregas
-Las entregas deberán realizarse el día pactado antes de las 19 Hs. con un tag llamado Entrega_XX correspondiente al número de entrega.
-Las entregas se realizarán indicando el link al repositorio y el tag para la entrega.
-Todo retraso en una entrega que no haya sido correctamente comunicado y justificado tendrá como penalización el agregado de nuevos requisitos para la aprobación final del TP.
-Entrega 1 - Esqueleto aplicación
-Esqueleto de la aplicación WEB.
-
-Se debe definir un primer approach hacia los recursos y URLs REST que se utilizarán para cumplir con las historias propuestas. Para esta entrega no es necesario que las historias funcionen sino que los recursos devuelvan respuestas ficticias estáticas. No es necesario tener una interfaz de usuario en esta instancia. Para esta entrega si es necesario que la app corra dentro de Docker.
-
-Entrega 2  - Persistencia en memoria
-Se debe definir el comportamiento de los principales servicios relacionados al dominio y cumplir con la funcionalidad persistiendo en memoria.
-
-Primera versión de interfaz de usuario: como mínimo debe incluir 2 casos de uso.
-
-Entrega 3 - UI
-Segunda versión de interfaz de usuario. Se debe poder utilizar los casos de uso de torneo y diccionario
-
-Entrega 4 - Persistencia con DB
-Persistencia utilizado una base de datos. Se debe modificar la aplicación para que en vez de almacenar los datos en memoria, la misma lo haga utilizando alguna base a definir por el equipo.
-
-Entrega 5 - Cloud
-Para esta entrega la aplicación debe estar deployada en la nube, el deploy en la nube debe ser utilizando Docker containers.
-
-Entrega Final
-Entrega final con detalles pulidos de funcionalidades faltantes y correcciones finales
+###Build up the project
+- Download the repository, and enter to the TACS-1C-2022-Grupo2\backend\TP-TACS backend root
+- Execute the following comand inside the backend folder:  " docker build --build-arg JAR_FILE=build/libs/*.jar -t tacs/backend . "
+- Then run: " docker run  -d -p 8080:8080 -t tacs/backend "
