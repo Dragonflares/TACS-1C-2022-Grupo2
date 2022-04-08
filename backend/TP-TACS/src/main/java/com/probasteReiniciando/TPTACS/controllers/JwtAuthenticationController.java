@@ -4,6 +4,8 @@ package com.probasteReiniciando.TPTACS.controllers;
 import com.probasteReiniciando.TPTACS.config.JwtTokenUtil;
 import com.probasteReiniciando.TPTACS.dto.JwtRequest;
 import com.probasteReiniciando.TPTACS.dto.JwtResponse;
+import com.probasteReiniciando.TPTACS.dto.UserDto;
+import com.probasteReiniciando.TPTACS.services.user.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +31,9 @@ public class JwtAuthenticationController {
 	@Autowired
 	private UserDetailsService jwtInMemoryUserDetailsService;
 
+	@Autowired
+	private JwtUserDetailsService userDetailsService;
+
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
 			throws Exception {
@@ -41,6 +46,11 @@ public class JwtAuthenticationController {
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
 		return ResponseEntity.ok(new JwtResponse(token));
+	}
+
+	@RequestMapping(value = "/signin", method = RequestMethod.POST)
+	public ResponseEntity<?> saveUser(@RequestBody UserDto user) throws Exception {
+		return ResponseEntity.ok(userDetailsService.save(user));
 	}
 
 	private void authenticate(String username, String password) throws Exception {
