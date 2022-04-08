@@ -1,8 +1,6 @@
 
+
 # TP-TACS-UTN-GROUP-2
-
-![](https://lh6.googleusercontent.com/TfiItFOh6SRQJtWZVUjFImkrwefct9b0SMkYCMn7SNJV-B69CO90Pmp8aoB2WArKoNdhRA=w16383)
-
 
 
 
