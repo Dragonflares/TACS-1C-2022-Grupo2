@@ -16,4 +16,8 @@ public class TournamentService {
     public List<Tournament> getPublicTournaments() {
         return tournamentRepository.getPublicTournaments();
     }
+
+    public  Tournament getTournamentById(int id){
+        return tournamentRepository.getTournament(id);
+    }
 }

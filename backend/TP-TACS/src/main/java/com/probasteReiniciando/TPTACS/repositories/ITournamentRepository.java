@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ITournamentRepository {
     List<Tournament> getPublicTournaments();
+    Tournament getTournament(int id);
 }
