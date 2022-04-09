@@ -1,8 +1,12 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
+import com.probasteReiniciando.TPTACS.domain.Language;
+import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
+import com.probasteReiniciando.TPTACS.domain.UserDao;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -16,6 +20,13 @@ public class TournamentRepository implements  ITournamentRepository {
         return Tournament.builder()
                 .name("Prueba")
                 .build();
+    }
+    @Override
+    public List<Result> getResults(){
+        return List.of(Result.builder()
+                .language(Language.SPANISH)
+                .date(LocalDate.now())
+                .build());
     }
 
 }
