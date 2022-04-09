@@ -15,10 +15,12 @@ public class TournamentRepository implements  ITournamentRepository {
     public List<Tournament> getPublicTournaments() {
         return List.of(Tournament.builder().name("TournamentExample").build());
     }
+
     @Override
     public Tournament getTournament(int id){
         return Tournament.builder()
                 .name("Prueba")
+                .language(Language.SPANISH)
                 .build();
     }
     @Override

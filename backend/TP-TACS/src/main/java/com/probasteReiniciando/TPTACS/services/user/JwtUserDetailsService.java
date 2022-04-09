@@ -1,7 +1,7 @@
 package com.probasteReiniciando.TPTACS.services.user;
 
 import com.probasteReiniciando.TPTACS.domain.UserDao;
-import com.probasteReiniciando.TPTACS.dto.UserDto;
+import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +38,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	}
 
 
-	public UserDao save(UserDto user) {
+	public UserDao save(UserLoginDto user) {
 		UserDao newUser = new UserDao();
 		newUser.setName(user.getUsername());
 		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));

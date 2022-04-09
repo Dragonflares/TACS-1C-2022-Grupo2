@@ -4,7 +4,7 @@ package com.probasteReiniciando.TPTACS.controllers;
 import com.probasteReiniciando.TPTACS.config.JwtTokenUtil;
 import com.probasteReiniciando.TPTACS.dto.JwtRequest;
 import com.probasteReiniciando.TPTACS.dto.JwtResponse;
-import com.probasteReiniciando.TPTACS.dto.UserDto;
+import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import com.probasteReiniciando.TPTACS.services.user.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +49,7 @@ public class JwtAuthenticationController {
 	}
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody UserDto user) throws Exception {
+	public ResponseEntity<?> saveUser(@RequestBody UserLoginDto user) throws Exception {
 		return ResponseEntity.ok(userDetailsService.save(user));
 	}
 

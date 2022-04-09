@@ -12,7 +12,7 @@ public class Tournament {
     private Language language;
     private Date startDate;
     private Date endDate;
-    private Boolean isPrivate;
+    private Privacy privacy;
     private UserDao owner;
     private List<UserDao> participants;
     private List<Position> positions;
