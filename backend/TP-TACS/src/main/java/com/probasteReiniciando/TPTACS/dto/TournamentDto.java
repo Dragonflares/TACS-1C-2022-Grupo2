@@ -21,7 +21,7 @@ public class TournamentDto {
     @NonNull
     private String name;
     @NonNull
-    private Language language;
+    private String language;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;

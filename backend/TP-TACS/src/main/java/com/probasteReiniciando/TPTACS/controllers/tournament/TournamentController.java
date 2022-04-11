@@ -24,7 +24,7 @@ public class TournamentController {
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<JSONWrapper> publicTournaments() {
-        return ResponseEntity.ok(new JSONWrapper<>(tournamentService.getPublicTournaments()));
+        return ResponseEntity.ok(new JSONWrapper<>(tournamentConverter.convertListTournamentToDto(tournamentService.getPublicTournaments())));
     }
 
     @GetMapping(path="/{id}", produces = "application/json")
