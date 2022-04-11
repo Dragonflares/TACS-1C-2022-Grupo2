@@ -1,4 +1,4 @@
-package com.probasteReiniciando.TPTACS.controllers;
+package com.probasteReiniciando.TPTACS.controllers.jwtauthentication;
 
 
 import com.probasteReiniciando.TPTACS.config.JwtTokenUtil;

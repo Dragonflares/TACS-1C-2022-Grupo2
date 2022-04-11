@@ -1,4 +1,4 @@
-package com.probasteReiniciando.TPTACS.controllers;
+package com.probasteReiniciando.TPTACS.controllers.dictionary;
 
 import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
 import org.springframework.http.ResponseEntity;

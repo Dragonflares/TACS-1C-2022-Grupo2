@@ -1,4 +1,4 @@
-package com.probasteReiniciando.TPTACS.controllers;
+package com.probasteReiniciando.TPTACS.controllers.result;
 
 import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
