@@ -1,7 +1,6 @@
 package com.probasteReiniciando.TPTACS.controllers.result;
 
 import com.probasteReiniciando.TPTACS.dto.ResultDto;
-import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +21,15 @@ public class ResultController {
         return ResponseEntity.ok(new JSONWrapper<>(tournamentService.getResults()));
     }
 
-    //carga resultados
-    @PutMapping(produces = "application/json")
-    public ResponseEntity<JSONWrapper> results(@PathVariable int id, @RequestBody ResultDto result) {
+    //modifica resultado
+    @PutMapping(path="/{resultId}", produces = "application/json")
+    public ResponseEntity<JSONWrapper> results(@PathVariable int id, @PathVariable int resultId, @RequestBody ResultDto result) {
         return ResponseEntity.ok(new JSONWrapper<>(tournamentService.getResults()));
     }
 
+    //crea resultado
+    @PostMapping(produces = "application/json")
+    public ResponseEntity<JSONWrapper> results(@PathVariable int id, @RequestBody ResultDto result) {
+        return ResponseEntity.ok(new JSONWrapper<>(tournamentService.getResults()));
+    }
 }
