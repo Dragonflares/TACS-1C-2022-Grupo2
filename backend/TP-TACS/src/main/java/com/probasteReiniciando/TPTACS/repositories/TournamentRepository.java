@@ -4,6 +4,7 @@ import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.domain.UserDao;
+import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -29,6 +30,13 @@ public class TournamentRepository implements  ITournamentRepository {
                 .language(Language.SPANISH)
                 .date(LocalDate.now())
                 .build());
+    }
+    @Override
+    public Tournament postTournament(TournamentDto dto){
+        return  Tournament.builder()
+                .name("Prueba")
+                .language(Language.SPANISH)
+                .build();
     }
 
 }

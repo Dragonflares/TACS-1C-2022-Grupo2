@@ -1,5 +1,6 @@
 package com.probasteReiniciando.TPTACS.controllers;
 
+import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
 import com.probasteReiniciando.TPTACS.functions.TournamentConverter;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
@@ -27,8 +28,19 @@ public class TournamentController {
     }
 
     @GetMapping(path="/{id}", produces = "application/json")
-    public  ResponseEntity<JSONWrapper> singleTournaments(@PathVariable int id) {
-        //FALTA HACER EL WRAPER
-        return ResponseEntity.ok(new JSONWrapper<>(List.of(tournamentConverter.convertTournamentToDto(tournamentService.getTournamentById(id)))));
+    public  ResponseEntity<TournamentDto> singleTournaments(@PathVariable int id) {
+        //TODO FALTA HACER EL WRAPER
+
+        // return ResponseEntity.ok(new JSONWrapper<>(List.of(tournamentConverter.convertTournamentToDto(tournamentService.getTournamentById(id)))));
+        // CREO QUE NO HACE FALTA USAR EL WRAPER, CON MANDAR EL DTO ALCANZA, depende como hagamos el front
+        // tambien se podria hacer una clase para cada request distinta y una clase para cada response
+        // porque no siempre vas a querer mandar o recibir todos los datos
+        return ResponseEntity.ok(tournamentConverter.convertTournamentToDto(tournamentService.getTournamentById(id)));
+    }
+
+    @PostMapping(produces = "application/json")
+    public ResponseEntity<TournamentDto> createTorneo(@RequestBody TournamentDto tournament){
+        // DEBERIA DEVOLVER SOLO EL ID
+        return ResponseEntity.ok(tournamentConverter.convertTournamentToDto(tournamentService.postTournament(tournament)));
     }
 }

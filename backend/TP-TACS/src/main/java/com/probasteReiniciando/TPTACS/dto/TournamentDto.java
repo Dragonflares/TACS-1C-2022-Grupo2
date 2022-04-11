@@ -32,6 +32,8 @@ public class TournamentDto {
     private Privacy privacy;
 
     private UserDto owner;
+    // Podria ser un string nomas porque en el DTO iria lo que a vos te interesa que le llegue al front,
+    // asi que con el nombre alcanza
 
     private List<UserDto> participants;
 

@@ -14,6 +14,9 @@ public class TournamentConverter {
         return TournamentDto.builder()
                 .name(tournament.getName())
                 .language(tournament.getLanguage())
+                .startDate(tournament.getStartDate())
+                .endDate(tournament.getEndDate())
+                .privacy(tournament.getPrivacy())
                 .build();
     }
 
@@ -21,6 +24,9 @@ public class TournamentConverter {
         return Tournament.builder()
                 .name(dto.getName())
                 .language(dto.getLanguage())
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .privacy(dto.getPrivacy())
                 .build();
     }
 

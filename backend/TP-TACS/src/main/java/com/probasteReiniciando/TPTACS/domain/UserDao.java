@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 @Data
-public class UserDao {
+public class UserDao { // DEBERIA LLAMARSE USER NOMAS PARA MI
     private String name;
     private String password;
     @EqualsAndHashCode.Exclude
