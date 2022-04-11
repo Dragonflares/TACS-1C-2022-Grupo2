@@ -1,0 +1,31 @@
+{
+  "name": "WordleTourney",
+  "version": "1.0.0",
+  "repository": "https://github.com/Dragonflares/TACS-1C-2022-GRUPO2",
+  "description": "A Wordle Tournament management tool.",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node -r esm bot.js"
+  },
+  "keywords": [
+    "discord",
+    "music",
+    "bot"
+  ],
+  "author": "Dragonflares",
+  "license": "",
+  "dependencies": {
+    "array-flatten": "^3.0.0",
+    "camelize": "^1.0.0",
+    "common-tags": "^1.8.0",
+    "discord-buttons": "^4.0.0",
+    "discord-paginationembed": "^2.1.0",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "loglevel-colors": "^1.0.1",
+    "mongoose": "^5.10.0",
+    "mongoose-map": "^1.1.0",
+    "string-similarity": "^4.0.2"
+  }
+}

@@ -8,10 +8,10 @@
 *.ctxt
 
 #DiscordBot Files 
-./DiscordBot/auth.json
-./DiscordBot/.env
-./DiscordBot/node_modules/
-./DiscordBot/package-lock.json
+DiscordBot/auth.json
+DiscordBot/.env
+DiscordBot/node_modules/
+DiscordBot/package-lock.json
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
