@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -38,16 +39,33 @@ public class TournamentControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
+    @MockBean
     private TournamentService tournamentService;
 
     @Test
     public void getPublicTournaments() throws Exception {
-        TournamentService tournamentService = mock(TournamentService.class);
         when(tournamentService.getPublicTournaments()).thenReturn(List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build()));
 
         MvcResult result = mockMvc
                 .perform(get("/tournaments").contentType("application/json"))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+
+        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
+        JsonNode data = jsonNode.get("data");
+        TournamentDto[] tournamentDtos = objectMapper.treeToValue(data, TournamentDto[].class);
+        List<TournamentDto> tournamentDtosList = new ArrayList<>(Arrays.asList(tournamentDtos));
+        Assert.assertEquals(List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENGLISH.name()).build()),tournamentDtosList);
+
+    }
+
+    @Test
+    public void getIndividualTournament() throws Exception {
+        when(tournamentService.getTournamentById(5)).thenReturn(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build());
+
+        MvcResult result = mockMvc
+                .perform(get("/tournaments/5").contentType("application/json"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();

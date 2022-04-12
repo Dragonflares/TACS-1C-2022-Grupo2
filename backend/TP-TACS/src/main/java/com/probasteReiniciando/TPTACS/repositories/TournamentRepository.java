@@ -14,7 +14,7 @@ import java.util.List;
 public class TournamentRepository implements  ITournamentRepository {
     @Override
     public List<Tournament> getPublicTournaments() {
-        return List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build());
+        return List.of(Tournament.builder().name("TournamentExampleRepository").language(Language.ENGLISH).build());
     }
 
     @Override
