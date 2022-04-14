@@ -1,7 +1,7 @@
 
 # TP-TACS-UTN-GROUP-2
 
-
+[![CI TACS](https://github.com/Dragonflares/TACS-1C-2022-Grupo2/actions/workflows/gradle.yml/badge.svg?branch=main)](https://github.com/Dragonflares/TACS-1C-2022-Grupo2/actions/workflows/gradle.yml)
 
 
 ### Class Diagram
