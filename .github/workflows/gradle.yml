@@ -17,9 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  jobs1:
     build:
-
       runs-on: ubuntu-latest
       defaults:
         run:
