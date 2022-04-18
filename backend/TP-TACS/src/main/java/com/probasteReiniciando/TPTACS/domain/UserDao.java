@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class UserDao { // DEBERIA LLAMARSE USER NOMAS PARA MI
     private String name;
+    @EqualsAndHashCode.Exclude
     private String password;
     @EqualsAndHashCode.Exclude
     private Integer telegramDiscordId;
