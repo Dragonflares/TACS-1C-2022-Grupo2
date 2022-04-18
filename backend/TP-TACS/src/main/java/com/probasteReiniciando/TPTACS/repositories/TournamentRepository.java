@@ -3,7 +3,6 @@ package com.probasteReiniciando.TPTACS.repositories;
 import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
-import com.probasteReiniciando.TPTACS.domain.UserDao;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import org.springframework.stereotype.Repository;
 

@@ -13,7 +13,7 @@ public class Tournament {
     private Date startDate;
     private Date endDate;
     private Privacy privacy;
-    private UserDao owner;
-    private List<UserDao> participants;
+    private User owner;
+    private List<User> participants;
     private List<Position> positions;
 }

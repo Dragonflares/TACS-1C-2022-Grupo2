@@ -1,13 +1,13 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
-import com.probasteReiniciando.TPTACS.domain.UserDao;
+import com.probasteReiniciando.TPTACS.domain.User;
 
 import java.util.Optional;
 
 public interface IUserRepository {
 
-    Optional<UserDao> findByName(String name);
-    Optional<UserDao> findById(Long id);
-    UserDao save(UserDao user);
-    void delete(UserDao user);
+    Optional<User> findByName(String name);
+    Optional<User> findById(Long id);
+    User save(User user);
+    void delete(User user);
 }
