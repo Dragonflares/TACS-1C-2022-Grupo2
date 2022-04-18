@@ -1,4 +1,4 @@
-package com.probasteReiniciando.TPTACS.tournament;
+package com.probasteReiniciando.TPTACS.controllers.tournament;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
