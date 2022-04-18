@@ -18,8 +18,8 @@ function getAuthHeader () {
     };
 }
 
-export async function Post(resource , data , headerExtra = null){
-    config = this.getAuthHeader();
+export async function post(resource , data , headerExtra = null){
+    let config = this.getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
@@ -31,8 +31,8 @@ export async function Post(resource , data , headerExtra = null){
     return axios.post(`${url}/${resource}`, data, config); 
 }
 
-export async function Get(resource, queryParams = null, headerExtra = null){
-    config = this.getAuthHeader();
+export async function get(resource, queryParams = null, headerExtra = null){
+    let config = this.getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
@@ -49,8 +49,8 @@ export async function Get(resource, queryParams = null, headerExtra = null){
     return axios.get(`${url}/${resource}?${queryString}`, config);
 }
 
-export async function Put(resource, data, headerExtra = null){
-    config = this.getAuthHeader();
+export async function put(resource, data, headerExtra = null){
+    let config = this.getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
@@ -62,8 +62,8 @@ export async function Put(resource, data, headerExtra = null){
     return axios.put(`${url}/${resource}`, data, config); 
 }
 
-export async function Patch(resource, data, headerExtra = null){
-    config = this.getAuthHeader();
+export async function patch(resource, data, headerExtra = null){
+    let config = this.getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
@@ -76,8 +76,8 @@ export async function Patch(resource, data, headerExtra = null){
 }
 
 
-export async function Delete(resource, headerExtra = null){
-    config = this.getAuthHeader();
+export async function deleteRes(resource, headerExtra = null){
+    let config = this.getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
