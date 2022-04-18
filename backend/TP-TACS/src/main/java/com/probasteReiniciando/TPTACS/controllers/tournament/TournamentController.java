@@ -29,8 +29,6 @@ public class TournamentController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<JSONWrapper<TournamentDto>> singleTournaments(@PathVariable int id) {
-        //TODO FALTA HACER EL WRAPER
-
         return ResponseEntity.ok(new JSONWrapper<>(List.of(tournamentConverter.convertTournamentToDto(tournamentService.getTournamentById(id)))));
 
     }
@@ -40,13 +38,13 @@ public class TournamentController {
         // DEBERIA DEVOLVER SOLO EL ID
         return ResponseEntity.ok(new JSONWrapper<>(List.of(tournamentConverter.convertTournamentToDto(tournamentService.postTournament(tournament)))));
     }
-    @PutMapping(path="/tournaments/{id}/participants", produces = "application/json")
+    @PostMapping(path="/{id}/participants", produces = "application/json")
     public ResponseEntity<JSONWrapper<String>> addUser(@PathVariable int id) {
         return ResponseEntity.ok(new JSONWrapper<>(List.of(Integer.toString(id), Integer.toString(id+323))));
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
-    @GetMapping(path="/tournaments/{id}/participants", produces = "application/json")
+    @GetMapping(path="/{id}/participants", produces = "application/json")
     public ResponseEntity<JSONWrapper<String>> addUser(@PathVariable int id, @RequestParam String orderBy, @RequestParam String order) {
         return ResponseEntity.ok(new JSONWrapper<>(List.of(Integer.toString(id), Integer.toString(id+324))));
     }

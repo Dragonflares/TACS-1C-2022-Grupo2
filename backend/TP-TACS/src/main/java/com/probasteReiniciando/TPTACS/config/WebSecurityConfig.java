@@ -58,8 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf(csrf -> csrf.disable())
 				// dont authenticate this particular request
 				.authorizeRequests()
-				.antMatchers(HttpMethod.POST,"/authenticate").permitAll()
-				.antMatchers(HttpMethod.POST,"/signin").permitAll()
+				.antMatchers(HttpMethod.POST,"/authorization").permitAll()
+				.antMatchers(HttpMethod.POST,"/accesstoken").permitAll()
 				.antMatchers(HttpMethod.GET,"/api-docs").permitAll()
 				.antMatchers(HttpMethod.GET,"/swagger-ui.html").permitAll()
 				// all other requests need to be authenticated
