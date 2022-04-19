@@ -17,19 +17,19 @@ public class TournamentService {
     private ITournamentRepository tournamentRepository;
 
     public Tournament postTournament(TournamentDto dto){
-        return tournamentRepository.postTournament(dto);
+        return tournamentRepository.returnTournament(dto);
     }
 
     public List<Tournament> getPublicTournaments() {
-        return tournamentRepository.getPublicTournaments();
+        return tournamentRepository.obtainPublicTournaments();
     }
 
     public Tournament getTournamentById(int id){
-        return tournamentRepository.getTournament(id);
+        return tournamentRepository.obtainTournament(id);
     }
 
     public List<Result> getResults(){
-        return tournamentRepository.getResults();
+        return tournamentRepository.obtainResults();
     }
 
 }
