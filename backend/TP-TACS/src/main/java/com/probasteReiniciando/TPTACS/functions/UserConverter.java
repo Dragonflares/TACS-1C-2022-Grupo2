@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 @NoArgsConstructor
 public class UserConverter {
-    public  UserDto convertUserToDto(UserDao user){
+/*    public  UserDto convertUserToDto(UserDao user){
         return UserDto.builder()
                 .name(user.getName())
                 .build();
-    }
+    }*/
 }

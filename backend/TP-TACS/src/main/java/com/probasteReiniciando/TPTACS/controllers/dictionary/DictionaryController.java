@@ -10,9 +10,9 @@ import java.util.Collections;
 public class DictionaryController {
 
     @RequestMapping({ "/dictionary" })
-    public ResponseEntity<JSONWrapper> wordDefinition(@RequestParam String word) {
+    public JSONWrapper wordDefinition(@RequestParam String word) {
 
-        return ResponseEntity.ok(new JSONWrapper<>("Everything real good", Collections.singletonList("Dictionary")));
+        return new JSONWrapper<>("Everything real good", Collections.singletonList("Dictionary"));
     }
 
 

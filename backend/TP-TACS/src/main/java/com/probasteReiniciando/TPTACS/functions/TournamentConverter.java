@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class TournamentConverter {
 
+/*
     //TODO create user converter and complete fields missing
     public TournamentDto convertTournamentToDto(Tournament tournament) {
         return TournamentDto.builder()
@@ -40,6 +41,7 @@ public class TournamentConverter {
         tournamentList.forEach(tournament -> tournamentDtos.add(convertTournamentToDto(tournament)));
         return tournamentDtos;
     }
+*/
 
 
 

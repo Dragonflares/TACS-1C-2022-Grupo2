@@ -8,7 +8,6 @@ import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
 import com.probasteReiniciando.TPTACS.services.user.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -37,7 +36,7 @@ public class JwtAuthenticationController {
 	private JwtUserDetailsService userDetailsService;
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
+	public JSONWrapper<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
 			throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -47,12 +46,12 @@ public class JwtAuthenticationController {
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
-		return ResponseEntity.ok(new JSONWrapper<>(List.of(new JwtResponse(token))));
+		return new JSONWrapper<JwtResponse>(List.of(new JwtResponse(token)));
 	}
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody UserLoginDto user) throws Exception {
-		return ResponseEntity.ok(userDetailsService.save(user));
+	public com.probasteReiniciando.TPTACS.domain.UserDao saveUser(@RequestBody UserLoginDto user) throws Exception {
+		return userDetailsService.save(user);
 	}
 
 	private void authenticate(String username, String password) throws Exception {

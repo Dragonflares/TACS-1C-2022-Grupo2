@@ -1,12 +1,13 @@
 package com.probasteReiniciando.TPTACS.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserDao { // DEBERIA LLAMARSE USER NOMAS PARA MI
     private String name;
     @EqualsAndHashCode.Exclude

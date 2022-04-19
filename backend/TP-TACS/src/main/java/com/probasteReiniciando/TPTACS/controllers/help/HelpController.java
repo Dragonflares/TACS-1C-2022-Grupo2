@@ -11,8 +11,8 @@ import java.util.Collections;
 public class HelpController {
 
     @RequestMapping({ "/help" })
-    public ResponseEntity<JSONWrapper> hello() {
+    public JSONWrapper hello() {
 
-        return ResponseEntity.ok(new JSONWrapper<>("Everything real good", Collections.singletonList("help")));
+        return new JSONWrapper<>("Everything real good", Collections.singletonList("help"));
     }
 }

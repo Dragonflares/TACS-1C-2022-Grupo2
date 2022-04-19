@@ -15,9 +15,9 @@ import java.util.List;
 public class PingController {
 
 	@RequestMapping({ "/ping" })
-	public ResponseEntity<JSONWrapper> hello() {
-		return ResponseEntity.ok(new JSONWrapper<>("Everything real good",
-				Collections.singletonList(new PingDto("HelloWorld"))));
+	public JSONWrapper hello() {
+		return new JSONWrapper<>("Everything real good",
+				Collections.singletonList(new PingDto("HelloWorld")));
 	}
 
 }

@@ -26,17 +26,11 @@ public class TournamentRepository implements  ITournamentRepository {
     }
     @Override
     public List<Result> getResults(){
-        return List.of(Result.builder()
-                .language(Language.SPANISH)
-                .date(LocalDate.now())
-                .build());
+        return List.of(Result.builder().language(Language.SPANISH).date(LocalDate.now()).build());
     }
     @Override
     public Tournament postTournament(TournamentDto dto){
-        return  Tournament.builder()
-                .name("Prueba")
-                .language(Language.SPANISH)
-                .build();
+        return  Tournament.builder().name("Prueba").language(Language.SPANISH).build();
     }
 
 }

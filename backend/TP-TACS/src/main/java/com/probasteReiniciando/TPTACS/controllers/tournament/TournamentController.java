@@ -7,6 +7,8 @@ import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.modelmapper.ModelMapper;
+
 
 import java.util.List;
 
@@ -22,23 +24,26 @@ public class TournamentController {
     @Autowired
     TournamentConverter tournamentConverter;
 
+    @Autowired
+    ModelMapper modelMapper;
+
+
     @GetMapping(produces = "application/json")
-    public ResponseEntity<JSONWrapper> publicTournaments() {
-        return ResponseEntity.ok(new JSONWrapper<>(tournamentConverter.convertListTournamentToDto(tournamentService.getPublicTournaments())));
+    public JSONWrapper publicTournaments() {
+
+        return new JSONWrapper<>(List.of((modelMapper.map(tournamentService.getPublicTournaments(),TournamentDto.class))));
     }
 
     @GetMapping(path="/{id}", produces = "application/json")
-    public ResponseEntity<JSONWrapper<TournamentDto>> singleTournaments(@PathVariable int id) {
-        //TODO FALTA HACER EL WRAPER
+    public JSONWrapper<TournamentDto> singleTournaments(@PathVariable int id) {
 
-        return ResponseEntity.ok(new JSONWrapper<>(List.of(tournamentConverter.convertTournamentToDto(tournamentService.getTournamentById(id)))));
+        return new JSONWrapper<>(List.of(modelMapper.map(tournamentService.getTournamentById(id),TournamentDto.class)));
 
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<JSONWrapper<TournamentDto>> createTournament(@RequestBody TournamentDto tournament) {
-        // DEBERIA DEVOLVER SOLO EL ID
-        return ResponseEntity.ok(new JSONWrapper<>(List.of(tournamentConverter.convertTournamentToDto(tournamentService.postTournament(tournament)))));
+    public JSONWrapper<TournamentDto> createTournament(@RequestBody TournamentDto tournament) {
+        return new JSONWrapper<>(List.of(modelMapper.map(tournamentService.postTournament(tournament),TournamentDto.class)));
     }
     @PutMapping(path="/tournaments/{id}/participants", produces = "application/json")
     public ResponseEntity<JSONWrapper<String>> addUser(@PathVariable int id) {
@@ -47,8 +52,8 @@ public class TournamentController {
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
     @GetMapping(path="/tournaments/{id}/participants", produces = "application/json")
-    public ResponseEntity<JSONWrapper<String>> addUser(@PathVariable int id, @RequestParam String orderBy, @RequestParam String order) {
-        return ResponseEntity.ok(new JSONWrapper<>(List.of(Integer.toString(id), Integer.toString(id+324))));
+    public JSONWrapper<String> addUser(@PathVariable int id, @RequestParam String orderBy, @RequestParam String order) {
+        return new JSONWrapper<>(List.of(Integer.toString(id), Integer.toString(id+324)));
     }
 
 
