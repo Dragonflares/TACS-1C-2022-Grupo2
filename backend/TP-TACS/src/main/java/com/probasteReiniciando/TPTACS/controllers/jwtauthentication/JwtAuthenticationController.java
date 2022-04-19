@@ -5,7 +5,6 @@ import com.probasteReiniciando.TPTACS.config.JwtTokenUtil;
 import com.probasteReiniciando.TPTACS.dto.JwtRequest;
 import com.probasteReiniciando.TPTACS.dto.JwtResponse;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
-import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
 import com.probasteReiniciando.TPTACS.services.user.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,8 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -36,7 +33,7 @@ public class JwtAuthenticationController {
 	private JwtUserDetailsService userDetailsService;
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public JSONWrapper<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
+	public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
 			throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -46,7 +43,7 @@ public class JwtAuthenticationController {
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
-		return new JSONWrapper<JwtResponse>(List.of(new JwtResponse(token)));
+		return new JwtResponse(token);
 	}
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)

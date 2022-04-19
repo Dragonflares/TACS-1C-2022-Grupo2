@@ -11,15 +11,15 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfig {
 
     @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
+    public ModelMapperTacs modelMapper() {
+        ModelMapperTacs modelMapper = new ModelMapperTacs();
 
         this.tournamentMapping(modelMapper);
 
         return modelMapper;
     }
 
-    private void tournamentMapping(ModelMapper modelMapper) {
+    private void tournamentMapping(ModelMapperTacs modelMapper) {
         modelMapper.createTypeMap(Tournament.class, TournamentDto.class)
                 .addMappings(mapper -> mapper.map(src -> src.getName(), TournamentDto::setName))
                 .addMappings(mapper -> mapper.map(Tournament::getEndDate, TournamentDto::setEndDate))
