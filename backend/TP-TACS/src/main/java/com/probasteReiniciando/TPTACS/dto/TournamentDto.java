@@ -19,24 +19,24 @@ import java.util.List;
 public class TournamentDto {
 
     @NonNull
-    private String name;
+    private final String name;
     @NonNull
-    private String language;
+    private final String language;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date startDate;
+    private final Date startDate;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date endDate;
+    private final Date endDate;
 
-    private Privacy privacy;
+    private final Privacy privacy;
 
-    private UserDto owner;
+    private final UserDto owner;
     // Podria ser un string nomas porque en el DTO iria lo que a vos te interesa que le llegue al front,
     // asi que con el nombre alcanza
 
-    private List<UserDto> participants;
+    private final List<UserDto> participants;
 
-    private List<PositionDto> positions;
+    private final List<PositionDto> positions;
 
 }

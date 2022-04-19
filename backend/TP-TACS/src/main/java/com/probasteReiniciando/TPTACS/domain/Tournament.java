@@ -8,12 +8,12 @@ import java.util.List;
 @Data
 @Builder
 public class Tournament {
-    private String name;
-    private Language language;
-    private Date startDate;
-    private Date endDate;
-    private Privacy privacy;
-    private User owner;
-    private List<User> participants;
-    private List<Position> positions;
+    private final String name;
+    private final Language language;
+    private final Date startDate;
+    private final Date endDate;
+    private final Privacy privacy;
+    private final User owner;
+    private final List<User> participants;
+    private final List<Position> positions;
 }
