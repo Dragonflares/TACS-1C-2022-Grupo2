@@ -35,7 +35,7 @@ public class UserRepositoryInMemory implements IUserRepository {
     }
 
     @Override
-    public void delete(User user) {
+    public void removeUser(User user) {
         repositoryInMemory.removeIf(x -> x.equals(user));
     }
 }
