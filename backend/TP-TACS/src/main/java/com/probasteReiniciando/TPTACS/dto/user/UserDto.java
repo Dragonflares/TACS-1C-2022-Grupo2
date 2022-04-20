@@ -4,9 +4,9 @@ import lombok.*;
 
 @AllArgsConstructor
 @Data
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
 public class UserDto {
     @NonNull
-    private final String name;
+    private  String name;
 }

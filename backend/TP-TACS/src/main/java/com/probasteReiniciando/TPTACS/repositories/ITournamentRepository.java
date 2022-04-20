@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ITournamentRepository {
-    List<Tournament> getPublicTournaments();
-    Optional<Tournament> getTournament(int id);
-    List<Result> getResults();
-    Tournament postTournament(TournamentDto dto);
+    List<Tournament> obtainPublicTournaments();
+    Optional<Tournament> obtainTournament(int id);
+    List<Result> obtainResults();
+    Tournament createTournament(TournamentDto dto);
 }

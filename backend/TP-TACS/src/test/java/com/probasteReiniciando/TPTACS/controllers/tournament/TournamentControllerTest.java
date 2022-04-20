@@ -44,7 +44,7 @@ public class TournamentControllerTest {
 
     @Test
     public void getPublicTournaments() throws Exception {
-        when(tournamentService.getPublicTournaments()).thenReturn(List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build()));
+        when(tournamentService.obtainPublicTournaments()).thenReturn(List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build()));
 
         MvcResult result = mockMvc
                 .perform(get("/tournaments").contentType("application/json"))

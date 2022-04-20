@@ -17,15 +17,15 @@ public class TournamentService {
     private ITournamentRepository tournamentRepository;
 
     public Tournament postTournament(TournamentDto dto){
-        return tournamentRepository.returnTournament(dto);
+        return tournamentRepository.createTournament(dto);
     }
 
-    public List<Tournament> getPublicTournaments() {
+    public List<Tournament> obtainPublicTournaments() {
         return tournamentRepository.obtainPublicTournaments();
     }
 
     public Tournament getTournamentById(int id) throws TournamentNotFoundException {
-        return tournamentRepository.getTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
+        return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
     }
 
     public List<Result> getResults(){

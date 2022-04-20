@@ -12,13 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Result {
-<<<<<<< HEAD
-    private final User user;
-    private final Integer points;
-    private final Language language;
-    private final LocalDate date;
-=======
-    private UserDao user;
+    private User user;
     private Integer points;
     private Language language;
     private LocalDate date;
@@ -27,5 +21,4 @@ public class Result {
         this.language = language;
         this.date = now;
     }
->>>>>>> controllers
 }

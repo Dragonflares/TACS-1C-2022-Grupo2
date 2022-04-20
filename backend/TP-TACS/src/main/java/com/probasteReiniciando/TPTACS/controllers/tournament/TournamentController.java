@@ -28,7 +28,7 @@ public class TournamentController {
     @GetMapping(produces = "application/json")
     public List<TournamentDto> publicTournaments() {
 
-        return  modelMapper.mapList(tournamentService.getPublicTournaments(),TournamentDto.class);
+        return  modelMapper.mapList(tournamentService.obtainPublicTournaments(),TournamentDto.class);
     }
 
     @GetMapping(path="/{id}", produces = "application/json")

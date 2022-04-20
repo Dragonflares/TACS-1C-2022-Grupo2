@@ -18,7 +18,7 @@ public class TournamentRepository implements  ITournamentRepository {
     }
 
     @Override
-    public Optional<Tournament> getTournament(int id){
+    public Optional<Tournament> obtainTournament(int id){
 
         return Integer.valueOf(id).equals(1) ? Optional.ofNullable(Tournament.builder()
                 .name("Prueba")
@@ -26,11 +26,11 @@ public class TournamentRepository implements  ITournamentRepository {
                 .build()) : Optional.empty();
     }
     @Override
-    public List<Result> getResults(){
+    public List<Result> obtainResults(){
         return List.of(Result.builder().language(Language.SPANISH).date(LocalDate.now()).build());
     }
     @Override
-    public Tournament postTournament(TournamentDto dto){
+    public Tournament createTournament(TournamentDto dto){
         return  Tournament.builder().name("Prueba").language(Language.SPANISH).build();
     }
 

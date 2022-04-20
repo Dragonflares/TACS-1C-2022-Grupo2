@@ -2,6 +2,7 @@ package com.probasteReiniciando.TPTACS.controllers.jwtauthentication;
 
 
 import com.probasteReiniciando.TPTACS.config.JwtTokenUtil;
+import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.JwtRequest;
 import com.probasteReiniciando.TPTACS.dto.JwtResponse;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
@@ -33,7 +34,7 @@ public class JwtAuthenticationController {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
 
-	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+	@RequestMapping(value = "/accesstoken", method = RequestMethod.POST)
 	public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
 			throws Exception {
 
@@ -47,8 +48,8 @@ public class JwtAuthenticationController {
 		return new JwtResponse(token);
 	}
 
-	@RequestMapping(value = "/signin", method = RequestMethod.POST)
-	public com.probasteReiniciando.TPTACS.domain.UserDao saveUser(@RequestBody UserLoginDto user) throws Exception {
+	@RequestMapping(value = "/authorization", method = RequestMethod.POST)
+	public User saveUser(@RequestBody UserLoginDto user) throws Exception {
 		return userDetailsService.save(user);
 	}
 
