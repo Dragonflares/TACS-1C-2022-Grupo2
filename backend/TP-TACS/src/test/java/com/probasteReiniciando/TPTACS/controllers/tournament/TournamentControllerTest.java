@@ -53,7 +53,7 @@ public class TournamentControllerTest {
                 .andReturn();
 
         JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
-        JsonNode data = jsonNode.get("data");
+        JsonNode data = jsonNode.get("response");
         TournamentDto[] tournamentDtos = objectMapper.treeToValue(data, TournamentDto[].class);
         List<TournamentDto> tournamentDtosList = new ArrayList<>(Arrays.asList(tournamentDtos));
         Assert.assertEquals(List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENGLISH.name()).build()),tournamentDtosList);
@@ -71,9 +71,9 @@ public class TournamentControllerTest {
                 .andReturn();
 
         JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
-        JsonNode data = jsonNode.get("data");
-        TournamentDto[] tournamentDtos = objectMapper.treeToValue(data, TournamentDto[].class);
-        List<TournamentDto> tournamentDtosList = new ArrayList<>(Arrays.asList(tournamentDtos));
+        JsonNode data = jsonNode.get("response");
+        TournamentDto tournamentDto = objectMapper.treeToValue(data, TournamentDto.class);
+        List<TournamentDto> tournamentDtosList = new ArrayList<>(Arrays.asList(tournamentDto));
         Assert.assertEquals(List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENGLISH.name()).build()),tournamentDtosList);
 
     }

@@ -5,16 +5,14 @@ import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 import java.sql.Date;
 import java.util.List;
 
 @AllArgsConstructor
 @Data
+@NoArgsConstructor
 @Builder
 public class TournamentDto {
 

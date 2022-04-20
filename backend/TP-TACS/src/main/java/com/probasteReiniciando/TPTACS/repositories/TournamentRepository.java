@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TournamentRepository implements  ITournamentRepository {
@@ -17,25 +18,20 @@ public class TournamentRepository implements  ITournamentRepository {
     }
 
     @Override
-    public Tournament obtainTournament(int id){
-        return Tournament.builder()
+    public Optional<Tournament> getTournament(int id){
+
+        return Integer.valueOf(id).equals(1) ? Optional.ofNullable(Tournament.builder()
                 .name("Prueba")
                 .language(Language.SPANISH)
-                .build();
+                .build()) : Optional.empty();
     }
     @Override
-    public List<Result> obtainResults(){
-        return List.of(Result.builder()
-                .language(Language.SPANISH)
-                .date(LocalDate.now())
-                .build());
+    public List<Result> getResults(){
+        return List.of(Result.builder().language(Language.SPANISH).date(LocalDate.now()).build());
     }
     @Override
-    public Tournament returnTournament(TournamentDto dto){
-        return  Tournament.builder()
-                .name("Prueba")
-                .language(Language.SPANISH)
-                .build();
+    public Tournament postTournament(TournamentDto dto){
+        return  Tournament.builder().name("Prueba").language(Language.SPANISH).build();
     }
 
 }

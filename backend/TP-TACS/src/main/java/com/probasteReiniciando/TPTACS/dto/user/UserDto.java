@@ -1,12 +1,10 @@
 package com.probasteReiniciando.TPTACS.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 @AllArgsConstructor
 @Data
+@NoArgsConstructor
 @Builder
 public class UserDto {
     @NonNull

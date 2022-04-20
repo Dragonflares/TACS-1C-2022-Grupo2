@@ -5,10 +5,9 @@ import com.probasteReiniciando.TPTACS.config.JwtTokenUtil;
 import com.probasteReiniciando.TPTACS.dto.JwtRequest;
 import com.probasteReiniciando.TPTACS.dto.JwtResponse;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
-import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
+import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.services.user.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -16,8 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -36,8 +33,8 @@ public class JwtAuthenticationController {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
 
-	@RequestMapping(value = "/accesstoken", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
+	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+	public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
 			throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -47,12 +44,12 @@ public class JwtAuthenticationController {
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
-		return ResponseEntity.ok(new JSONWrapper<>(List.of(new JwtResponse(token))));
+		return new JwtResponse(token);
 	}
 
-	@RequestMapping(value = "/authorization", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody UserLoginDto user) throws Exception {
-		return ResponseEntity.ok(userDetailsService.save(user));
+	@RequestMapping(value = "/signin", method = RequestMethod.POST)
+	public com.probasteReiniciando.TPTACS.domain.UserDao saveUser(@RequestBody UserLoginDto user) throws Exception {
+		return userDetailsService.save(user);
 	}
 
 	private void authenticate(String username, String password) throws Exception {
@@ -62,9 +59,9 @@ public class JwtAuthenticationController {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (DisabledException e) {
-			throw new Exception("USER_DISABLED", e);
+			throw new UserNotFoundException(username);
 		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
+			throw new UserNotFoundException(username);
 		}
 	}
 }

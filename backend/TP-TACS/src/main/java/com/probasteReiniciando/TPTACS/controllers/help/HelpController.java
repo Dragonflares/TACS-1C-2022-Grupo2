@@ -2,17 +2,18 @@ package com.probasteReiniciando.TPTACS.controllers.help;
 
 import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 public class HelpController {
 
-    @GetMapping(path="/help",produces = "application/json")
-    public ResponseEntity<JSONWrapper> hello() {
+    @RequestMapping({ "/help" })
+    public List<String> hello() {
 
-        return ResponseEntity.ok(new JSONWrapper<>("Everything real good", Collections.singletonList("help")));
+        return Collections.singletonList("help");
     }
 }

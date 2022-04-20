@@ -8,14 +8,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 public class DictionaryController {
 
-    @GetMapping(path="/dictionary",produces = "application/json")
-    public ResponseEntity<JSONWrapper> wordDefinition(@RequestParam String word) {
+    @RequestMapping({ "/dictionary" })
+    public List<String> wordDefinition(@RequestParam String word) {
 
-        return ResponseEntity.ok(new JSONWrapper<>("Everything real good", Collections.singletonList("Dictionary")));
+        return Collections.singletonList("Dictionary");
     }
 
 
