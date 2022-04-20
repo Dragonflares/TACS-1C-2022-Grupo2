@@ -8,8 +8,8 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class Result {
-    private UserDao user;
-    private Integer points;
-    private Language language;
-    private LocalDate date;
+    private final User user;
+    private final Integer points;
+    private final Language language;
+    private final LocalDate date;
 }

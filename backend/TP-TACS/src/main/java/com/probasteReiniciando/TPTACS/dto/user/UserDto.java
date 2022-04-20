@@ -10,5 +10,5 @@ import lombok.NonNull;
 @Builder
 public class UserDto {
     @NonNull
-    private String name;
+    private final String name;
 }
