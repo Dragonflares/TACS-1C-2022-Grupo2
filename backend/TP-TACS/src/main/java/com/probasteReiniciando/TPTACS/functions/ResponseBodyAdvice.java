@@ -21,7 +21,6 @@ public class ResponseBodyAdvice extends AbstractMappingJacksonResponseBodyAdvice
         Object body = bodyContainer.getValue();
         Map<String, Object> map = new HashMap<>();
         map.put("response", body);
-        map.put("timestamp", System.currentTimeMillis());
         bodyContainer.setValue(map);
 
     }
