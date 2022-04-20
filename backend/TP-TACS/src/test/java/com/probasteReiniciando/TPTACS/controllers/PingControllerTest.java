@@ -1,4 +1,4 @@
-package com.probasteReiniciando.TPTACS.ping;
+package com.probasteReiniciando.TPTACS.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
