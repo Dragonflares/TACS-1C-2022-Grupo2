@@ -3,11 +3,6 @@ import Config from '../appConfig.json';
 
 const url = Config.ApiURL;
 
-
-export async function createUser(data){
-    return axios.post(`${url}/authorization`, data);
-}
-
 //LOCAL STORAGE PROVISIORIO
 export async function auth(data){
     return axios.post(`${url}/accesstoken`, data).then(
