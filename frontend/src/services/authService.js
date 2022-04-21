@@ -5,12 +5,12 @@ const url = Config.ApiURL;
 
 
 export async function createUser(data){
-    return axios.post(`${url}/accesstoken`, data);
+    return axios.post(`${url}/authorization`, data);
 }
 
 //LOCAL STORAGE PROVISIORIO
 export async function auth(data){
-    return axios.post(`${url}/authorization`, data).then(
+    return axios.post(`${url}/accesstoken`, data).then(
         async (response) => {
             if(response.status === 200){
                 localStorage.setItem('jwt', response.data.data.token);
