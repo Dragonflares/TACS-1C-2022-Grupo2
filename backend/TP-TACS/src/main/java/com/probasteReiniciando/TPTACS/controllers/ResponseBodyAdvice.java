@@ -1,4 +1,4 @@
-package com.probasteReiniciando.TPTACS.functions;
+package com.probasteReiniciando.TPTACS.controllers;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.AbstractMappingJack
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.probasteReiniciando.TPTACS.controllers")
 public class ResponseBodyAdvice extends AbstractMappingJacksonResponseBodyAdvice {
 
 
