@@ -5,7 +5,6 @@ import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
