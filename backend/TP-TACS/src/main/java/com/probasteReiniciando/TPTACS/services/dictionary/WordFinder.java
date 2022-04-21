@@ -1,9 +1,11 @@
 package com.probasteReiniciando.TPTACS.services.dictionary;
 
-import com.probasteReiniciando.TPTACS.domain.Language;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import java.util.Optional;
 
 public interface WordFinder {
 
-    String findWord (String param);
+    Optional<String> findWord (String param, String language) throws JsonProcessingException;
 
 }
