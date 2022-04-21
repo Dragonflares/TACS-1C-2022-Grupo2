@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 public class Dictionary {
 
-    private List<WordFinder> wordFinder = new ArrayList<>();
+    private final List<WordFinder> wordFinder = new ArrayList<>();
 
 }

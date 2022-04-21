@@ -7,5 +7,5 @@ import org.springframework.stereotype.Component;
 @Data
 @Builder
 public class PingDto {
-   private String message;
+   private final String message;
 }

@@ -6,13 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 public class HelpController {
 
     @RequestMapping({ "/help" })
-    public ResponseEntity<JSONWrapper> hello() {
+    public List<String> hello() {
 
-        return ResponseEntity.ok(new JSONWrapper<>("Everything real good", Collections.singletonList("help")));
+        return Collections.singletonList("help");
     }
 }

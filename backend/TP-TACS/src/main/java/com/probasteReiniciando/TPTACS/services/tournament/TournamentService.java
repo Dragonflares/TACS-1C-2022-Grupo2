@@ -3,8 +3,8 @@ package com.probasteReiniciando.TPTACS.services.tournament;
 import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
+import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
-import com.probasteReiniciando.TPTACS.repositories.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,19 +17,19 @@ public class TournamentService {
     private ITournamentRepository tournamentRepository;
 
     public Tournament postTournament(TournamentDto dto){
-        return tournamentRepository.postTournament(dto);
+        return tournamentRepository.createTournament(dto);
     }
 
-    public List<Tournament> getPublicTournaments() {
-        return tournamentRepository.getPublicTournaments();
+    public List<Tournament> obtainPublicTournaments() {
+        return tournamentRepository.obtainPublicTournaments();
     }
 
-    public Tournament getTournamentById(int id){
-        return tournamentRepository.getTournament(id);
+    public Tournament getTournamentById(int id) throws TournamentNotFoundException {
+        return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
     }
 
     public List<Result> getResults(){
-        return tournamentRepository.getResults();
+        return tournamentRepository.obtainResults();
     }
 
 }

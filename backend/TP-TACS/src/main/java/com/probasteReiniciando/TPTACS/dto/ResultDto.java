@@ -12,9 +12,9 @@ import java.time.LocalDate;
 @Builder
 public class ResultDto {
 
-    private UserDto user;
+    private final UserDto user;
 
-    private Integer points;
+    private final Integer points;
 
     private String language;
 

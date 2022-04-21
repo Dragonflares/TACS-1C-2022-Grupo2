@@ -7,6 +7,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Data
+@Deprecated
 public class JSONWrapper<T> {
 
     String message = "Everything okay";

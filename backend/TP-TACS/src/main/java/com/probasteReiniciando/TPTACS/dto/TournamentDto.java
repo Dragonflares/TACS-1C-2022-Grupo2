@@ -5,10 +5,7 @@ import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 import java.sql.Date;
 import java.util.List;
@@ -16,27 +13,28 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
+@NoArgsConstructor
 public class TournamentDto {
 
     @NonNull
-    private String name;
+    private  String name;
     @NonNull
-    private String language;
+    private  String language;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date startDate;
+    private  Date startDate;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date endDate;
+    private  Date endDate;
 
-    private Privacy privacy;
+    private  Privacy privacy;
 
-    private UserDto owner;
+    private  UserDto owner;
     // Podria ser un string nomas porque en el DTO iria lo que a vos te interesa que le llegue al front,
     // asi que con el nombre alcanza
 
-    private List<UserDto> participants;
+    private  List<UserDto> participants;
 
-    private List<PositionDto> positions;
+    private  List<PositionDto> positions;
 
 }

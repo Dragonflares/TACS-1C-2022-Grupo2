@@ -1,14 +1,16 @@
 package com.probasteReiniciando.TPTACS.controllers.tournament;
 
+import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
-import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
-import com.probasteReiniciando.TPTACS.functions.TournamentConverter;
+import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.modelmapper.ModelMapper;
+
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin()
@@ -17,40 +19,39 @@ public class TournamentController {
 
 
     @Autowired
-    TournamentService tournamentService;
+    private TournamentService tournamentService;
 
     @Autowired
-    TournamentConverter tournamentConverter;
+    private ModelMapperTacs modelMapper;
+
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<JSONWrapper> publicTournaments() {
-        return ResponseEntity.ok(new JSONWrapper<>(tournamentConverter.convertListTournamentToDto(tournamentService.getPublicTournaments())));
+    public List<TournamentDto> publicTournaments() {
+
+        return  modelMapper.mapList(tournamentService.obtainPublicTournaments(),TournamentDto.class);
     }
 
     @GetMapping(path="/{id}", produces = "application/json")
-    public ResponseEntity<JSONWrapper<TournamentDto>> singleTournaments(@PathVariable int id) {
-        //TODO FALTA HACER EL WRAPER
+    public TournamentDto singleTournaments(@PathVariable int id) throws TournamentNotFoundException {
 
-        return ResponseEntity.ok(new JSONWrapper<>(List.of(tournamentConverter.convertTournamentToDto(tournamentService.getTournamentById(id)))));
+        return  modelMapper.map(tournamentService.getTournamentById(id),TournamentDto.class);
 
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<JSONWrapper<TournamentDto>> createTournament(@RequestBody TournamentDto tournament) {
-        // DEBERIA DEVOLVER SOLO EL ID
-        return ResponseEntity.ok(new JSONWrapper<>(List.of(tournamentConverter.convertTournamentToDto(tournamentService.postTournament(tournament)))));
+    public TournamentDto createTournament(@RequestBody TournamentDto tournament) {
+        return modelMapper.map(tournamentService.postTournament(tournament),TournamentDto.class);
     }
     @PutMapping(path="/tournaments/{id}/participants", produces = "application/json")
-    public ResponseEntity<JSONWrapper<String>> addUser(@PathVariable int id) {
-        return ResponseEntity.ok(new JSONWrapper<>(List.of(Integer.toString(id), Integer.toString(id+323))));
+    public List<String> addUser(@PathVariable int id) {
+        return List.of(Integer.toString(id), Integer.toString(id+323));
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
     @GetMapping(path="/tournaments/{id}/participants", produces = "application/json")
-    public ResponseEntity<JSONWrapper<String>> addUser(@PathVariable int id, @RequestParam String orderBy, @RequestParam String order) {
-        return ResponseEntity.ok(new JSONWrapper<>(List.of(Integer.toString(id), Integer.toString(id+324))));
+    public List<String> addUser(@PathVariable int id, @RequestParam String orderBy, @RequestParam String order) {
+        return List.of(Integer.toString(id), Integer.toString(id + 324));
     }
-
 
 
 }

@@ -1,6 +1,6 @@
 package com.probasteReiniciando.TPTACS.domain;
 
 public class Position {
-    private UserDao user;
+    private User user;
     private Integer points;
 }
