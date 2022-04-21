@@ -7,16 +7,17 @@ import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class TournamentRepository implements  ITournamentRepository {
+    private List<Tournament> tournaments = new ArrayList<>();
     @Override
     public List<Tournament> obtainPublicTournaments() {
         return List.of(Tournament.builder().name("TournamentExampleRepository").language(Language.ENGLISH).build());
     }
-
     @Override
     public Optional<Tournament> obtainTournament(int id){
 
