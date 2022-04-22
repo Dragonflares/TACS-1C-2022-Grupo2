@@ -49,7 +49,7 @@ public class WordFileSearcher {
         words.forEach(word -> {
             if(validatesGreyWords(word,helpDto.getGreyWords())  && validatesYellowWords(word,helpDto.getYellowWords())
                     && validatesGreenWords(word,helpDto.getGreenWords()))
-                wordDtosResult.add(WordDto.builder().phrase(word).build());
+                wordDtosResult.add(WordDto.builder().phrase(word.toLowerCase()).build());
 
         });
         return wordDtosResult;
@@ -63,7 +63,19 @@ public class WordFileSearcher {
      * @return
      */
     private boolean validatesGreenWords(String word, HashMap<Integer, String> greenWords) {
-        return true;
+
+        Boolean condition = true;
+
+        if(!greenWords.isEmpty()) {
+            Set<Integer> keys = greenWords.keySet();
+
+            for (Integer key : keys) {
+                if (word.length() > key) {
+                    condition = greenWords.get(key).equalsIgnoreCase(String.valueOf(word.charAt(key))) && condition;
+                }
+            }
+        }
+        return condition;
     }
 
     /** Validates that the word given does  contain the letter passed in the second parameter
@@ -73,7 +85,17 @@ public class WordFileSearcher {
      * @return
      */
     private boolean validatesYellowWords(String word, String yellowWords) {
-        return true;
+        char[] array = yellowWords.toCharArray();
+        Boolean condition = true;
+        for (int i = 0; i < array.length && condition; i++) {
+
+            char y = array[i];
+            if(!word.toLowerCase().chars().anyMatch(x -> x == y))
+                condition = false;
+        }
+
+        return condition;
+
     }
 
 
@@ -89,7 +111,7 @@ public class WordFileSearcher {
         for (int i = 0; i < array.length && condition; i++) {
 
             char y = array[i];
-            if(!word.chars().anyMatch( x -> x == y))
+            if(word.toLowerCase().chars().anyMatch(x -> x == y))
                 condition = false;
         }
 
