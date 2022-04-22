@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface ITournamentRepository {
     List<Tournament> obtainPublicTournaments();
     Optional<Tournament> obtainTournament(int id);
-    List<Result> obtainResults();
+    List<Result> obtainResults(int id);
     Tournament createTournament(TournamentDto dto);
 }

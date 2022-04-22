@@ -28,8 +28,8 @@ public class TournamentService {
         return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
     }
 
-    public List<Result> getResults(){
-        return tournamentRepository.obtainResults();
+    public List<Result> getResults(int id){
+        return tournamentRepository.obtainResults(id);
     }
 
 }

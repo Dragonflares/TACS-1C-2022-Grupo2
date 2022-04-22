@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Tournament {
+    private Integer id;
     private String name;
     private Language language;
     private Date startDate;
@@ -18,6 +19,7 @@ public class Tournament {
     private User owner;
     private List<User> participants;
     private List<Position> positions;
+    private List<Result> results;
 
 
     public Tournament(String prueba, Language spanish) {
