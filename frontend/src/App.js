@@ -12,7 +12,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      authorized: false
+      authorized: true
     }
   }
 
@@ -54,7 +54,7 @@ class App extends Component {
         <Router>
           <Routes>
             <Route path='/log-in' element={<LogIn/>} />
-          </Routes>
+          </Routes>  
         </Router>
       </div>
     );     
