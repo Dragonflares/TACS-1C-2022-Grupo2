@@ -7,10 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 @NoArgsConstructor
 @Data
 @Service
@@ -20,7 +16,7 @@ public class DictionaryService {
     private  WordFinder wordFinder;
 
     public WordDto findWord(String name,String language) throws JsonProcessingException {
-        return WordDto.builder().definition(wordFinder.findWord(name,language).orElseThrow()).build();
+        return WordDto.builder().phrase(wordFinder.findWord(name,language).orElseThrow()).build();
     }
 
 }

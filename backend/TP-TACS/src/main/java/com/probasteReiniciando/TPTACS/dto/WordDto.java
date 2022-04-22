@@ -8,5 +8,5 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class WordDto {
-    private final String definition;
+    private final String phrase;
 }
