@@ -11,10 +11,9 @@ import java.util.HashMap;
 @AllArgsConstructor
 @Builder
 public class HelpDto {
-    private final String wordToHelp;
-    private final Language language;
-    private final String yellowWords;
-    private final String greyWords;
-    private final HashMap<Integer,String> greenWords;
+    private  Language language;
+    private  String yellowWords = "";
+    private  String greyWords = "";
+    private  HashMap<Integer,String> greenWords;
 
 }

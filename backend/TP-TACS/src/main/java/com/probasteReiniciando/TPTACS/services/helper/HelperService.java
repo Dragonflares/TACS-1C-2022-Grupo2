@@ -1,11 +1,11 @@
-package com.probasteReiniciando.TPTACS.functions;
+package com.probasteReiniciando.TPTACS.services.helper;
 
 import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.dto.HelpDto;
 import com.probasteReiniciando.TPTACS.dto.WordDto;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,8 @@ import java.util.*;
 
 @Component
 @NoArgsConstructor
-public class WordFileSearcher {
+@Service
+public class HelperService {
 
     public  final String WORD_FILE_ENGLSIH = "words-english.list";
     public  final String WORD_FILE_SPANISH = "words-spanish.list";
@@ -85,15 +86,17 @@ public class WordFileSearcher {
      * @return
      */
     private boolean validatesYellowWords(String word, String yellowWords) {
-        char[] array = yellowWords.toCharArray();
         Boolean condition = true;
-        for (int i = 0; i < array.length && condition; i++) {
+        if(yellowWords != null ) {
+            char[] array = yellowWords.toCharArray();
 
-            char y = array[i];
-            if(!word.toLowerCase().chars().anyMatch(x -> x == y))
-                condition = false;
+            for (int i = 0; i < array.length && condition; i++) {
+
+                char y = array[i];
+                if (!word.toLowerCase().chars().anyMatch(x -> x == y))
+                    condition = false;
+            }
         }
-
         return condition;
 
     }
@@ -106,15 +109,17 @@ public class WordFileSearcher {
      * @return
      */
     private boolean validatesGreyWords(String word, String greyWords) {
-        char[] array = greyWords.toCharArray();
         Boolean condition= true;
-        for (int i = 0; i < array.length && condition; i++) {
+        if(greyWords != null) {
+            char[] array = greyWords.toCharArray();
 
-            char y = array[i];
-            if(word.toLowerCase().chars().anyMatch(x -> x == y))
-                condition = false;
+            for (int i = 0; i < array.length && condition; i++) {
+
+                char y = array[i];
+                if (word.toLowerCase().chars().anyMatch(x -> x == y))
+                    condition = false;
+            }
         }
-
         return condition;
     }
 }
