@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,8 +44,13 @@ public class TournamentControllerTest {
     public void getPublicTournaments() throws Exception {
         when(tournamentService.obtainPublicTournaments(1, 5)).thenReturn(List.of(Tournament.builder().name("TournamentExample").language(Language.ENG).build()));
 
+        LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("offset", "1");
+        requestParams.add("limit", "5");
+
+
         MvcResult result = mockMvc
-                .perform(get("/tournaments").contentType("application/json"))
+                .perform(get("/tournaments").contentType("application/json").params(requestParams))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
