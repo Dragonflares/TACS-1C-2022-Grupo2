@@ -21,7 +21,7 @@ public class HelperServiceTest {
     public void readWordsFromEnglishText () throws Exception {
 
         HelperService helperService = new HelperService();
-        Assert.assertTrue(helperService.readWordsFromFile(Language.ENGLISH).size() > 0);
+        Assert.assertTrue(helperService.readWordsFromFile(Language.ENG).size() > 0);
     }
 
 
@@ -29,7 +29,7 @@ public class HelperServiceTest {
     public void readWordsFromSpanishText () throws Exception {
 
         HelperService helperService = new HelperService();
-        Assert.assertTrue(helperService.readWordsFromFile(Language.SPANISH).size() > 0);
+        Assert.assertTrue(helperService.readWordsFromFile(Language.SPA).size() > 0);
     }
 
 

@@ -2,7 +2,7 @@ package com.probasteReiniciando.TPTACS.domain;
 
 import lombok.*;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -10,15 +10,25 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Tournament {
+
     private Integer id;
+
     private String name;
+
     private Language language;
+
     private Date startDate;
+
     private Date endDate;
+
     private Privacy privacy;
+
     private User owner;
+
     private List<User> participants;
+
     private List<Position> positions;
+
     private List<Result> results;
 
 
@@ -26,4 +36,5 @@ public class Tournament {
         this.name = prueba;
         this.language = spanish;
     }
+
 }

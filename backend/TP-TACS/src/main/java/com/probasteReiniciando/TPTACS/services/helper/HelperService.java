@@ -24,7 +24,7 @@ public class HelperService {
 
         List<String> words = new ArrayList<>();
 
-        String path = Language.ENGLISH.equals(language) ? WORD_FILE_ENGLSIH : WORD_FILE_SPANISH;
+        String path = Language.ENG.equals(language) ? WORD_FILE_ENGLSIH : WORD_FILE_SPANISH;
 
         try {
             File file = new File(path);

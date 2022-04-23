@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
-import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import lombok.*;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,10 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 public class TournamentDto {
 
+    private Integer id;
+
     @NonNull
     private  String name;
+
     @NonNull
-    private  String language;
+    private Language language;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private  Date startDate;

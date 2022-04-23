@@ -2,21 +2,18 @@ package com.probasteReiniciando.TPTACS.controllers.tournament;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
+import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.modelmapper.ModelMapper;
-
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin()
 @RequestMapping({ "/tournaments" })
 public class TournamentController {
-
 
     @Autowired
     private TournamentService tournamentService;
@@ -25,10 +22,14 @@ public class TournamentController {
     private ModelMapperTacs modelMapper;
 
 
-    @GetMapping(produces = "application/json")
-    public List<TournamentDto> publicTournaments() {
+    @PostMapping(produces = "application/json")
+    public TournamentDto createTournament(@RequestBody TournamentDto tournament) throws TournamentBadRequestException {
+        return modelMapper.map(tournamentService.createTournament(tournament),TournamentDto.class);
+    }
 
-        return  modelMapper.mapList(tournamentService.obtainPublicTournaments(),TournamentDto.class);
+    @GetMapping(produces = "application/json")
+    public List<TournamentDto> publicTournaments(@RequestParam int offset, @RequestParam int limit) {
+        return  modelMapper.mapList(tournamentService.obtainPublicTournaments(offset, limit),TournamentDto.class);
     }
 
     @GetMapping(path="/{id}", produces = "application/json")
@@ -36,10 +37,7 @@ public class TournamentController {
         return  modelMapper.map(tournamentService.getTournamentById(id),TournamentDto.class);
     }
 
-    @PostMapping(produces = "application/json")
-    public TournamentDto createTournament(@RequestBody TournamentDto tournament) {
-        return modelMapper.map(tournamentService.postTournament(tournament),TournamentDto.class);
-    }
+
     @PutMapping(path="/tournaments/{id}/participants", produces = "application/json")
     public List<String> addUser(@PathVariable int id) {
         return List.of(Integer.toString(id), Integer.toString(id));
