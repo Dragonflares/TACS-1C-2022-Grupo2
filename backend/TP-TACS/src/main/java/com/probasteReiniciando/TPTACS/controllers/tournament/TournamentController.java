@@ -33,9 +33,7 @@ public class TournamentController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public TournamentDto singleTournaments(@PathVariable int id) throws TournamentNotFoundException {
-
         return  modelMapper.map(tournamentService.getTournamentById(id),TournamentDto.class);
-
     }
 
     @PostMapping(produces = "application/json")
@@ -44,7 +42,7 @@ public class TournamentController {
     }
     @PutMapping(path="/tournaments/{id}/participants", produces = "application/json")
     public List<String> addUser(@PathVariable int id) {
-        return List.of(Integer.toString(id), Integer.toString(id+323));
+        return List.of(Integer.toString(id), Integer.toString(id));
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes

@@ -10,11 +10,12 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class User { // DEBERIA LLAMARSE USER NOMAS PARA MI
+public class User {
+    private Integer id;
     private final String name;
     private final String password;
     @EqualsAndHashCode.Exclude
-    private final Integer telegramDiscordId;
+    private final Integer discordId;
     @EqualsAndHashCode.Exclude
     private final List<Result> results;
 }
