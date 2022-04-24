@@ -17,7 +17,8 @@ export class LogIn extends Component {
         this.state = {
             username : '',
             password : '',
-            type : 'password'
+            type : 'password',
+            showModal: false,
         };
 
     }
@@ -56,6 +57,9 @@ export class LogIn extends Component {
         );
     }
 
+    toggleSigIn = () => {
+        this.setState({showModal : !this.state.showModal});
+    }
 
     render(){
 
@@ -100,16 +104,17 @@ export class LogIn extends Component {
                                         </Row>
                                         </div>                                        
                                         <div className="d-grid gap-2" onClick={this.handleSubmit}>
-                                        <Button variant="primary" >
-                                            Log In
-                                        </Button>
-                                        <div class="_6lux">
-                                            <a href="https://www.facebook.com/recover/initiate/?privacy_mutation_token=eyJ0eXBlIjowLCJjcmVhdGlvbl90aW1lIjoxNjUwNjA0MTUwLCJjYWxsc2l0ZV9pZCI6MzgxMjI5MDc5NTc1OTQ2fQ%3D%3D&amp;ars=facebook_login">
-                                                Forgot password?</a>
+                                            <Button variant="primary" >
+                                                Log In
+                                            </Button>
                                         </div>
+                                        <div className="d-grid gap-2" onClick={this.toggleSigIn}>
+                                            <Button variant="primary" >
+                                                Sign In
+                                            </Button>
                                         </div>
                                         <hr/>
-                                        <PopUpCustom position="right center"/>
+                                        <PopUpCustom show={this.state.showModal} handleClose={this.toggleSigIn} position="right center"/>
                                     </Form.Group>
 									 </Card.Text>                                
                             </Card.Body>
