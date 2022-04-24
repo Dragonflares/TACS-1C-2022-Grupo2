@@ -7,7 +7,7 @@ import { IsAuthenticated } from './services/appService';
 import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
 
 import LogIn from './pages/login/index';
-
+import Home from './pages/home/index';
 class App extends Component {
   constructor(props){
     super(props);
@@ -17,7 +17,7 @@ class App extends Component {
   }
 
   componentDidMount(){
-    this.setState({authorized :  IsAuthenticated()});
+    //this.setState({authorized :  IsAuthenticated()});
   }
 
   render(){
@@ -53,6 +53,7 @@ class App extends Component {
         }
         <Router>
           <Routes>
+            <Route path='/' element={<Home/>} />
             <Route path='/log-in' element={<LogIn/>} />
           </Routes>  
         </Router>

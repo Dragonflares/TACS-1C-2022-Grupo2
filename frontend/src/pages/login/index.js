@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
-import PopUpCustom from './popUp/PopUpCustom';
+import SignUpPopUp from './popUp/SignUp';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import {auth} from '../../services/authService';
@@ -65,7 +65,7 @@ export class LogIn extends Component {
 
         return (
             <div class='p-5 mb-100 bg-light text-black'>
-                <Container>
+                <Container fluid>
                     <Row>
                         <Col md={{span: 6, offset:3}}>
                             <br/>
@@ -118,7 +118,7 @@ export class LogIn extends Component {
                                                         Sign Up
                                                     </Button>
                                                 </div>
-                                                <PopUpCustom show={this.state.showModal} handleClose={this.toggleSigIn} position="right center"/>
+                                                <SignUpPopUp show={this.state.showModal} handleClose={this.toggleSigIn} position="right center"/>
                                             </Row>
                                         </Card.Text>                                
                                     </Card.Body>

@@ -1,5 +1,4 @@
 import React, {Component } from 'react'
-import Popup from 'reactjs-popup'
 import { FormGroup, Modal, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form';
@@ -7,7 +6,7 @@ import {createUser} from '../../../services/userService'
 import Col from 'react-bootstrap/Col';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 
-export class PopUpCustom extends Component {
+export class SignUpPopUp extends Component {
 
   constructor(props){
     super(props);
@@ -121,4 +120,4 @@ export class PopUpCustom extends Component {
   }
 }
 
-export default PopUpCustom
+export default SignUpPopUp
