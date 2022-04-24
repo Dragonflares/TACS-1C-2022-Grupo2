@@ -1,7 +1,10 @@
 package com.probasteReiniciando.TPTACS.dto.user;
 
 import com.probasteReiniciando.TPTACS.domain.Result;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -10,8 +13,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 public class UserDto {
-    @NonNull
-    private String name;
+
+    private String username;
     private String password;
     private Integer discordId;
     private List<Result> results;

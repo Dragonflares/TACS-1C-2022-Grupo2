@@ -1,7 +1,5 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
-import com.probasteReiniciando.TPTACS.domain.Language;
-import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import org.springframework.stereotype.Repository;
@@ -32,7 +30,7 @@ public class UserRepositoryInMemory implements IUserRepository {
     public User createUser(UserDto dto){
         modifyId();
         User newUser = User.builder()
-                .name(dto.getName())
+                .name(dto.getUsername())
                 .password(dto.getPassword())
                 .id(this.currentId)
                 .build();

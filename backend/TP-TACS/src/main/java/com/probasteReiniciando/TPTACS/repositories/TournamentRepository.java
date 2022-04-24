@@ -1,9 +1,6 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
-import com.probasteReiniciando.TPTACS.domain.Language;
-import com.probasteReiniciando.TPTACS.domain.Privacy;
-import com.probasteReiniciando.TPTACS.domain.Result;
-import com.probasteReiniciando.TPTACS.domain.Tournament;
+import com.probasteReiniciando.TPTACS.domain.*;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import org.springframework.stereotype.Repository;
 
@@ -43,6 +40,17 @@ public class TournamentRepository implements ITournamentRepository {
         tournament.setId(currentId);
 
         return tournament;
+
+    }
+
+    public List<String> addUser(Tournament tournament, User user) {
+
+        if(tournament.getParticipants() == null) {
+            tournament.setParticipants(new ArrayList<>());
+        }
+        tournament.getParticipants().add(user);
+        return tournament.getParticipants().stream().map(userStream -> userStream.getName()).collect(Collectors.toList());
+
 
     }
 
