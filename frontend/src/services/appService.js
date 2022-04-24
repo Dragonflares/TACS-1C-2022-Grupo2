@@ -10,7 +10,7 @@ export function IsAuthenticated(){
     return localStorage.getItem('jwt') ? true : false;
 }
 
-function getAuthHeader () {
+export function getAuthHeader () {
     const token = localStorage.getItem('jwt');
 
     return {
@@ -19,7 +19,7 @@ function getAuthHeader () {
 }
 
 export async function post(resource , data , headerExtra = null){
-    let config = this.getAuthHeader();
+    let config = getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
@@ -32,7 +32,7 @@ export async function post(resource , data , headerExtra = null){
 }
 
 export async function get(resource, queryParams = null, headerExtra = null){
-    let config = this.getAuthHeader();
+    let config = getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
@@ -50,7 +50,7 @@ export async function get(resource, queryParams = null, headerExtra = null){
 }
 
 export async function put(resource, data, headerExtra = null){
-    let config = this.getAuthHeader();
+    let config = getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
@@ -63,7 +63,7 @@ export async function put(resource, data, headerExtra = null){
 }
 
 export async function patch(resource, data, headerExtra = null){
-    let config = this.getAuthHeader();
+    let config = getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
@@ -77,7 +77,7 @@ export async function patch(resource, data, headerExtra = null){
 
 
 export async function deleteRes(resource, headerExtra = null){
-    let config = this.getAuthHeader();
+    let config = getAuthHeader();
 
     if(headerExtra !== null){
         config.headers = {
