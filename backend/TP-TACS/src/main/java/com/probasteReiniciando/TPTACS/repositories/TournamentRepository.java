@@ -1,38 +1,62 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
-import com.probasteReiniciando.TPTACS.domain.Language;
-import com.probasteReiniciando.TPTACS.domain.Result;
-import com.probasteReiniciando.TPTACS.domain.Tournament;
+import com.probasteReiniciando.TPTACS.domain.*;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
-public class TournamentRepository implements  ITournamentRepository {
-    private List<Tournament> tournaments = new ArrayList<>();
-    @Override
-    public List<Tournament> obtainPublicTournaments() {
-        return List.of(Tournament.builder().name("TournamentExampleRepository").language(Language.ENGLISH).build());
-    }
-    @Override
-    public Optional<Tournament> obtainTournament(int id){
+public class TournamentRepository implements ITournamentRepository {
 
-        return Integer.valueOf(id).equals(1) ? Optional.ofNullable(Tournament.builder()
-                .name("Prueba")
-                .language(Language.SPANISH)
-                .build()) : Optional.empty();
-    }
+    private List<Tournament> tournaments = new ArrayList<>();
+
+    private Integer currentId = 0;
+
     @Override
-    public List<Result> obtainResults(){
-        return List.of(Result.builder().language(Language.SPANISH).date(LocalDate.now()).build());
+    public List<Tournament> obtainPublicTournaments(int offset, int limit) {
+        return tournaments.stream().filter(x -> x.getPrivacy().equals(Privacy.PUBLIC) && x.getId() >= offset && x.getId() < offset + limit).collect(Collectors.toList());
     }
+
     @Override
-    public Tournament createTournament(TournamentDto dto){
-        return  Tournament.builder().name("Prueba").language(Language.SPANISH).build();
+    public Optional<Tournament> obtainTournament(int id) {
+        return tournaments.stream().filter(x -> x.getId().equals(id)).findFirst();
     }
+
+    @Override
+    public List<Result> obtainResults(int id) {
+        return obtainTournament(id).get().getResults();
+    }
+
+    @Override
+    public Tournament createTournament(Tournament tournament) {
+
+        incrementId();
+
+        tournaments.add(tournament);
+        tournament.setId(currentId);
+
+        return tournament;
+
+    }
+
+    public List<String> addUser(Tournament tournament, User user) {
+
+        if(tournament.getParticipants() == null) {
+            tournament.setParticipants(new ArrayList<>());
+        }
+        tournament.getParticipants().add(user);
+        return tournament.getParticipants().stream().map(userStream -> userStream.getName()).collect(Collectors.toList());
+
+
+    }
+
+    private void incrementId() {
+        currentId++;
+    }
+
 
 }

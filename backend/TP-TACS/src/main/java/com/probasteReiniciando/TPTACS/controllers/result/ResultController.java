@@ -19,18 +19,18 @@ public class ResultController {
     //obtiene los resultados
     @GetMapping(produces = "application/json")
     public List<Result> results(@PathVariable int id) {
-        return tournamentService.getResults();
+        return tournamentService.getResults(id);
     }
 
     //modifica resultado
     @PutMapping(path="/{resultId}", produces = "application/json")
     public List<Result> results(@PathVariable int id, @PathVariable int resultId, @RequestBody ResultDto result) {
-        return tournamentService.getResults();
+        return tournamentService.getResults(id);
     }
 
     //crea resultado
     @PostMapping(produces = "application/json")
     public List<Result> results(@PathVariable int id, @RequestBody ResultDto result) {
-        return tournamentService.getResults();
+        return tournamentService.getResults(id);
     }
 }

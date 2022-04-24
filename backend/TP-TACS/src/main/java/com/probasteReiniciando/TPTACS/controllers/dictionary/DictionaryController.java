@@ -1,22 +1,22 @@
 package com.probasteReiniciando.TPTACS.controllers.dictionary;
 
-import com.probasteReiniciando.TPTACS.functions.JSONWrapper;
-import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.probasteReiniciando.TPTACS.dto.WordDto;
+import com.probasteReiniciando.TPTACS.services.dictionary.DictionaryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 public class DictionaryController {
 
-    @RequestMapping({ "/dictionary" })
-    public List<String> wordDefinition(@RequestParam String word) {
+    @Autowired
+    DictionaryService dictionaryService;
 
-        return Collections.singletonList("Dictionary");
+    @GetMapping(path="/dictionary", produces = "application/json")
+    public WordDto wordDefinition(@RequestParam String word, @RequestParam String language) throws JsonProcessingException {
+        return dictionaryService.findWord(word,language);
     }
 
 

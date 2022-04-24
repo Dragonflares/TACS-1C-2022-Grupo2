@@ -9,3 +9,8 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui
+app:
+  urlApi: https://lexicala1.p.rapidapi.com/search?text={text}&language={language}
+  host: lexicala1.p.rapidapi.com
+  key: 1c4317a744mshd65440aeaef3d67p1f8fb0jsn36ff2d050c0e
+
