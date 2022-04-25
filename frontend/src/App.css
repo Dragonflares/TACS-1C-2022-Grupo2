@@ -24,6 +24,18 @@
   color: white;
 }
 
+._6lux{
+  padding: 10px 0;
+}
+
+.buttonHiden {
+
+  background-color: transparent;
+  border: none;
+  border-radius: 100%;
+  
+}
+
 .App-link {
   color: #61dafb;
 }
