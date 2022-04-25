@@ -14,6 +14,7 @@ export class SignUpPopUp extends Component {
       username : '',
       password : '',
       type : 'password',
+      validated : false
     }
   }
 
@@ -21,7 +22,7 @@ export class SignUpPopUp extends Component {
       const target = event.target;
       const value = target.value;
       const name = target.name;
-
+    
       this.setState ({
           [name] : value,
       });
@@ -33,9 +34,19 @@ export class SignUpPopUp extends Component {
     });
   }
 
-  handleSave = () => {
+  handleSave = (event) => {
     const {username, password} = this.state;
-//VER DE AGREGAR UN INICADOR DE LOADING
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if(!this.state.validated){
+      this.setState({validated: !this.state.validated});
+    }
+
+    if(!username || !password || username === '' || password === '')
+      return;
+
     createUser({
       username : username,
       password : password
@@ -57,6 +68,7 @@ export class SignUpPopUp extends Component {
       username : '',
       password : '',
       type : 'password',
+      validated: false
     });
     this.props.handleClose();
   }
@@ -69,13 +81,13 @@ export class SignUpPopUp extends Component {
           <Modal.Header closeButton>
             <Modal.Title>Create Account</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            <Form>
+          <Form noValidate validated={this.state.validated} onSubmit={this.handleSave}>
+            <Modal.Body>
               <FormGroup>
                 <Row>
                   <Form.Group controlId="formBasicEmail">
                       <Form.Label>Username</Form.Label>
-                      <Form.Control name="username" type="text" placeholder="Username" 
+                      <Form.Control name="username" type="text" placeholder="Username" required
                           value={this.state.username} 
                           onChange={this.handleChange}/>
                       <Form.Text className="text-muted">
@@ -88,7 +100,7 @@ export class SignUpPopUp extends Component {
                       <Form.Label>Password</Form.Label>
                       <Row>
                           <Col xs={12} sm={11}>
-                              <input className="form-control form-control--rounded col-xs-2" name="password"
+                              <input className="form-control form-control--rounded col-xs-2" name="password" required
                                     id="password" type={this.state.type} placeholder="Password" 
                                     value={this.state.password} onChange={this.handleChange}/>
                           </Col>
@@ -105,16 +117,16 @@ export class SignUpPopUp extends Component {
                   </Form.Group>
                 </Row>
               </FormGroup>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleHide}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={this.handleSave}>
-              Save Changes
-            </Button>
-          </Modal.Footer>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleHide}>
+                Close
+              </Button>
+              <Button variant="primary" type='submit'>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Form>
         </Modal>
       </>
     );

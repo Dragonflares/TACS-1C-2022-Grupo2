@@ -16,13 +16,24 @@ export function LogIn ({isLoged}){
     const [password, setPassword] = useState('');
     const [type, setType] = useState('password');
     const [showModal, setShowModal] = useState(false);
+    const [validated, setValidated] = useState(false);
 
     const showHide = useCallback(() => {
         const newType = type === 'text' ? 'password' : 'text';
         setType(newType);
     });
 
-    const handleSubmit = useCallback(async () => {       
+    const handleSubmit = useCallback(async (event) => {       
+        event.preventDefault();
+        event.stopPropagation();
+    
+        if(!validated){
+            setValidated(validated => !validated);
+        }
+    
+        if(!username || !password || username === '' || password === '')
+          return;  
+
         auth({
             username : username,
             password : password
@@ -54,12 +65,12 @@ export function LogIn ({isLoged}){
                 </Row>
                 <Row>
                     <Col md={{span: 6, offset:3}}>
-                        <Form>
+                        <Form onSubmit={handleSubmit} noValidate validated={validated}>
                             <Card>
                                 <Card.Body>
                                     <Form.Group controlId="formBasicEmail">
                                         <Form.Label>Username</Form.Label>
-                                        <Form.Control name="username" type="text" placeholder="Username" 
+                                        <Form.Control name="username" type="text" placeholder="Username" required
                                             value={username} 
                                             onChange={(event) => {setUsername(event.target.value)}}/>
                                         <Form.Text className="text-muted">
@@ -70,7 +81,7 @@ export function LogIn ({isLoged}){
                                         <Form.Label>Password</Form.Label>
                                         <Row>
                                             <Col xs={12} sm={11}>
-                                                <input className="form-control form-control--rounded col-xs-2" name="password"
+                                                <input className="form-control form-control--rounded col-xs-2" name="password" required
                                                         id="password" type={type} placeholder="Password" 
                                                         value={password}
                                                         onChange={(event) => {setPassword(event.target.value)}}/>
@@ -87,8 +98,8 @@ export function LogIn ({isLoged}){
                                         </div>
                                     </Form.Group>
                                     <Row>
-                                        <div className="d-grid gap-2" onClick={handleSubmit}>
-                                            <Button variant="primary" >
+                                        <div className="d-grid gap-2">
+                                            <Button variant="primary" type='submit'>
                                                 Log In
                                             </Button>
                                         </div>
