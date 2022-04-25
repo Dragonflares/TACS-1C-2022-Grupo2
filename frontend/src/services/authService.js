@@ -3,6 +3,11 @@ import Config from '../appConfig.json';
 
 const url = Config.ApiURL;
 
+//USO LOCAL STORAGE PROVISORIAMENTE
+export function isAuthenticated(){
+    return localStorage.getItem('jwt') ? true : false;
+}
+
 //LOCAL STORAGE PROVISIORIO
 export async function auth(data){
     return axios.post(`${url}/accesstoken`, data).then(
@@ -20,4 +25,8 @@ export async function auth(data){
             }
         }
     );
+}
+
+export function logOut() {
+    
 }

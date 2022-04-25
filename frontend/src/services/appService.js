@@ -3,13 +3,6 @@ import Config from '../appConfig.json';
 
 const url = Config.ApiURL;
 
-//CONSULTAR SI VALIDAR OPTIONS ANTES DE MANDAR EL REQUEST
-
-//USO LOCAL STORAGE PROVISORIAMENTE
-export function IsAuthenticated(){
-    return localStorage.getItem('jwt') ? true : false;
-}
-
 export function getAuthHeader () {
     const token = localStorage.getItem('jwt');
 

@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 import {Navbar, Nav, NavDropdown, Container} from 'react-bootstrap';
-import { IsAuthenticated } from './services/appService';
+import { isAuthenticated, logOut } from './services/authService';
 import {  Routes,  Route, NavLink, useLocation, useNavigate} from "react-router-dom";
 
 import LogIn from './pages/login/index';
@@ -15,15 +15,20 @@ export function App (){
   let location = useLocation();
   let navigate = useNavigate();
 
-  const [auth, setAuth] = useState(IsAuthenticated());
+  const [auth, setAuth] = useState(isAuthenticated());
   
   useEffect(() => {
-    setAuth(IsAuthenticated());
-    if(!auth){
+    setAuth(isAuthenticated());
+    if(!auth && location.pathname !== 'log-in'){
       navigate('log-in');
     }
   }
-  , [location])
+  , [location.pathname])
+
+  const handleLogOut = () => {
+    logOut();
+      navigate('log-in');
+  }
 
   return(
       
@@ -49,6 +54,7 @@ export function App (){
                   <Nav>
                     <Nav.Link rel="noopener noreferrer"  href='https://wordle.danielfrg.com/'  target="_bank">Play in English</Nav.Link>
                     <Nav.Link rel="noopener noreferrer"  href="https://www.nytimes.com/games/wordle/index.html" target="_blank">Juega en Español</Nav.Link>
+                    <Nav.Link onClick={this.handleLogOut()}>Log Out</Nav.Link>
                   </Nav>
                 </Navbar.Collapse>
               </Container>
@@ -61,7 +67,7 @@ export function App (){
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/log-in' element={<LogIn />} />
-          <Route path='dictionary' element={<Dictionary />} />
+          <Route path='/dictionary' element={<Dictionary />} />
         </Routes> 
     </div>
   );      
