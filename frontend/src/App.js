@@ -8,16 +8,17 @@ import {  BrowserRouter as Router,  Routes,  Route, NavLink, Link} from "react-r
 
 import LogIn from './pages/login/index';
 import Home from './pages/home/index';
+import Dictionary from './pages/dictionary/index';
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      authorized: false
+      authorized: true
     }
   }
 
   componentDidMount(){
-    this.setState({authorized :  IsAuthenticated()});
+    //this.setState({authorized :  IsAuthenticated()});
   }
 
   render(){
@@ -56,8 +57,9 @@ class App extends Component {
             </>
           }        
           <Routes>
-            <Route path='/' element={<Home/>} />
-            <Route path='/log-in' element={<LogIn/>} />
+            <Route path='/' element={<Home />} />
+            <Route path='/log-in' element={<LogIn />} />
+            <Route path='dictionary' element={<Dictionary />} />
           </Routes>  
         </Router>
       </div>
