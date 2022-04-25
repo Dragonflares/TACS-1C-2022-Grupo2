@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -59,6 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// dont authenticate this particular request
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST,"/authorization").permitAll()
+				.antMatchers(HttpMethod.OPTIONS,"/authorization").permitAll()
+				.antMatchers(HttpMethod.OPTIONS,"/accesstoken").permitAll()
 				.antMatchers(HttpMethod.POST,"/accesstoken").permitAll()
 				.antMatchers(HttpMethod.GET,"/api-docs").permitAll()
 				.antMatchers(HttpMethod.GET,"/swagger-ui.html").permitAll()
