@@ -8,7 +8,7 @@ export async function auth(data){
     return axios.post(`${url}/accesstoken`, data).then(
         async (response) => {
             if(response.status === 200){
-                localStorage.setItem('jwt', response.data.data.token);
+                localStorage.setItem('jwt', response.data.response.token);
                 return {
                     status :response.status
                 }            

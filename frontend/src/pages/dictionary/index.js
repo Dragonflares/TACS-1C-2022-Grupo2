@@ -8,8 +8,8 @@ import Button from 'react-bootstrap/Button';
 
 import { getMeaning } from '../../services/dictionaryService';
 
-const englishLang = 'eng';
-const spanishLang = 'esp';
+const englishLang = 'en';
+const spanishLang = 'es';
 
 export class Dictionary extends Component {
     constructor(props){
@@ -37,8 +37,8 @@ export class Dictionary extends Component {
         getMeaning(search, language).then(response => {
             if(response){
                 this.setState({
-                    search: '',
-                    result: response
+                    search: response.word,
+                    result: response.meaning
                 })
             }
         });
@@ -87,10 +87,10 @@ export class Dictionary extends Component {
                                 <Card  className="py-2">
                                     <Card.Body>
                                         <Card.Title>
-                                            {this.state.result.word}
+                                            {this.state.meaning}
                                         </Card.Title>
                                         <Card.Text>
-                                            {this.state.result.meaning}
+                                            {this.state.result}
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>

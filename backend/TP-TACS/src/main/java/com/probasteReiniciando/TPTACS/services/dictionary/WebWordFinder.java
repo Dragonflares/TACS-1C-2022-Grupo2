@@ -49,7 +49,7 @@ public class WebWordFinder implements WordFinder {
         ObjectMapper objectMapper = new ObjectMapper();
 
         JsonNode jsonNode = objectMapper.readTree(response.getBody());
-
+        //TODO throw exception of not found word in case that not found
         return Optional.ofNullable(jsonNode.get("results").get(0).get("senses").get(0).get("definition").asText());
     }
 }

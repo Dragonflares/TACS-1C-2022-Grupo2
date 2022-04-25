@@ -60,8 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// dont authenticate this particular request
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST,"/authorization").permitAll()
-				.antMatchers(HttpMethod.OPTIONS,"/authorization").permitAll()
-				.antMatchers(HttpMethod.OPTIONS,"/accesstoken").permitAll()
+				.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+				.antMatchers(HttpMethod.OPTIONS, "/*").permitAll()
 				.antMatchers(HttpMethod.POST,"/accesstoken").permitAll()
 				.antMatchers(HttpMethod.GET,"/api-docs").permitAll()
 				.antMatchers(HttpMethod.GET,"/swagger-ui.html").permitAll()
