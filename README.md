@@ -36,10 +36,10 @@
 
 - For getting the rest endpoints you need the application running and access to the following url:
 
-  - Backend
-    -- http://localhost:8080/swagger-ui 
+  ## Backend
+- http://localhost:8080/swagger-ui 
  
-    -- http://localhost:8080/api-docs
-    -- http://localhost:8080
-  - Frontend
-    -- http://localhost:3000
+- http://localhost:8080/api-docs
+- http://localhost:8080
+  ## Frontend
+- http://localhost:3000
