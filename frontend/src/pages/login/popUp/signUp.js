@@ -43,6 +43,7 @@ export class SignUpPopUp extends Component {
       response => {
           if(response.status === 200){
               console.log('Creacion de user correcta');
+              this.props.setUser(username);
           }else{
               console.log('Fallo Creacion de user');
           }
@@ -87,7 +88,7 @@ export class SignUpPopUp extends Component {
                       <Form.Label>Password</Form.Label>
                       <Row>
                           <Col xs={12} sm={11}>
-                              <input class="form-control form-control--rounded col-xs-2" name="password"
+                              <input className="form-control form-control--rounded col-xs-2" name="password"
                                     id="password" type={this.state.type} placeholder="Password" 
                                     value={this.state.password} onChange={this.handleChange}/>
                           </Col>

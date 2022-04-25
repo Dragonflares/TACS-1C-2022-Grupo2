@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -25,10 +25,16 @@ export function App (){
   }
   , [location.pathname])
 
-  const handleLogOut = () => {
-    logOut();
+  const handleLogOut = useCallback(() => {
+      logOut();
+      setAuth(isAuthenticated());
       navigate('log-in');
-  }
+  });
+
+  const handleLogIn = useCallback(() => {
+    setAuth(isAuthenticated());
+    navigate('');
+  });
 
   return(
       
@@ -54,7 +60,7 @@ export function App (){
                   <Nav>
                     <Nav.Link rel="noopener noreferrer"  href='https://wordle.danielfrg.com/'  target="_bank">Play in English</Nav.Link>
                     <Nav.Link rel="noopener noreferrer"  href="https://www.nytimes.com/games/wordle/index.html" target="_blank">Juega en Español</Nav.Link>
-                    <Nav.Link onClick={this.handleLogOut()}>Log Out</Nav.Link>
+                    <Nav.Link onClick={handleLogOut}>Log Out</Nav.Link>
                   </Nav>
                 </Navbar.Collapse>
               </Container>
@@ -66,7 +72,7 @@ export function App (){
         }        
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/log-in' element={<LogIn />} />
+          <Route path='/log-in' element={<LogIn isLoged={handleLogIn}/>} />
           <Route path='/dictionary' element={<Dictionary />} />
         </Routes> 
     </div>

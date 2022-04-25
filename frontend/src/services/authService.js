@@ -28,5 +28,5 @@ export async function auth(data){
 }
 
 export function logOut() {
-    
+    localStorage.removeItem('jwt');
 }
