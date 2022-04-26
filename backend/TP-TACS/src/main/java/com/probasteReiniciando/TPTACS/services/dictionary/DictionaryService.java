@@ -2,6 +2,7 @@ package com.probasteReiniciando.TPTACS.services.dictionary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.probasteReiniciando.TPTACS.dto.WordDto;
+import com.probasteReiniciando.TPTACS.exceptions.WordNotFoundException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class DictionaryService {
         this.wordFinder = wordFinder;
     }
 
-    public WordDto findWord(String name,String language) throws JsonProcessingException {
-        return WordDto.builder().phrase(wordFinder.findWord(name,language).orElseThrow()).build();
+    public WordDto findWord(String name,String language) throws JsonProcessingException, WordNotFoundException {
+        return WordDto.builder().phrase(wordFinder.findWord(name,language).orElseThrow(() ->new WordNotFoundException(name))).build();
     }
 
 }

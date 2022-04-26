@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+
 @AllArgsConstructor
 @Data
 public class UserLoginDto {
-    @NonNull
+    @NotEmpty
     private final String username;
-    @NonNull
+    @NotEmpty
     private final String password;
 }

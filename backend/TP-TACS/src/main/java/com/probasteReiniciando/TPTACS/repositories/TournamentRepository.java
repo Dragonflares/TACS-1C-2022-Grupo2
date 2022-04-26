@@ -1,7 +1,6 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.domain.*;
-import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class TournamentRepository implements ITournamentRepository {
             tournament.setParticipants(new ArrayList<>());
         }
         tournament.getParticipants().add(user);
-        return tournament.getParticipants().stream().map(userStream -> userStream.getName()).collect(Collectors.toList());
+        return tournament.getParticipants().stream().map(userStream -> userStream.getUsername()).collect(Collectors.toList());
 
 
     }

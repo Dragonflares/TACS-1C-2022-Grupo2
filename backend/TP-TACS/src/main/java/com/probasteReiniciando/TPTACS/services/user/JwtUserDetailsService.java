@@ -1,7 +1,9 @@
 package com.probasteReiniciando.TPTACS.services.user;
 
+import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
+import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,12 +23,16 @@ public class JwtUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserService userService;
 
+
+	@Autowired
+	private ModelMapperTacs modelMapper;
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		Optional<User> user = userService.findByUsername(username);
 		if (user.isPresent()) {
-			return new org.springframework.security.core.userdetails.User(user.get().getName(), user.get().getPassword(),
+			return new org.springframework.security.core.userdetails.User(user.get().getUsername(), user.get().getPassword(),
 					new ArrayList<>());
 		} else if ("german".equals(username)) {
 			return new org.springframework.security.core.userdetails.User("german", "$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6",
@@ -37,11 +43,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 	}
 
 
-	public User save(UserLoginDto user) {
+	public User save(UserLoginDto user) throws UserAlreadyExistsException {
 
-		return userService.save(User.builder().name(user.getUsername())
-				.password(bcryptEncoder.encode(user.getPassword()))
-				.build());
+		return userService.save(new UserLoginDto(user.getUsername(),
+				bcryptEncoder.encode(user.getPassword())));
 	}
 
 }

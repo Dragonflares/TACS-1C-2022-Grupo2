@@ -5,9 +5,11 @@ import com.probasteReiniciando.TPTACS.config.JwtTokenUtil;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.JwtRequest;
 import com.probasteReiniciando.TPTACS.dto.JwtResponse;
+import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.services.user.JwtUserDetailsService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,6 +36,9 @@ public class JwtAuthenticationController {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
 
+	@Autowired
+	private ModelMapper modelMapper;
+
 	@RequestMapping(value = "/accesstoken", method = RequestMethod.POST)
 	public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
 			throws Exception {
@@ -49,8 +54,8 @@ public class JwtAuthenticationController {
 	}
 
 	@RequestMapping(value = "/authorization", method = RequestMethod.POST)
-	public User saveUser(@RequestBody UserLoginDto user) throws Exception {
-		return userDetailsService.save(user);
+	public UserDto saveUser(@RequestBody UserLoginDto user) throws Exception {
+		return modelMapper.map(userDetailsService.save(user), UserDto.class);
 	}
 
 	private void authenticate(String username, String password) throws Exception {

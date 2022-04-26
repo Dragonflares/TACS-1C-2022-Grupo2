@@ -1,7 +1,6 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.domain.User;
-import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class UserRepositoryInMemory implements IUserRepository {
 
     @Override
     public Optional<User> findByName(String name) {
-        return repositoryInMemory.stream().filter(x -> x.getName().equals(name)).findFirst();
+        return repositoryInMemory.stream().filter(x -> x.getUsername().equals(name)).findFirst();
     }
 
     @Override
@@ -27,23 +26,16 @@ public class UserRepositoryInMemory implements IUserRepository {
     }
 
     @Override
-    public User createUser(UserDto dto){
+    public User createUser(User user)  {
         modifyId();
-        User newUser = User.builder()
-                .name(dto.getUsername())
-                .password(dto.getPassword())
-                .id(this.currentId)
-                .build();
-        this.save(newUser);
-        return newUser;
+        user.setId(this.currentId);
+        this.save(user);
+        return user;
     }
 
     @Override
     public User save(User user) {
-        if (repositoryInMemory.contains(user))
-        {
-            throw new IllegalStateException("User already exists");
-        }
+
         repositoryInMemory.add(user);
         return user;
     }

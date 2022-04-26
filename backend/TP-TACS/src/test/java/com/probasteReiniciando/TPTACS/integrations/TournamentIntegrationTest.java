@@ -1,6 +1,5 @@
 package com.probasteReiniciando.TPTACS.integrations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.probasteReiniciando.TPTACS.domain.Language;
@@ -8,7 +7,6 @@ import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
-import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import com.probasteReiniciando.TPTACS.repositories.TournamentRepository;
 import com.probasteReiniciando.TPTACS.repositories.UserRepositoryInMemory;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
@@ -166,7 +164,7 @@ public class TournamentIntegrationTest {
         tournamentService.setTournamentRepository(tournamentRepository);
         tournamentService.setUserRepository(userRepository);
 
-        User userPepe = User.builder().name("pepe").build();
+        User userPepe = User.builder().username("pepe").build();
 
         when(userRepository.findByName("pepe")).thenReturn(Optional.of(userPepe));
 

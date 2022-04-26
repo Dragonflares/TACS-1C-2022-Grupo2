@@ -2,7 +2,6 @@ package com.probasteReiniciando.TPTACS.services.tournament;
 
 import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
-import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
@@ -78,7 +77,7 @@ public class TournamentServiceTest {
     @Test
     public void addUserToPublicTournament() throws Exception {
 
-        User userPepe = User.builder().name("pepe").build();
+        User userPepe = User.builder().username("pepe").build();
 
         when(userRepository.findByName("pepe")).thenReturn(Optional.of(userPepe));
 
@@ -100,7 +99,7 @@ public class TournamentServiceTest {
 
         List<String> users = tournamentService.addUser(dto.getId(), "pepe");
 
-        Assert.assertEquals(users, List.of(userPepe.getName()));
+        Assert.assertEquals(users, List.of(userPepe.getUsername()));
 
     }
 

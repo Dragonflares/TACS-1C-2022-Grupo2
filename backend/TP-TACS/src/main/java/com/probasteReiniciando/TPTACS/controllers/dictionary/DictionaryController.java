@@ -2,6 +2,7 @@ package com.probasteReiniciando.TPTACS.controllers.dictionary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.probasteReiniciando.TPTACS.dto.WordDto;
+import com.probasteReiniciando.TPTACS.exceptions.WordNotFoundException;
 import com.probasteReiniciando.TPTACS.services.dictionary.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,7 +18,7 @@ public class DictionaryController {
     DictionaryService dictionaryService;
 
     @GetMapping(path="/dictionary", produces = "application/json")
-    public WordDto wordDefinition(@RequestParam String word, @RequestParam String language) throws JsonProcessingException {
+    public WordDto wordDefinition(@RequestParam String word, @RequestParam String language) throws WordNotFoundException, JsonProcessingException {
         return dictionaryService.findWord(word,language);
     }
 

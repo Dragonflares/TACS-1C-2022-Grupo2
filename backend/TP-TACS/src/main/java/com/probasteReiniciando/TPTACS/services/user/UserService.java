@@ -1,6 +1,8 @@
 package com.probasteReiniciando.TPTACS.services.user;
 
 import com.probasteReiniciando.TPTACS.domain.User;
+import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
+import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,21 @@ public class UserService {
     private IUserRepository userRepository;
 
     public Optional<User> findByUsername(String username) {
-        return Optional.of(userRepository.findByName(username).get());
+        return userRepository.findByName(username);
     }
 
-    public User save(User newUser) {
-        return userRepository.save(newUser);
+    public User save(UserLoginDto userParam) throws UserAlreadyExistsException {
+
+        if (findByUsername(userParam.getUsername()).isPresent())
+        {
+            throw new UserAlreadyExistsException(userParam.getUsername());
+        }
+
+        User newUser = User.builder()
+                .username(userParam.getUsername())
+                .password(userParam.getPassword())
+                .build();
+
+        return userRepository.createUser(newUser);
     }
 }
