@@ -6,6 +6,8 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import SignUpPopUp from './popUp/signUp';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import {auth} from '../../services/authService';
@@ -68,36 +70,38 @@ export function LogIn ({isLoged}){
                         <Form onSubmit={handleSubmit} noValidate validated={validated}>
                             <Card>
                                 <Card.Body>
-                                    <Form.Group controlId="formBasicEmail">
-                                        <Form.Label>Username</Form.Label>
-                                        <Form.Control name="username" type="text" placeholder="Username" required
-                                            value={username} 
-                                            onChange={(event) => {setUsername(event.target.value)}}/>
-                                        <Form.Text className="text-muted">
-                                        </Form.Text>
+                                    <Form.Group as={Row} className='_6lux' controlId="formUsername">
+                                        <InputGroup>
+                                            <FloatingLabel className='group-first-element'>
+                                                <Form.Control name="username" type="text" placeholder="Username" required
+                                                    value={username} 
+                                                    onChange={(event) => {setUsername(event.target.value)}}/>
+                                                <Form.Text className="text-muted">
+                                                </Form.Text>
+                                                <label style={{paddingLeft:0, marginLeft: '1em'}}>UserName</label>   
+                                            </FloatingLabel>
+                                        </InputGroup>
                                     </Form.Group>
-                                    <Form.Group controlId="formBasicPassword">
-                                        <div className='_6lux'> 
-                                        <Form.Label>Password</Form.Label>
-                                        <Row>
-                                            <Col xs={12} sm={11}>
-                                                <input className="form-control form-control--rounded col-xs-2" name="password" required
-                                                        id="password" type={type} placeholder="Password" 
-                                                        value={password}
-                                                        onChange={(event) => {setPassword(event.target.value)}}/>
-                                            </Col>
-                                            <Col xs={12} sm={1} className="py-1">   
-                                                <Button className="buttonHiden px-0" variant="outline-light" size="sm"
-                                                    onClick={showHide}>
+                                    <Form.Group as={Row} className='_6lux' controlId="formPassword">
+                                        <InputGroup>
+                                            <FloatingLabel className='group-first-element'> 
+                                                <Form.Control className="form-control-rounded" 
+                                                    name="password" required
+                                                    id="password" type={type} placeholder="Password" 
+                                                    value={password}                                                    
+                                                    onChange={(event) => {setPassword(event.target.value)}}/>                                               
+                                                <label style={{paddingLeft:0, marginLeft: '1em'}}>Password</label>   
+                                            </FloatingLabel>
+                                            <Button variant="outline-secondary"
+                                                    onClick={showHide}
+                                                    size="sm">
                                                     {
                                                         type === 'text'?<AiFillEye color='black'/>:<AiFillEyeInvisible color='black'/>
                                                     }
-                                                </Button>
-                                            </Col>
-                                        </Row>
-                                        </div>
+                                            </Button>
+                                        </InputGroup>
                                     </Form.Group>
-                                    <Row>
+                                    <Row className='_6lux'>
                                         <div className="d-grid gap-2">
                                             <Button variant="primary" type='submit'>
                                                 Log In

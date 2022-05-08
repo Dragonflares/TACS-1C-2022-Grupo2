@@ -12,3 +12,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.group-first-element input {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.group-first-element {
+  display: flex;
+  flex-grow: 1;
+}
