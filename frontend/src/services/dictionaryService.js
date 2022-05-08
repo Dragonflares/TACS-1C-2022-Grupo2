@@ -9,12 +9,5 @@ export async function getMeaning(word, language){
     return get(`${resource}`, {
         word: word,
         language: language
-    }, { headers: { header } } ).then(
-        async (response) => {
-            return {
-                word: word,
-                meaning: response.data.response.phrase
-            }
-        }
-    );
+    }, { headers: { header } } );
 }

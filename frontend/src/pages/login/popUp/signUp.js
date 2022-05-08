@@ -2,8 +2,10 @@ import React, {Component } from 'react'
 import { FormGroup, Modal, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form';
-import {createUser} from '../../../services/userService'
-import Col from 'react-bootstrap/Col';
+import {createUser} from '../../../services/userService';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 
 export class SignUpPopUp extends Component {
@@ -83,40 +85,36 @@ export class SignUpPopUp extends Component {
           </Modal.Header>
           <Form noValidate validated={this.state.validated} onSubmit={this.handleSave}>
             <Modal.Body>
-              <FormGroup>
-                <Row>
-                  <Form.Group controlId="formBasicEmail">
-                      <Form.Label>Username</Form.Label>
-                      <Form.Control name="username" type="text" placeholder="Username" required
-                          value={this.state.username} 
-                          onChange={this.handleChange}/>
-                      <Form.Text className="text-muted">
-                      </Form.Text>
-                  </Form.Group>
-                </Row>
-                <Row>
-                  <Form.Group controlId="formBasicPassword">
-                      <div className='_6lux'> 
-                      <Form.Label>Password</Form.Label>
-                      <Row>
-                          <Col xs={12} sm={11}>
-                              <input className="form-control form-control--rounded col-xs-2" name="password" required
-                                    id="password" type={this.state.type} placeholder="Password" 
-                                    value={this.state.password} onChange={this.handleChange}/>
-                          </Col>
-                          <Col xs={1} sm={1} className="py-1">   
-                              <Button className="buttonHiden px-0" variant="outline-light" size="sm"
-                                  onClick={this.showHide}>
-                                  {
-                                      this.state.type === 'text'?<AiFillEye color='black'/>:<AiFillEyeInvisible color='black'/>
-                                  }
-                              </Button>
-                          </Col>
-                      </Row>
-                      </div>
-                  </Form.Group>
-                </Row>
-              </FormGroup>
+              <Form.Group as={Row} className='_6lux' controlId="formUsername">
+                <InputGroup>
+                    <FloatingLabel className='group-first-element'>
+                        <Form.Control name="username" type="text" placeholder="Username" required
+                            value={this.state.username} 
+                            onChange={this.handleChange}/>
+                        <Form.Text className="text-muted">
+                        </Form.Text>
+                        <label style={{paddingLeft:0, marginLeft: '1em'}}>UserName</label>   
+                    </FloatingLabel>
+                </InputGroup>
+              </Form.Group>
+              <Form.Group as={Row} className='_6lux' controlId="formPassword">
+                <InputGroup>
+                    <FloatingLabel className='group-first-element'> 
+                        <Form.Control className="form-control-rounded" 
+                            name="password" required
+                            id="password" type={this.state.type} placeholder="Password" 
+                            value={this.state.password} onChange={this.handleChange}/>                                               
+                        <label style={{paddingLeft:0, marginLeft: '1em'}}>Password</label>   
+                    </FloatingLabel>
+                    <Button variant="outline-secondary"
+                            onClick={this.showHide}
+                            size="sm">
+                            {
+                                this.state.type === 'text'?<AiFillEye color='black'/>:<AiFillEyeInvisible color='black'/>
+                            }
+                    </Button>
+                </InputGroup>
+              </Form.Group>              
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={this.handleHide}>

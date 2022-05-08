@@ -9,5 +9,5 @@ export async function createUser(data){
 }
 
 export async function updateUser(data){
-    return put(`user/${data.id}`, data); //EJEMPLO TODAVIA NO HAY recurso users
+    return put(`user/${data.id}`, data); 
 }

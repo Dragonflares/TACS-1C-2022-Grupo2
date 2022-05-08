@@ -37,8 +37,8 @@ export class Dictionary extends Component {
         getMeaning(search, language).then(response => {
             if(response){
                 this.setState({
-                    search: response.word,
-                    result: response.meaning
+                    search: search,
+                    result: response.data.response.phrase
                 })
             }
         });
