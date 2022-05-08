@@ -36,6 +36,10 @@
   
 }
 
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
 .App-link {
   color: #61dafb;
 }

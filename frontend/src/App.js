@@ -9,6 +9,11 @@ import {  Routes,  Route, NavLink, useLocation, useNavigate} from "react-router-
 import LogIn from './pages/login/index';
 import Home from './pages/home/index';
 import Dictionary from './pages/dictionary/index';
+import Helper from './pages/helper';
+import Results from './pages/results';
+import PublicTournaments from './pages/tournaments/publicTournaments';
+import MyTournaments from './pages/tournaments/myTournaments';
+import Tournament from './pages/tournaments/tournament';
 
 export function App (){
   
@@ -74,6 +79,12 @@ export function App (){
           <Route path='/' element={<Home />} />
           <Route path='/log-in' element={<LogIn isLoged={handleLogIn}/>} />
           <Route path='/dictionary' element={<Dictionary />} />
+          <Route path='/help' element={<Helper/>} />
+          <Route path='/result' element={<Results/>}/>
+          <Route path='/public-tournaments' element={<PublicTournaments/>}/>
+          <Route path='/tournaments' element={<MyTournaments/>}/>
+          <Route path='/tournament/:action/:id' element={<Tournament/>}/>
+          <Route path='/tournament/:action' element={<Tournament/>}/>
         </Routes> 
     </div>
   );      
