@@ -2,6 +2,7 @@ package com.probasteReiniciando.TPTACS.controllers.helper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.dto.HelpDto;
 import com.probasteReiniciando.TPTACS.dto.WordDto;
 import com.probasteReiniciando.TPTACS.services.helper.HelperService;
@@ -38,7 +39,8 @@ public class HelperControllerTest {
         List<WordDto> wordsTest = new ArrayList<>();
         wordsTest.add(WordDto.builder().phrase("test").build());
 
-        when(helperService.findWords(HelpDto.builder().build(),new ArrayList<>())).thenReturn(wordsTest);
+        when(helperService.readWordsFromFile(Language.ENG)).thenReturn(new ArrayList<>());
+        when(helperService.wordSearch(HelpDto.builder().build())).thenReturn(wordsTest);
 
         String object = objectMapper.writeValueAsString(HelpDto.builder().build());
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/helper")
@@ -56,7 +58,7 @@ public class HelperControllerTest {
         WordDto[] words = objectMapper.treeToValue(data, WordDto[].class);
         List<WordDto> wordDtoList = new ArrayList<>(Arrays.asList(words));
         Assert.assertEquals(List.of(WordDto.builder().phrase("test").build()),wordDtoList);
-        verify(helperService).findWords(HelpDto.builder().build(), new ArrayList<>());
+        verify(helperService).wordSearch(HelpDto.builder().build());
 
     }
 }

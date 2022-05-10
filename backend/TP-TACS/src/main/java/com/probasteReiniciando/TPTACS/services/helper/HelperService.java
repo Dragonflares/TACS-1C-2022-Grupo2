@@ -8,7 +8,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +21,10 @@ public class HelperService {
     public  final String WORD_FILE_ENGLSIH = "words-english.list";
     public  final String WORD_FILE_SPANISH = "words-spanish.list";
 
+
+    public List<WordDto> wordSearch(HelpDto helpDto) {
+        return findWords(helpDto,readWordsFromFile(helpDto.getLanguage()));
+    }
 
     public  List<String> readWordsFromFile(Language language){
 
