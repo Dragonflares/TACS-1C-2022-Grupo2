@@ -7,6 +7,7 @@ import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin()
+@Slf4j
 @RequestMapping({ "/tournaments" })
 public class TournamentController {
 
@@ -25,7 +27,8 @@ public class TournamentController {
 
 
     @PostMapping(produces = "application/json")
-    public TournamentDto createTournament(@RequestBody TournamentDto tournament) throws TournamentBadRequestException {
+    public TournamentDto createTournament(@RequestBody TournamentDto tournament,@RequestAttribute(name="userAttributeName") String username) throws TournamentBadRequestException {
+        log.info(username);
         return modelMapper.map(tournamentService.createTournament(tournament),TournamentDto.class);
     }
 
