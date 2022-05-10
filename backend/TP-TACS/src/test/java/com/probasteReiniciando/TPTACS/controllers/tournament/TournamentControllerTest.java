@@ -97,7 +97,7 @@ public class TournamentControllerTest {
         String body = objectMapper.writeValueAsString(tournamentDtoBody);
 
         MvcResult result = mockMvc
-                .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body))
+                .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body).requestAttr("userAttributeName","test"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();

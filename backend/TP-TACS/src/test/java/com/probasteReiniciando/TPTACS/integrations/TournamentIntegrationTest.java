@@ -66,7 +66,7 @@ public class TournamentIntegrationTest {
         String body = objectMapper.writeValueAsString(tournamentDtoBody);
 
         MvcResult result = mockMvc
-                .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body))
+                .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body).requestAttr("userAttributeName","test"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -128,7 +128,7 @@ public class TournamentIntegrationTest {
             String body = objectMapper.writeValueAsString(tournamentBody);
 
             MvcResult result = mockMvc
-                    .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body))
+                    .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body).requestAttr("userAttributeName","test"))
                     .andExpect(status().isOk())
                     .andDo(MockMvcResultHandlers.print())
                     .andReturn();
@@ -182,7 +182,7 @@ public class TournamentIntegrationTest {
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
 
-        mockMvc.perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8")
+        mockMvc.perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").requestAttr("userAttributeName","test")
                         .content(objectMapper.writeValueAsString(tournamentDto)))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
