@@ -28,27 +28,23 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return handleExceptionInternal(ex, ApiError.builder().status(HttpStatus.BAD_REQUEST)
-                        .message("Request malformed")
+        return handleExceptionInternal(ex, ApiError.builder()
+                        .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
-                        .debugMessage(ex.getLocalizedMessage())
                         .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
-                        .status(HttpStatus.BAD_REQUEST).build(),
+                        .build(),
                 headers, HttpStatus.BAD_REQUEST, request);
     }
 
-
      @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return handleExceptionInternal(ex, ApiError.builder().status(HttpStatus.METHOD_NOT_ALLOWED)
-                        .message("Http method not allowed")
+        return handleExceptionInternal(ex, ApiError.builder()
+                        .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
-                        .debugMessage(ex.getLocalizedMessage())
                         .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
-                        .status(HttpStatus.METHOD_NOT_ALLOWED).build(),
+                        .build(),
                 headers, HttpStatus.METHOD_NOT_ALLOWED, request);
     }
 
@@ -56,43 +52,37 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleNoHandlerFoundException(
             NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        return handleExceptionInternal(ex, ApiError.builder().status(HttpStatus.NOT_FOUND)
-                        .message("Request not found")
+        return handleExceptionInternal(ex, ApiError.builder()
+                        .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
-                        .debugMessage(ex.getLocalizedMessage())
                         .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
-                        .status(HttpStatus.BAD_REQUEST).build(),
+                        .build(),
                 headers, HttpStatus.NOT_FOUND, request);
     }
-
-
 
     @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class, TournamentNotFoundException.class, WordNotFoundException.class})
     public ResponseEntity<ApiError> handleConflict(Exception ex,WebRequest request)
     {
 
-        ApiError error =ApiError.builder().status(HttpStatus.NOT_FOUND)
+        ApiError error =ApiError.builder()
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
-                .status(HttpStatus.NOT_FOUND).build();
+                .build();
 
         return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
     }
-
 
     @ExceptionHandler({UserAlreadyExistsException.class})
     public ResponseEntity<ApiError> handleConflict(UserAlreadyExistsException exception)
     {
 
-        ApiError error =ApiError.builder().status(HttpStatus.BAD_REQUEST)
+        ApiError error =ApiError.builder()
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST).build();
+                .build();
 
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
-
-
 
 }
