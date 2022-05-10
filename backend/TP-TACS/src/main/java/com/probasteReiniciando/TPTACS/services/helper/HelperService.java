@@ -4,11 +4,14 @@ import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.dto.HelpDto;
 import com.probasteReiniciando.TPTACS.dto.WordDto;
 import lombok.NoArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @Component
@@ -27,7 +30,8 @@ public class HelperService {
         String path = Language.ENG.equals(language) ? WORD_FILE_ENGLSIH : WORD_FILE_SPANISH;
 
         try {
-            File file = new File(path);
+
+            InputStream file = new ClassPathResource(path).getInputStream();
             Scanner scanner = new Scanner(file);
 
             while (scanner.hasNextLine()) {
@@ -41,6 +45,8 @@ public class HelperService {
             scanner.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return words;
     }
