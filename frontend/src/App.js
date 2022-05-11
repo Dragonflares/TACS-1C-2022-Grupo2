@@ -14,6 +14,7 @@ import Results from './pages/results';
 import PublicTournaments from './pages/tournaments/publicTournaments';
 import MyTournaments from './pages/tournaments/myTournaments';
 import Tournament from './pages/tournaments/tournament';
+import Positions from './pages/positions';
 
 export function App (){
   
@@ -85,6 +86,7 @@ export function App (){
           <Route path='/tournaments' element={<MyTournaments/>}/>
           <Route path='/tournament/:action/:id' element={<Tournament/>}/>
           <Route path='/tournament/:action' element={<Tournament/>}/>
+          <Route path='/positions/:id' element={<Positions />}/>
         </Routes> 
     </div>
   );      

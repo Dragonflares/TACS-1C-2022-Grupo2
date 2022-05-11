@@ -3,6 +3,10 @@ import Config from '../appConfig.json';
 
 const url = Config.ApiURL;
 
+export function getUserId(){
+    return 1;
+}
+
 //USO LOCAL STORAGE PROVISORIAMENTE
 export function isAuthenticated(){
     return localStorage.getItem('jwt') ? true : false;
