@@ -26,7 +26,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -44,7 +44,7 @@ public class TournamentControllerTest {
 
     @Test
     public void getPublicTournaments() throws Exception {
-        when(tournamentService.obtainPublicTournaments(1, 5)).thenReturn(List.of(Tournament.builder().name("TournamentExample").language(Language.ENG).build()));
+        when(tournamentService.obtainPublicTournaments(1, 5)).thenReturn(List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build()));
 
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("offset", "1");
@@ -61,14 +61,14 @@ public class TournamentControllerTest {
         JsonNode data = jsonNode.get("response");
         TournamentDto[] tournamentDtos = objectMapper.treeToValue(data, TournamentDto[].class);
         List<TournamentDto> tournamentDtosList = new ArrayList<>(Arrays.asList(tournamentDtos));
-        Assert.assertEquals(List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENG).build()), tournamentDtosList);
+        Assert.assertEquals(List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENGLISH).build()), tournamentDtosList);
 
     }
 
     @Test
     public void getIndividualTournament() throws Exception {
 
-        when(tournamentService.getTournamentById(5)).thenReturn(Tournament.builder().name("TournamentExample").language(Language.ENG).build());
+        when(tournamentService.getTournamentById(5)).thenReturn(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build());
 
         MvcResult result = mockMvc
                 .perform(get("/tournaments/5").contentType("application/json"))
@@ -80,7 +80,7 @@ public class TournamentControllerTest {
         JsonNode data = jsonNode.get("response");
         TournamentDto tournamentDto = objectMapper.treeToValue(data, TournamentDto.class);
         List<TournamentDto> tournamentDtosList = new ArrayList<>(Arrays.asList(tournamentDto));
-        Assert.assertEquals(List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENG).build()), tournamentDtosList);
+        Assert.assertEquals(List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENGLISH).build()), tournamentDtosList);
 
     }
 
@@ -89,7 +89,7 @@ public class TournamentControllerTest {
 
         TournamentDto tournamentDtoBody = TournamentDto.builder()
                 .name("Champions Wordle")
-                .language(Language.ENG)
+                .language(Language.ENGLISH)
                 .privacy(Privacy.PUBLIC).build();
 
         when(tournamentService.createTournament(tournamentDtoBody)).thenReturn(tournamentDtoBody);
@@ -120,7 +120,7 @@ public class TournamentControllerTest {
         String body = objectMapper.writeValueAsString(user);
 
         MvcResult result = mockMvc
-                .perform(put("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8").content(body))
+                .perform(patch("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8").content(body))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();

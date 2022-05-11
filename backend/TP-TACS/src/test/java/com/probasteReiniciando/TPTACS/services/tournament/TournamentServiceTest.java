@@ -43,7 +43,7 @@ public class TournamentServiceTest {
 
         TournamentDto dto = TournamentDto.builder()
                 .name("Champions Wordle")
-                .language(Language.ENG)
+                .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
 
@@ -64,7 +64,7 @@ public class TournamentServiceTest {
 
         TournamentDto dto = TournamentDto.builder()
                 .name("Champions Wordle")
-                .language(Language.ENG)
+                .language(Language.ENGLISH)
                 .startDate(endDate).endDate(startDate)
                 .privacy(Privacy.PUBLIC).build();
 
@@ -92,7 +92,7 @@ public class TournamentServiceTest {
 
         TournamentDto dto = TournamentDto.builder()
                 .name("Champions Wordle")
-                .language(Language.ENG)
+                .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
         dto = tournamentService.createTournament(dto);

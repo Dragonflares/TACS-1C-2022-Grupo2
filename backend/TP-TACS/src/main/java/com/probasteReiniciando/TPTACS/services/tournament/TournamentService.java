@@ -5,7 +5,6 @@ import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
-import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
@@ -27,7 +26,7 @@ public class TournamentService {
     @Autowired
     private IUserRepository userRepository;
 
-    public TournamentDto createTournament(TournamentDto tournamentDto) throws TournamentBadRequestException {
+    public TournamentDto createTournament(TournamentDto tournamentDto) {
 
         TournamentValidator.validateRangeDate(tournamentDto.getStartDate(), tournamentDto.getEndDate());
 

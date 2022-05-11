@@ -13,7 +13,7 @@ public class TournamentValidator {
 
     private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static void validateLanguage(String language) throws TournamentBadRequestException {
+    public static void validateLanguage(String language) {
         if (!EnumUtils.isValidEnum(Language.class, language)) {
             String messageError = String.format("%s is not a valid language or is not supported", language);
             throw new TournamentBadRequestException(messageError);
@@ -21,7 +21,7 @@ public class TournamentValidator {
 
     }
 
-    public static void validateRangeDate(Date startDate, Date endDate) throws TournamentBadRequestException {
+    public static void validateRangeDate(Date startDate, Date endDate) {
 
         Calendar calendarStartDate = Calendar.getInstance();
         calendarStartDate.setTime(startDate);
@@ -43,7 +43,7 @@ public class TournamentValidator {
 
     }
 
-    public static void validatePrivacy(String privacy) throws TournamentBadRequestException {
+    public static void validatePrivacy(String privacy) {
         if (!EnumUtils.isValidEnum(Privacy.class, privacy)) {
             String messageError = String.format("%s is not supported", privacy);
             throw new TournamentBadRequestException(messageError);

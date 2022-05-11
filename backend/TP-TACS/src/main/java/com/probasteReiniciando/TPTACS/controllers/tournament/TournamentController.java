@@ -3,9 +3,6 @@ package com.probasteReiniciando.TPTACS.controllers.tournament;
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
-import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
-import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
-import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +24,7 @@ public class TournamentController {
 
 
     @PostMapping(produces = "application/json")
-    public TournamentDto createTournament(@RequestBody TournamentDto tournament,@RequestAttribute(name="userAttributeName") String username) throws TournamentBadRequestException {
+    public TournamentDto createTournament(@RequestBody TournamentDto tournament,@RequestAttribute(name="userAttributeName") String username) {
         log.info(username);
         return modelMapper.map(tournamentService.createTournament(tournament),TournamentDto.class);
     }
@@ -43,13 +40,13 @@ public class TournamentController {
     }
 
 
-    @PutMapping(path="/{tournamentId}/participants", produces = "application/json") //TODO CORREGIR EL METODO, HACERLO API REST. ¿¿COMO???
+    @PatchMapping(path="/{tournamentId}/participants", produces = "application/json")
     public List<String> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user)  {
         return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername()),String.class);
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
-    @GetMapping(path="/tournaments/{id}/participants", produces = "application/json")
+    @GetMapping(path="/{id}/participants", produces = "application/json")
     public List<String> obtainParticipants(@PathVariable int id, @RequestParam String orderBy, @RequestParam String order) {
         return List.of(Integer.toString(id), Integer.toString(id + 324));
     }

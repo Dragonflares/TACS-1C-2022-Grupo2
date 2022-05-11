@@ -5,7 +5,6 @@ import com.probasteReiniciando.TPTACS.dto.HelpDto;
 import com.probasteReiniciando.TPTACS.dto.WordDto;
 import lombok.NoArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +22,7 @@ public class HelperService {
     public  final String WORD_FILE_SPANISH = "words-spanish.list";
     public List<String> spanishWords = new ArrayList<>();
     public List<String> englishWords = new ArrayList<>();
-    public  final Map<Language,String> files = Map.of(Language.ENG, WORD_FILE_ENGLSIH,Language.SPA,WORD_FILE_SPANISH);
+    public  final Map<Language,String> files = Map.of(Language.ENGLISH, WORD_FILE_ENGLSIH,Language.SPANISH,WORD_FILE_SPANISH);
     public  Map<Language,List<String>> wordsInMemory = new HashMap<>();
 
 
@@ -31,9 +30,9 @@ public class HelperService {
 
     @PostConstruct
     public void initialize() {
-        this.spanishWords = readWordsFromFile(Language.SPA);
-        this.englishWords = readWordsFromFile(Language.ENG);
-        wordsInMemory = Map.of(Language.ENG,englishWords ,Language.SPA,spanishWords);
+        this.spanishWords = readWordsFromFile(Language.SPANISH);
+        this.englishWords = readWordsFromFile(Language.ENGLISH);
+        wordsInMemory = Map.of(Language.ENGLISH,englishWords ,Language.SPANISH,spanishWords);
     }
 
 
