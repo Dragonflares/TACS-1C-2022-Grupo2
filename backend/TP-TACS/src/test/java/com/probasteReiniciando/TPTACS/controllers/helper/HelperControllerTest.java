@@ -39,7 +39,7 @@ public class HelperControllerTest {
         List<WordDto> wordsTest = new ArrayList<>();
         wordsTest.add(WordDto.builder().phrase("test").build());
 
-        when(helperService.readWordsFromFile(Language.ENG)).thenReturn(new ArrayList<>());
+        when(helperService.readWordsInMemory(Language.ENG)).thenReturn(new ArrayList<>());
         when(helperService.wordSearch(HelpDto.builder().build())).thenReturn(wordsTest);
 
         String object = objectMapper.writeValueAsString(HelpDto.builder().build());

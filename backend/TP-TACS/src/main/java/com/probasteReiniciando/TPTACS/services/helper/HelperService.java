@@ -8,29 +8,48 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-@Component
 @NoArgsConstructor
 @Service
 public class HelperService {
 
     public  final String WORD_FILE_ENGLSIH = "words-english.list";
     public  final String WORD_FILE_SPANISH = "words-spanish.list";
+    public List<String> spanishWords = new ArrayList<>();
+    public List<String> englishWords = new ArrayList<>();
+    public  final Map<Language,String> files = Map.of(Language.ENG, WORD_FILE_ENGLSIH,Language.SPA,WORD_FILE_SPANISH);
+    public  final Map<Language,List<String>> wordsInMemory = Map.of(Language.ENG, spanishWords,Language.SPA,englishWords);
+
+
+
+
+    @PostConstruct
+    public void initialize() {
+        this.spanishWords = readWordsFromFile(Language.SPA);
+        this.englishWords = readWordsFromFile(Language.ENG);
+    }
 
 
     public List<WordDto> wordSearch(HelpDto helpDto) {
-        return findWords(helpDto,readWordsFromFile(helpDto.getLanguage()));
+        return findWords(helpDto,readWordsInMemory(helpDto.getLanguage()));
+    }
+
+
+    public List<String> readWordsInMemory(Language language) {
+        return this.wordsInMemory.getOrDefault(language,this.englishWords);
     }
 
     public  List<String> readWordsFromFile(Language language){
 
         List<String> words = new ArrayList<>();
 
-        String path = Language.ENG.equals(language) ? WORD_FILE_ENGLSIH : WORD_FILE_SPANISH;
+
+        String path = files.getOrDefault(language,WORD_FILE_ENGLSIH);
 
         try {
 
