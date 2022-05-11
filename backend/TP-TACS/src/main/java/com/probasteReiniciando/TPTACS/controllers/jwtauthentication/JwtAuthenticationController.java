@@ -58,7 +58,7 @@ public class JwtAuthenticationController {
 		return modelMapper.map(userDetailsService.save(user), UserDto.class);
 	}
 
-	private void authenticate(String username, String password) throws Exception {
+	private void authenticate(String username, String password) {
 		Objects.requireNonNull(username);
 		Objects.requireNonNull(password);
 

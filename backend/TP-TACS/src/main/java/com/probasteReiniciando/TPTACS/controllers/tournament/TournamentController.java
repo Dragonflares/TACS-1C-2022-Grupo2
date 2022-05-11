@@ -38,13 +38,13 @@ public class TournamentController {
     }
 
     @GetMapping(path="/{id}", produces = "application/json")
-    public TournamentDto singleTournaments(@PathVariable int id) throws TournamentNotFoundException {
+    public TournamentDto singleTournaments(@PathVariable int id)  {
         return  modelMapper.map(tournamentService.getTournamentById(id),TournamentDto.class);
     }
 
 
     @PutMapping(path="/{tournamentId}/participants", produces = "application/json") //TODO CORREGIR EL METODO, HACERLO API REST. ¿¿COMO???
-    public List<String> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user) throws UserNotFoundException, TournamentNotFoundException {
+    public List<String> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user)  {
         return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername()),String.class);
     }
 

@@ -1,6 +1,6 @@
 package com.probasteReiniciando.TPTACS.exceptions;
 
-public class UserAlreadyExistsException extends Exception {
+public class UserAlreadyExistsException extends RuntimeException {
 
     public UserAlreadyExistsException(String param) {
 

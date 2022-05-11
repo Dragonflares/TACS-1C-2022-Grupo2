@@ -50,11 +50,11 @@ public class TournamentService {
         return tournamentRepository.obtainPublicTournaments(offset, limit);
     }
 
-    public Tournament getTournamentById(int id) throws TournamentNotFoundException {
+    public Tournament getTournamentById(int id)  {
         return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
     }
 
-    public List<String> addUser(int tournamentId, String userName) throws TournamentNotFoundException, UserNotFoundException {
+    public List<String> addUser(int tournamentId, String userName)  {
 
         Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 

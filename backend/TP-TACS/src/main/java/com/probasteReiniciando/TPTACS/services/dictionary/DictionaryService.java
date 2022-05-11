@@ -18,7 +18,7 @@ public class DictionaryService {
         this.wordFinder = wordFinder;
     }
 
-    public WordDto findWord(String name,String language) throws JsonProcessingException, WordNotFoundException {
+    public WordDto findWord(String name,String language) throws JsonProcessingException {
         return WordDto.builder().phrase(wordFinder.findWord(name,language).orElseThrow(() ->new WordNotFoundException(name))).build();
     }
 

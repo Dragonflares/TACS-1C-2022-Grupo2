@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Service
@@ -23,7 +24,7 @@ public class HelperService {
     public List<String> spanishWords = new ArrayList<>();
     public List<String> englishWords = new ArrayList<>();
     public  final Map<Language,String> files = Map.of(Language.ENG, WORD_FILE_ENGLSIH,Language.SPA,WORD_FILE_SPANISH);
-    public  final Map<Language,List<String>> wordsInMemory = Map.of(Language.ENG, spanishWords,Language.SPA,englishWords);
+    public  Map<Language,List<String>> wordsInMemory = new HashMap<>();
 
 
 
@@ -32,6 +33,7 @@ public class HelperService {
     public void initialize() {
         this.spanishWords = readWordsFromFile(Language.SPA);
         this.englishWords = readWordsFromFile(Language.ENG);
+        wordsInMemory = Map.of(Language.ENG,englishWords ,Language.SPA,spanishWords);
     }
 
 
@@ -75,12 +77,12 @@ public class HelperService {
 
     public List<WordDto> findWords(HelpDto helpDto, List<String> words) {
         List<WordDto> wordDtosResult = new ArrayList<>();
-        words.forEach(word -> {
-            if(validatesGreyWords(word,helpDto.getGreyWords())  && validatesYellowWords(word,helpDto.getYellowWords())
-                    && validatesGreenWords(word,helpDto.getGreenWords()))
-                wordDtosResult.add(WordDto.builder().phrase(word.toLowerCase()).build());
-
-        });
+        words = words.stream()
+                .filter(word -> validatesGreyWords(word,helpDto.getGreyWords()))
+                .filter(word -> validatesYellowWords(word,helpDto.getYellowWords()))
+                .filter(word -> validatesGreenWords(word,helpDto.getGreenWords()))
+                .collect(Collectors.toList());
+        words.forEach(word -> wordDtosResult.add(WordDto.builder().phrase(word.toLowerCase()).build()));
         return wordDtosResult;
     }
 

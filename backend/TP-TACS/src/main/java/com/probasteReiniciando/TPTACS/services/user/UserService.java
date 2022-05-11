@@ -19,7 +19,7 @@ public class UserService {
         return userRepository.findByName(username);
     }
 
-    public User save(UserLoginDto userParam) throws UserAlreadyExistsException {
+    public User save(UserLoginDto userParam)  {
 
         if (findByUsername(userParam.getUsername()).isPresent())
         {

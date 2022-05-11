@@ -2,10 +2,7 @@ package com.probasteReiniciando.TPTACS.controllers.exception;
 
 
 import com.probasteReiniciando.TPTACS.dto.ApiError;
-import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
-import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
-import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
-import com.probasteReiniciando.TPTACS.exceptions.WordNotFoundException;
+import com.probasteReiniciando.TPTACS.exceptions.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +30,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, ApiError.builder()
                         .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
-                        .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
                         .build(),
                 headers, HttpStatus.BAD_REQUEST, request);
     }
@@ -43,7 +39,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, ApiError.builder()
                         .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
-                        .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
                         .build(),
                 headers, HttpStatus.METHOD_NOT_ALLOWED, request);
     }
@@ -55,7 +50,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, ApiError.builder()
                         .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
-                        .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
                         .build(),
                 headers, HttpStatus.NOT_FOUND, request);
     }
@@ -67,7 +61,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         ApiError error =ApiError.builder()
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
-                .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
                 .build();
 
         return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
@@ -83,6 +76,19 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .build();
 
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler({UnAuthorizedException.class})
+    public ResponseEntity<ApiError> handleConflict(UnAuthorizedException exception)
+    {
+
+        ApiError error =ApiError.builder()
+                .message(exception.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(error,HttpStatus.UNAUTHORIZED);
     }
 
 }

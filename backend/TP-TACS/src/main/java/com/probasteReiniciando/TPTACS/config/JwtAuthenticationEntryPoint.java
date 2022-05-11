@@ -1,5 +1,6 @@
 package com.probasteReiniciando.TPTACS.config;
 
+import com.probasteReiniciando.TPTACS.exceptions.UnAuthorizedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -19,5 +20,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
 			AuthenticationException authException) throws IOException {
 
 		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+
 	}
 }

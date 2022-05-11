@@ -1,6 +1,6 @@
 package com.probasteReiniciando.TPTACS.exceptions;
 
-public class WordNotFoundException extends Exception {
+public class WordNotFoundException extends RuntimeException {
 
     public WordNotFoundException(String param) {
 

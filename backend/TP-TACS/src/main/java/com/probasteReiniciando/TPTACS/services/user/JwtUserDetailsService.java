@@ -43,7 +43,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	}
 
 
-	public User save(UserLoginDto user) throws UserAlreadyExistsException {
+	public User save(UserLoginDto user)  {
 
 		return userService.save(new UserLoginDto(user.getUsername(),
 				bcryptEncoder.encode(user.getPassword())));

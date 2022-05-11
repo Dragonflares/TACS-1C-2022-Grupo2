@@ -18,7 +18,7 @@ public class DictionaryController {
     DictionaryService dictionaryService;
 
     @GetMapping(path="/dictionary", produces = "application/json")
-    public WordDto wordDefinition(@RequestParam String word, @RequestParam String language) throws WordNotFoundException, JsonProcessingException {
+    public WordDto wordDefinition(@RequestParam String word, @RequestParam String language) throws  JsonProcessingException {
         return dictionaryService.findWord(word,language);
     }
 
