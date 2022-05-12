@@ -9,7 +9,6 @@ import { Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import OptionsPopUp from "./optionsPopUp";
 
-
 export function MyTournaments () {
     const pageSize = 10;
     const [data, setData] = useState({
@@ -106,15 +105,21 @@ export function MyTournaments () {
                     <Card>
                         <Card.Body>
                             <Card.Title>My Tournaments</Card.Title>
-                            <Button as={Link} to={"/tournament/create"} variant="primary">Create</Button>
-                            <PaginatedTable 
-                                headings={headings}
-                                data={data}
-                                pageSize={pageSize}
-                                handlePageChange={handlePageChange}
-                                onClick={handleRowClick}
-                                key='myTournamentss'
-                            />
+                            <Row>
+                                <Button as={Link} to={"/tournament/create"} variant="primary" style={{float: 'left'}}>
+                                    Add
+                                </Button>
+                            </Row>
+                            <Row>
+                                <PaginatedTable 
+                                    headings={headings}
+                                    data={data}
+                                    pageSize={pageSize}
+                                    handlePageChange={handlePageChange}
+                                    onClick={handleRowClick}
+                                    key='myTournamentss'
+                                />   
+                            </Row>                                                     
                         </Card.Body>
                     </Card>
                 </Container>

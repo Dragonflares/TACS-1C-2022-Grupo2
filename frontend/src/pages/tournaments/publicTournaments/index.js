@@ -114,7 +114,7 @@ export function PublicTournaments () {
                 <Container fluid>
                     <Card>
                         <Card.Body>
-                            <Card.Title>My Tournaments</Card.Title>
+                            <Card.Title>Public Tournaments</Card.Title>
                             <PaginatedTable 
                                 headings={headings}
                                 data={data}

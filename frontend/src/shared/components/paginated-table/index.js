@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import PaginationComponent from '../pagination';
 import './style.css';
 
-export function PaginatedTable ({headings, data, pageSize = 10, handlePageChange, onClick}) {
+export function PaginatedTable ({headings, data, pageSize = 10, hover= true, handlePageChange, onClick}) {
 
     const [page, setPage] = useState(1);
 
@@ -19,7 +19,7 @@ export function PaginatedTable ({headings, data, pageSize = 10, handlePageChange
 
     return (
         <>
-            <Table responsive hover>
+            <Table responsive hover={hover}>
                 <thead>
                     <tr key={0}>
                     {Array.from(headings).map((header, index) => {

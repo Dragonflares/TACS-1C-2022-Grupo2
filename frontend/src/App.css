@@ -40,6 +40,13 @@
   display: block;
 }
 
+.floating-button{
+  float: right;
+  right: 1.5em;
+  bottom: 2.5em;
+  position: fixed;
+}
+
 .App-link {
   color: #61dafb;
 }
