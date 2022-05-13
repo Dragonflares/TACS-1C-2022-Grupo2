@@ -25,7 +25,7 @@ export function LogIn ({isLoged}){
         setType(newType);
     });
 
-    const handleSubmit = useCallback(async (event) => {       
+    const handleSubmit = useCallback((event) => {       
         event.preventDefault();
         event.stopPropagation();
     

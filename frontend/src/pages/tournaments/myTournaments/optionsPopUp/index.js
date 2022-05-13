@@ -17,7 +17,7 @@ export default function OptionsPopUp({selected, show, handleClose}) {
                     <Modal.Title> {selected.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Col  md={{offset: 3, span: 6}} xs={12}>
+                    <Col>
                         <Row className="_6lux">
                             <Button as={Link} to={`/positions/${selected.id}`}  variant="success">Positions</Button>
                         </Row>

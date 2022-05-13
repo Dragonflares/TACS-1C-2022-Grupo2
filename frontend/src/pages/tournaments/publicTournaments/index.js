@@ -6,8 +6,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from "react-bootstrap/Modal";
 import { PaginatedTable } from "../../../shared/components/paginated-table";
 
-import { getPublicTournaments } from '../../../services/publicTournamentService';
-
 export function PublicTournaments () {
     const pageSize = 10;
     const [data, setData] = useState({

@@ -13,9 +13,9 @@ export function isAuthenticated(){
 }
 
 //LOCAL STORAGE PROVISIORIO
-export async function auth(data){
+export function auth(data){
     return axios.post(`${url}/accesstoken`, data).then(
-        async (response) => {
+        (response) => {
             if(response.status === 200){
                 localStorage.setItem('jwt', response.data.response.token);
                 return {

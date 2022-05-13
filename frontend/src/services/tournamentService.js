@@ -9,3 +9,7 @@ export async function getPublicTournaments(offset, limit){
         limit: limit
     });
 }
+
+export async function getTournament(id){
+    return get(`${resource}/${id}`);
+}

@@ -23,18 +23,25 @@ export function App (){
 
   const [auth, setAuth] = useState(isAuthenticated());
   
-  useEffect(() => {
+  const redirectOnNotAuth = () => {
     setAuth(isAuthenticated());
     if(!auth && location.pathname !== 'log-in'){
       navigate('log-in');
     }
+  };
+
+  useEffect(() => {
+    redirectOnNotAuth();
+  }, [])
+
+  useEffect(() => {
+    redirectOnNotAuth();
   }
   , [location.pathname])
 
   const handleLogOut = useCallback(() => {
       logOut();
-      setAuth(isAuthenticated());
-      navigate('log-in');
+      redirectOnNotAuth();
   });
 
   const handleLogIn = useCallback(() => {
