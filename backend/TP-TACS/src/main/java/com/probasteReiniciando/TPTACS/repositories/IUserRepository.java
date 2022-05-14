@@ -9,7 +9,7 @@ public interface IUserRepository {
 
     Optional<User> findByName(String name);
     Optional<User> findById(int id);
-    User save(User user) throws UserAlreadyExistsException;
+    User save(User user) ;
     void removeUser(User user);
-    User createUser(User user) throws UserAlreadyExistsException;
+    User createUser(User user) ;
 }

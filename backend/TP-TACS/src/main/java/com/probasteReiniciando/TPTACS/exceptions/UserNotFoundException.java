@@ -1,6 +1,6 @@
 package com.probasteReiniciando.TPTACS.exceptions;
 
-public class UserNotFoundException extends Exception {
+public class UserNotFoundException extends RuntimeException {
 
     public UserNotFoundException(String param) {
 

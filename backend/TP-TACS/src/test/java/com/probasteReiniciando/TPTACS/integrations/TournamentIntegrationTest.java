@@ -59,14 +59,14 @@ public class TournamentIntegrationTest {
 
         TournamentDto tournamentDtoBody = TournamentDto.builder()
                 .name("Champions Wordle")
-                .language(Language.ENG)
+                .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
 
         String body = objectMapper.writeValueAsString(tournamentDtoBody);
 
         MvcResult result = mockMvc
-                .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body))
+                .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body).requestAttr("userAttributeName","test"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -98,25 +98,25 @@ public class TournamentIntegrationTest {
 
         TournamentDto tournamentDtoBody1 = TournamentDto.builder()
                 .name("Champions Wordle")
-                .language(Language.ENG)
+                .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
 
         TournamentDto tournamentDtoBody2 = TournamentDto.builder()
                 .name("Libertadores Wordle")
-                .language(Language.SPA)
+                .language(Language.SPANISH)
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
 
         TournamentDto tournamentDtoBody3 = TournamentDto.builder()
                 .name("Liga Wordle")
-                .language(Language.ENG)
+                .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
 
         TournamentDto tournamentDtoBody4 = TournamentDto.builder()
                 .name("Pepe Wordle")
-                .language(Language.ENG)
+                .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PRIVATE).build();
 
@@ -128,7 +128,7 @@ public class TournamentIntegrationTest {
             String body = objectMapper.writeValueAsString(tournamentBody);
 
             MvcResult result = mockMvc
-                    .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body))
+                    .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body).requestAttr("userAttributeName","test"))
                     .andExpect(status().isOk())
                     .andDo(MockMvcResultHandlers.print())
                     .andReturn();
@@ -178,11 +178,11 @@ public class TournamentIntegrationTest {
 
         TournamentDto tournamentDto = TournamentDto.builder()
                 .name("Champions Wordle")
-                .language(Language.ENG)
+                .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
 
-        mockMvc.perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8")
+        mockMvc.perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").requestAttr("userAttributeName","test")
                         .content(objectMapper.writeValueAsString(tournamentDto)))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
@@ -193,7 +193,7 @@ public class TournamentIntegrationTest {
         String body = objectMapper.writeValueAsString(user);
 
         MvcResult result = mockMvc
-                .perform(put("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8").content(body))
+                .perform(patch("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8").content(body))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();

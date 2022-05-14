@@ -18,7 +18,6 @@ public class HelperController {
 
     @PostMapping(path="/helper", produces = "application/json")
     public List<WordDto> help(@RequestBody HelpDto helpDto) throws JsonProcessingException {
-        List<String> words =  helperService.readWordsFromFile(helpDto.getLanguage());
-        return helperService.findWords(helpDto,words);
+        return helperService.wordSearch(helpDto);
     }
 }

@@ -2,10 +2,7 @@ package com.probasteReiniciando.TPTACS.controllers.exception;
 
 
 import com.probasteReiniciando.TPTACS.dto.ApiError;
-import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
-import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
-import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
-import com.probasteReiniciando.TPTACS.exceptions.WordNotFoundException;
+import com.probasteReiniciando.TPTACS.exceptions.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -28,27 +23,21 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return handleExceptionInternal(ex, ApiError.builder().status(HttpStatus.BAD_REQUEST)
-                        .message("Request malformed")
+        return handleExceptionInternal(ex, ApiError.builder()
+                        .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
-                        .debugMessage(ex.getLocalizedMessage())
-                        .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
-                        .status(HttpStatus.BAD_REQUEST).build(),
+                        .build(),
                 headers, HttpStatus.BAD_REQUEST, request);
     }
 
-
      @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return handleExceptionInternal(ex, ApiError.builder().status(HttpStatus.METHOD_NOT_ALLOWED)
-                        .message("Http method not allowed")
+        return handleExceptionInternal(ex, ApiError.builder()
+                        .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
-                        .debugMessage(ex.getLocalizedMessage())
-                        .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
-                        .status(HttpStatus.METHOD_NOT_ALLOWED).build(),
+                        .build(),
                 headers, HttpStatus.METHOD_NOT_ALLOWED, request);
     }
 
@@ -56,43 +45,48 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleNoHandlerFoundException(
             NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        return handleExceptionInternal(ex, ApiError.builder().status(HttpStatus.NOT_FOUND)
-                        .message("Request not found")
+        return handleExceptionInternal(ex, ApiError.builder()
+                        .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
-                        .debugMessage(ex.getLocalizedMessage())
-                        .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
-                        .status(HttpStatus.BAD_REQUEST).build(),
+                        .build(),
                 headers, HttpStatus.NOT_FOUND, request);
     }
-
-
 
     @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class, TournamentNotFoundException.class, WordNotFoundException.class})
     public ResponseEntity<ApiError> handleConflict(Exception ex,WebRequest request)
     {
 
-        ApiError error =ApiError.builder().status(HttpStatus.NOT_FOUND)
+        ApiError error =ApiError.builder()
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
-                .path(((ServletWebRequest)request).getRequest().getRequestURI().toString())
-                .status(HttpStatus.NOT_FOUND).build();
+                .build();
 
         return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
     }
 
-
-    @ExceptionHandler({UserAlreadyExistsException.class})
+    @ExceptionHandler({UserAlreadyExistsException.class, TournamentBadRequestException.class})
     public ResponseEntity<ApiError> handleConflict(UserAlreadyExistsException exception)
     {
 
-        ApiError error =ApiError.builder().status(HttpStatus.BAD_REQUEST)
+        ApiError error =ApiError.builder()
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST).build();
+                .build();
 
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
 
 
+    @ExceptionHandler({UnAuthorizedException.class})
+    public ResponseEntity<ApiError> handleConflict(UnAuthorizedException exception)
+    {
+
+        ApiError error =ApiError.builder()
+                .message(exception.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(error,HttpStatus.UNAUTHORIZED);
+    }
 
 }

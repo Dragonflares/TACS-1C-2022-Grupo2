@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class DictionaryServiceTest {
 
     @Autowired
-    WebWordFinder webWordFinder;
+    WordFinder webWordFinder;
 
     @Test
     public void getWordfromApiWebWordFinder () throws Exception {

@@ -5,7 +5,6 @@ import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
-import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
@@ -27,7 +26,7 @@ public class TournamentService {
     @Autowired
     private IUserRepository userRepository;
 
-    public TournamentDto createTournament(TournamentDto tournamentDto) throws TournamentBadRequestException {
+    public TournamentDto createTournament(TournamentDto tournamentDto) {
 
         TournamentValidator.validateRangeDate(tournamentDto.getStartDate(), tournamentDto.getEndDate());
 
@@ -50,11 +49,11 @@ public class TournamentService {
         return tournamentRepository.obtainPublicTournaments(offset, limit);
     }
 
-    public Tournament getTournamentById(int id) throws TournamentNotFoundException {
+    public Tournament getTournamentById(int id)  {
         return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
     }
 
-    public List<String> addUser(int tournamentId, String userName) throws TournamentNotFoundException, UserNotFoundException {
+    public List<String> addUser(int tournamentId, String userName)  {
 
         Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 

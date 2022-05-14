@@ -15,11 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ApiError {
 
-    private HttpStatus status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private String message;
-    private String debugMessage;
-    private String path;
 
 }

@@ -1,6 +1,6 @@
 package com.probasteReiniciando.TPTACS.exceptions;
 
-public class TournamentNotFoundException extends Exception {
+public class TournamentNotFoundException extends RuntimeException {
 
     public TournamentNotFoundException(String param) {
 
