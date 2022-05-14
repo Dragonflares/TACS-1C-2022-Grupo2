@@ -6,6 +6,7 @@ import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import org.apache.commons.lang3.EnumUtils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,22 +22,11 @@ public class TournamentValidator {
 
     }
 
-    public static void validateRangeDate(Date startDate, Date endDate) {
+    public static void validateRangeDate(LocalDate startDate, LocalDate endDate) {
 
-        Calendar calendarStartDate = Calendar.getInstance();
-        calendarStartDate.setTime(startDate);
+        LocalDate currentDate = LocalDate.now();
 
-        Calendar calendarEndDate = Calendar.getInstance();
-        calendarEndDate.setTime(endDate);
-
-        Calendar calendarActualDate = Calendar.getInstance();
-        calendarActualDate.setTime(new Date());
-        calendarActualDate.set(Calendar.HOUR_OF_DAY, 0);
-        calendarActualDate.set(Calendar.MINUTE, 0);
-        calendarActualDate.set(Calendar.SECOND, 0);
-        calendarActualDate.set(Calendar.MILLISECOND, 0);
-
-        if (calendarEndDate.compareTo(calendarStartDate) < 0 || calendarStartDate.compareTo(calendarActualDate) < 0) {
+        if (endDate.isBefore(startDate) || startDate.isBefore(currentDate)) {
             String messageError = String.format("[%s, %s] range date is invalid", startDate, endDate);
             throw new TournamentBadRequestException(messageError);
         }

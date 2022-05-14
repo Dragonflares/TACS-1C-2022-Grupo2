@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.mockito.Mockito.when;
@@ -45,17 +46,10 @@ public class TournamentIntegrationTest {
 
         TournamentRepository tournamentRepository = new TournamentRepository();
 
-        TournamentService tournamentService = new TournamentService();
+        TournamentService tournamentService = new TournamentService(tournamentRepository,null);
 
-        tournamentService.setTournamentRepository(tournamentRepository);
-
-        Date actualDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(actualDate);
-        calendar.add(Calendar.DATE, 2);
-        Date startDate = calendar.getTime();
-        calendar.add(Calendar.DATE, 10);
-        Date endDate = calendar.getTime();
+        LocalDate startDate = LocalDate.now().plusDays(2);
+        LocalDate endDate = startDate.plusDays(10);
 
         TournamentDto tournamentDtoBody = TournamentDto.builder()
                 .name("Champions Wordle")
@@ -84,17 +78,10 @@ public class TournamentIntegrationTest {
 
         TournamentRepository tournamentRepository = new TournamentRepository();
 
-        TournamentService tournamentService = new TournamentService();
+        TournamentService tournamentService = new TournamentService(tournamentRepository,null);
 
-        tournamentService.setTournamentRepository(tournamentRepository);
-
-        Date actualDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(actualDate);
-        calendar.add(Calendar.DATE, 2);
-        Date startDate = calendar.getTime();
-        calendar.add(Calendar.DATE, 10);
-        Date endDate = calendar.getTime();
+        LocalDate startDate = LocalDate.now().plusDays(2);
+        LocalDate endDate = startDate.plusDays(10);
 
         TournamentDto tournamentDtoBody1 = TournamentDto.builder()
                 .name("Champions Wordle")
@@ -159,22 +146,14 @@ public class TournamentIntegrationTest {
 
         TournamentRepository tournamentRepository = new TournamentRepository();
 
-        TournamentService tournamentService = new TournamentService();
-
-        tournamentService.setTournamentRepository(tournamentRepository);
-        tournamentService.setUserRepository(userRepository);
+        TournamentService tournamentService = new TournamentService(tournamentRepository,userRepository);
 
         User userPepe = User.builder().username("pepe").build();
 
         when(userRepository.findByName("pepe")).thenReturn(Optional.of(userPepe));
 
-        Date actualDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(actualDate);
-        calendar.add(Calendar.DATE, 2);
-        Date startDate = calendar.getTime();
-        calendar.add(Calendar.DATE, 10);
-        Date endDate = calendar.getTime();
+        LocalDate startDate = LocalDate.now().plusDays(2);
+        LocalDate endDate = startDate.plusDays(10);
 
         TournamentDto tournamentDto = TournamentDto.builder()
                 .name("Champions Wordle")

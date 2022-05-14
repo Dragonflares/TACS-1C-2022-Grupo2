@@ -12,8 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,22 +23,18 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class TournamentServiceTest {
 
-    private TournamentRepository tournamentRepository = new TournamentRepository();
-    private TournamentService tournamentService = new TournamentService();
-
     @MockBean
     private UserRepositoryInMemory userRepository;
+    private TournamentRepository tournamentRepository = new TournamentRepository();
+
 
     @Test
     public void createTournament() throws TournamentBadRequestException {
 
-        tournamentService.setTournamentRepository(tournamentRepository);
+        TournamentService tournamentService = new TournamentService(tournamentRepository,userRepository);
 
-        Date startDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
-        calendar.add(Calendar.DATE, 10);
-        Date endDate = calendar.getTime();
+        LocalDate startDate = LocalDate.now().plusDays(1);
+        LocalDate endDate = startDate.plusDays(10);
 
         TournamentDto dto = TournamentDto.builder()
                 .name("Champions Wordle")
@@ -54,13 +49,10 @@ public class TournamentServiceTest {
     @Test
     public void createTournamentBadRequestException() {
 
-        tournamentService.setTournamentRepository(tournamentRepository);
+        TournamentService tournamentService = new TournamentService(tournamentRepository,userRepository);
 
-        Date startDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
-        calendar.add(Calendar.DATE, 10);
-        Date endDate = calendar.getTime();
+        LocalDate startDate = LocalDate.now().plusDays(1);
+        LocalDate endDate = startDate.plusDays(10);
 
         TournamentDto dto = TournamentDto.builder()
                 .name("Champions Wordle")
@@ -81,14 +73,10 @@ public class TournamentServiceTest {
 
         when(userRepository.findByName("pepe")).thenReturn(Optional.of(userPepe));
 
-        tournamentService.setTournamentRepository(tournamentRepository);
+        TournamentService tournamentService = new TournamentService(tournamentRepository,userRepository);
 
-        tournamentService.setUserRepository(userRepository);
-        Date startDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
-        calendar.add(Calendar.DATE, 10);
-        Date endDate = calendar.getTime();
+        LocalDate startDate = LocalDate.now().plusDays(1);
+        LocalDate endDate = startDate.plusDays(10);
 
         TournamentDto dto = TournamentDto.builder()
                 .name("Champions Wordle")
@@ -102,10 +90,5 @@ public class TournamentServiceTest {
         Assert.assertEquals(users, List.of(userPepe.getUsername()));
 
     }
-
-
-
-
-
 
 }

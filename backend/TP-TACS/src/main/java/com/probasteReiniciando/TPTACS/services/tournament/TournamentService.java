@@ -1,5 +1,6 @@
 package com.probasteReiniciando.TPTACS.services.tournament;
 
+import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
@@ -17,27 +18,26 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Data
 public class TournamentService {
 
-    @Autowired
-    private ITournamentRepository tournamentRepository;
+    final private ITournamentRepository tournamentRepository;
 
-    @Autowired
-    private IUserRepository userRepository;
+    final private IUserRepository userRepository;
+
+    private ModelMapperTacs modelMapper = new ModelMapperTacs();
+
+
+    public TournamentService(ITournamentRepository tournamentRepository, IUserRepository userRepository) {
+        this.tournamentRepository = tournamentRepository;
+        this.userRepository = userRepository;
+    }
 
     public TournamentDto createTournament(TournamentDto tournamentDto) {
 
         TournamentValidator.validateRangeDate(tournamentDto.getStartDate(), tournamentDto.getEndDate());
 
-        Tournament tournament = Tournament.builder()
-                .name(tournamentDto.getName())
-                .language(tournamentDto.getLanguage())
-                .startDate(tournamentDto.getStartDate())
-                .endDate(tournamentDto.getEndDate())
-                .privacy(tournamentDto.getPrivacy())
-                //TODO owner: obtener de los datos de la sesion?
-                .build();
+        Tournament tournament =  modelMapper.map(tournamentDto,Tournament.class);
+
         tournament = tournamentRepository.createTournament(tournament);
 
         tournamentDto.setId(tournament.getId());

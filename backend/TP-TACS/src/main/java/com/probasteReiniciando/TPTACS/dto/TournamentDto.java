@@ -6,7 +6,7 @@ import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,10 +24,10 @@ public class TournamentDto {
     private Language language;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private  Date startDate;
+    private  LocalDate startDate;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private  Date endDate;
+    private LocalDate endDate;
 
     private  Privacy privacy;
 
