@@ -45,6 +45,7 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
         if(tournament.getParticipants() == null) {
             tournament.setParticipants(new ArrayList<>());
         }
+
         tournament.getParticipants().add(user);
         return tournament.getParticipants().stream().map(userStream -> userStream.getUsername()).collect(Collectors.toList());
 

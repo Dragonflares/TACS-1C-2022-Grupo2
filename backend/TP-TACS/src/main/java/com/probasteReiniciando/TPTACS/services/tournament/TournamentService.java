@@ -38,7 +38,7 @@ public class TournamentService {
 
         TournamentValidator.validateRangeDate(tournamentDto.getStartDate(), tournamentDto.getEndDate());
 
-        Tournament tournament =  modelMapper.map(tournamentDto,Tournament.class);
+        Tournament tournament = modelMapper.map(tournamentDto, Tournament.class);
 
         User owner = userRepository.findByName(userLoggedIn).orElseThrow(() -> new UserNotFoundException(userLoggedIn));
 
@@ -57,11 +57,11 @@ public class TournamentService {
         return tournamentRepository.obtainPublicTournaments(offset, limit);
     }
 
-    public Tournament getTournamentById(int id)  {
+    public Tournament getTournamentById(int id) {
         return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
     }
 
-    public List<String> addUser(int tournamentId, String userName, String userLoggedIn)  {
+    public List<String> addUser(int tournamentId, String userName, String userLoggedIn) {
 
         Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 
@@ -92,7 +92,7 @@ public class TournamentService {
 
 
     public List<String> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order) {
-        return tournamentRepository.obtainParticipants(tournamentId,orderBy,order);
+        return tournamentRepository.obtainParticipants(tournamentId, orderBy, order);
 
 
     }
@@ -106,7 +106,7 @@ public class TournamentService {
             throw new UnAuthorizedException(userLoggedIn);
         }
 
-        tournamentRepository.updateTournament(tournamentId, modelMapper.map(tournamentDto,Tournament.class));
+        tournamentRepository.updateTournament(tournamentId, modelMapper.map(tournamentDto, Tournament.class));
 
         return tournamentRepository.obtainTournament(tournamentId).get();
 

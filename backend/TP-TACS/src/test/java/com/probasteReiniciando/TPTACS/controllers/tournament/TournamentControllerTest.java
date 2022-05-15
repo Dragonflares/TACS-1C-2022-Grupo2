@@ -92,7 +92,7 @@ public class TournamentControllerTest {
                 .language(Language.ENGLISH)
                 .privacy(Privacy.PUBLIC).build();
 
-        when(tournamentService.createTournament(tournamentDtoBody)).thenReturn(tournamentDtoBody);
+        when(tournamentService.createTournament(tournamentDtoBody,"pepe")).thenReturn(tournamentDtoBody);
 
         String body = objectMapper.writeValueAsString(tournamentDtoBody);
 
@@ -113,7 +113,7 @@ public class TournamentControllerTest {
     @Test
     public void addUserToPublicTournament() throws Exception {
 
-        when(tournamentService.addUser(1, "pepe")).thenReturn(List.of("pepe"));
+        when(tournamentService.addUser(1, "pepe","duenio")).thenReturn(List.of("pepe"));
 
         UserDto user = UserDto.builder().username("pepe").build();
 

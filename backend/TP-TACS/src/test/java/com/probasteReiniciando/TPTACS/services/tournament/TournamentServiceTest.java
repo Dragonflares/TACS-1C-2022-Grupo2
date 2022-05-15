@@ -4,6 +4,7 @@ import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
+import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import com.probasteReiniciando.TPTACS.repositories.TournamentRepositoryInMemory;
 import com.probasteReiniciando.TPTACS.repositories.UserRepositoryInMemory;
@@ -42,7 +43,7 @@ public class TournamentServiceTest {
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
 
-        Assert.assertNotNull(tournamentService.createTournament(dto));
+        Assert.assertNotNull(tournamentService.createTournament(dto,"pepe"));
 
     }
 
@@ -61,7 +62,7 @@ public class TournamentServiceTest {
                 .privacy(Privacy.PUBLIC).build();
 
         TournamentBadRequestException thrown = assertThrows ( TournamentBadRequestException.class,
-                () -> tournamentService.createTournament(dto));
+                () -> tournamentService.createTournament(dto,"pepe"));
 
         assertTrue(thrown.getMessage().contains("range date is invalid"));
     }
@@ -83,9 +84,9 @@ public class TournamentServiceTest {
                 .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
-        dto = tournamentService.createTournament(dto);
+        dto = tournamentService.createTournament(dto,"duenio");
 
-        List<String> users = tournamentService.addUser(dto.getId(), "pepe");
+        List<String> users = tournamentService.addUser(dto.getId(), "pepe","duenio");
 
         Assert.assertEquals(users, List.of(userPepe.getUsername()));
 

@@ -39,7 +39,7 @@ public class TournamentController {
     }
 
 
-    @PatchMapping(path="/{tournamentId}/participants", produces = "application/json")
+    @PostMapping(path="/{tournamentId}/participants", produces = "application/json")
     public List<String> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
         return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn),String.class);
     }
