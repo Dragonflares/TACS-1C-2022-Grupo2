@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 import {Navbar, Nav, NavDropdown, Container} from 'react-bootstrap';
 import { isAuthenticated, logOut } from './services/authService';
@@ -9,6 +10,13 @@ import {  Routes,  Route, NavLink, useLocation, useNavigate} from "react-router-
 import LogIn from './pages/login/index';
 import Home from './pages/home/index';
 import Dictionary from './pages/dictionary/index';
+import Helper from './pages/helper';
+import Results from './pages/results';
+import PublicTournaments from './pages/tournaments/publicTournaments';
+import MyTournaments from './pages/tournaments/myTournaments';
+import Tournament from './pages/tournaments/tournament';
+import Positions from './pages/positions';
+import ErrorPage from './pages/error';
 
 export function App (){
   
@@ -17,18 +25,25 @@ export function App (){
 
   const [auth, setAuth] = useState(isAuthenticated());
   
-  useEffect(() => {
+  const redirectOnNotAuth = () => {
     setAuth(isAuthenticated());
     if(!auth && location.pathname !== 'log-in'){
       navigate('log-in');
     }
+  };
+
+  useEffect(() => {
+    redirectOnNotAuth();
+  }, [])
+
+  useEffect(() => {
+    redirectOnNotAuth();
   }
   , [location.pathname])
 
   const handleLogOut = useCallback(() => {
       logOut();
-      setAuth(isAuthenticated());
-      navigate('log-in');
+      redirectOnNotAuth();
   });
 
   const handleLogIn = useCallback(() => {
@@ -74,6 +89,15 @@ export function App (){
           <Route path='/' element={<Home />} />
           <Route path='/log-in' element={<LogIn isLoged={handleLogIn}/>} />
           <Route path='/dictionary' element={<Dictionary />} />
+          <Route path='/help' element={<Helper/>} />
+          <Route path='/result' element={<Results/>}/>
+          <Route path='/public-tournaments' element={<PublicTournaments/>}/>
+          <Route path='/tournaments' element={<MyTournaments/>}/>
+          <Route path='/tournament/:action/:id' element={<Tournament/>}/>
+          <Route path='/tournament/:action' element={<Tournament/>}/>
+          <Route path='/positions/:id' element={<Positions />}/>
+          <Route path='/error/:code' element={<ErrorPage />}/>
+          <Route path='*' element={<ErrorPage />}/>
         </Routes> 
     </div>
   );      

@@ -3,15 +3,19 @@ import Config from '../appConfig.json';
 
 const url = Config.ApiURL;
 
+export function getUserId(){
+    return 1;
+}
+
 //USO LOCAL STORAGE PROVISORIAMENTE
 export function isAuthenticated(){
     return localStorage.getItem('jwt') ? true : false;
 }
 
 //LOCAL STORAGE PROVISIORIO
-export async function auth(data){
+export function auth(data){
     return axios.post(`${url}/accesstoken`, data).then(
-        async (response) => {
+        (response) => {
             if(response.status === 200){
                 localStorage.setItem('jwt', response.data.response.token);
                 return {
