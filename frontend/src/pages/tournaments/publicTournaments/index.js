@@ -4,7 +4,9 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from "react-bootstrap/Modal";
-import { PaginatedTable } from "../../../shared/components/paginated-table";
+import { PaginatedTable } from "../../../shared/components/paginatedTable";
+import { getPublicTournaments } from "../../../services/tournamentService";
+import { useHandleHttpResponse } from "../../../shared/hooks/responseHandlerHook";
 
 export function PublicTournaments () {
     const pageSize = 10;
@@ -43,18 +45,18 @@ export function PublicTournaments () {
         
 
         const offset = ((page - 1) * pageSize);
-        /*
-        await getPublicTournaments(offset, pageSize).then(
-            response => {//HAY QUE CAMBIAR LA RESPUESTA
-                if(response.status === 200){                    
-                   setData(response.data);
-                }else{
-
-                }
-            }
-        );*/
         
-        const elements = [];
+        getPublicTournaments(offset, pageSize).then(
+            response => {//HAY QUE CAMBIAR LA RESPUESTA
+                const handled = useHandleHttpResponse(() => {
+                    setData(response.data);
+                }, response.status);
+                handled();
+            }
+        );
+        
+        /* MOCK
+const elements = [];
         for(let i = offset + 1; i < offset + pageSize + 1; i++){
             elements.push({
                 id: i,
@@ -71,6 +73,7 @@ export function PublicTournaments () {
         }
 
         setData(mock);
+        */
     };
 
     useEffect(() => {
@@ -117,7 +120,7 @@ export function PublicTournaments () {
                                 headings={headings}
                                 data={data}
                                 pageSize={pageSize}
-                                handlePageChange={handlePageChange}
+                                onPageChange={handlePageChange}
                                 onClick={handleRowClick}
                                 key='publicTournaments'
                             />

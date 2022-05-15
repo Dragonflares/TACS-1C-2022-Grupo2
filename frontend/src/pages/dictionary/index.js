@@ -1,25 +1,36 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import { getLangauges } from '../../services/languageService';
 
 import { getMeaning } from '../../services/dictionaryService';
-
-const englishLang = 'en';
-const spanishLang = 'es';
-
+import { useHandleHttpResponse } from '../../shared/hooks/responseHandlerHook';
 export class Dictionary extends Component {
     constructor(props){
         super(props);
         this.state = {
-            language: englishLang,
+            language: 'en',
             search: '',
-            result: null
+            result: null,
+            languages: [],
         }
     }
+
+    componentDidMount(){
+        getLangauges().then(response => {
+            const handled = useHandleHttpResponse(() => {
+                this.setState({
+                    languages: response.data,
+                });
+            }, response.status);
+
+            handled();
+        });
+    } 
 
     handleChange= (event) => {
         const target = event.target;
@@ -59,8 +70,9 @@ export class Dictionary extends Component {
                                                 <Form.Select name='language' 
                                                     value={this.state.language} 
                                                     onChange={this.handleChange}>
-                                                    <option value={englishLang}>English</option>
-                                                    <option value={spanishLang}>Español</option>
+                                                    {this.state.languages.map(lang => (
+                                                        <option key={lang.id} value={lang.id}>{lang.desc}</option>
+                                                    ))}
                                                 </Form.Select>
                                             </Form.Group>
                                         </Col>

@@ -3,10 +3,14 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import { PaginatedTable } from "../../../shared/components/paginated-table";
+import { PaginatedTable } from "../../../shared/components/paginatedTable";
 import { Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import OptionsPopUp from "./optionsPopUp";
+import { useHandleHttpResponse } from "../../../shared/hooks/responseHandlerHook";
+import { getPublicTournaments } from "../../../services/tournamentService";
+import { getTournaments } from "../../../services/userService";
+import { getUserId } from "../../../services/authService";
 
 export function MyTournaments () {
     const pageSize = 10;
@@ -45,18 +49,19 @@ export function MyTournaments () {
         
 
         const offset = ((page - 1) * pageSize);
-        /*
-        await getPublicTournaments(offset, pageSize).then(
-            response => {//HAY QUE CAMBIAR LA RESPUESTA
-                if(response.status === 200){                    
-                   setData(response.data);
-                }else{
-
-                }
-            }
-        );*/
         
-        const elements = [];
+        getTournaments(getUserId(), offset, pageSize).then(
+            response => {
+                const handled = useHandleHttpResponse(() => {
+                    setData(response.data);
+                }, response.status);
+
+                handled();
+            }
+        );
+        
+        /* MOCK SIN API
+            const elements = [];
         for(let i = offset + 1; i < offset + pageSize + 1; i++){
             elements.push({
                 id: i,
@@ -74,6 +79,8 @@ export function MyTournaments () {
         }
 
         setData(mock);
+          
+         */
     };
 
     useEffect(() => {
@@ -114,7 +121,7 @@ export function MyTournaments () {
                                     headings={headings}
                                     data={data}
                                     pageSize={pageSize}
-                                    handlePageChange={handlePageChange}
+                                    onPageChange={handlePageChange}
                                     onClick={handleRowClick}
                                     key='myTournaments'
                                 />   

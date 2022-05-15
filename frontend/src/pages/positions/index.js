@@ -2,10 +2,14 @@ import React, {useState, useCallback, useEffect} from "react";
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
-import { PaginatedTable } from "../../shared/components/paginated-table";
+import { PaginatedTable } from "../../shared/components/paginatedTable";
 import { Row } from "react-bootstrap";
+import { getPositions } from "../../services/tournamentService";
+import { useParams } from "react-router-dom";
+import { useHandleHttpResponse } from "../../shared/hooks/responseHandlerHook";
 
 export default function Positions(){
+    const [id] = useParams();
     const pageSize = 10;
     const [data, setData] = useState({
         elements: [],
@@ -31,35 +35,37 @@ export default function Positions(){
         
 
         const offset = ((page - 1) * pageSize);
-        /*
-        await getPublicTournaments(offset, pageSize).then(
-            response => {//HAY QUE CAMBIAR LA RESPUESTA
-                if(response.status === 200){                    
-                   setData(response.data);
-                }else{
-
-                }
-            }
-        );*/
         
+        await getPositions(id, offset, pageSize).then(
+            response => {
+                const handled = useHandleHttpResponse(() => {
+                    setData(response.data);
+                }, response.status);
+                handled();                
+            }
+        );
+        
+       /*MOCK para probar sin API
         const elements = [];
-        for(let i = offset + 1; i < offset + pageSize + 1; i++){
-            elements.push({
-                position: i,
-                name: `USER ${i}`,
-                points: 0,
-            });
-        }
+                for(let i = offset + 1; i < offset + pageSize + 1; i++){
+                    elements.push({
+                        position: i,
+                        name: `USER ${i}`,
+                        points: 0,
+                    });
+                }
 
-        const mock = {
-            elements : elements,
-            count : 20,
-        }
-
-        setData(mock);
+                const mock = {
+                    elements : elements,
+                    count : 20,
+                }
+                setData(mock);
+       */
     };
 
     useEffect(() => {
+        ///validar que id sea del formato correcto
+
         const init = async () => {
             await getData(1, pageSize);
         };
@@ -86,7 +92,7 @@ export default function Positions(){
                                     headings={headings}
                                     data={data}
                                     pageSize={pageSize}
-                                    handlePageChange={handlePageChange}
+                                    onPageChange={handlePageChange}
                                     onClick={handleRowClick}
                                     hover={false}
                                     key='positions'

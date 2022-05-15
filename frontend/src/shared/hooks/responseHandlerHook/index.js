@@ -2,12 +2,17 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 export function useHandleHttpResponse(callback, status) {
-    const navigate = useNavigate();
-    
+       
     if(status === 200){
-        callback();
+        return callback;
     }
     else{
-        navigate(`error/${status}`);
+        return () => {
+            /*  preguntar como redireccionar desde un hook o un workarround
+                const navigate = useNavigate();
+                navigate(`error/${status}`)
+            */
+           console.log(`Error ${status}`);
+        };
     }
 }

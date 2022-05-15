@@ -5,14 +5,40 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-
-const englishLang = 'en';
-const spanishLang = 'es';
+import { getLangauges } from "../../services/languageService";
+import { useHandleHttpResponse } from "../../shared/hooks/responseHandlerHook";
+import { getDailyResults, updateDailyResults } from "../../services/userService";
+import { getUserId } from "../../services/authService";
 
 export function Results () {
     const [language, setLanguage] = useState('');
     const [result, setResult] = useState(0);
     const [validated, setValidated] = useState(false);
+    const [languages, setLanguages] = useState([]);
+    const [results, setResults] = useState([]);
+
+    useEffect(() => {
+        const init = () => {
+            getLangauges().then(response => {
+                const handled = useHandleHttpResponse(() => {
+                    setLanguages(response.data);
+                }, response.status);
+
+                handled();
+            });
+    
+            getDailyResults(getUserId()).then(response => {
+                const handled = useHandleHttpResponse(() => {
+                    setResults(response.data);
+                    setLanguage(response.data[0].language);
+                }, response.status);
+                
+                handled();
+            });
+        };
+
+        init();
+    }, []);
 
     const handleSubmit = useCallback(async (event) => {       
         event.preventDefault();
@@ -23,9 +49,26 @@ export function Results () {
         }
     
         if(!language || !result || language === '')
-          return;  
+          return;
+    
+        updateDailyResults(getUserId(), {
+            language: language,
+            result: result
+        }).then((response) => {
+            const handled =  useHandleHttpResponse(() => {
+                window.location.reload();
+            }, response.status);
 
-        
+            handled();
+        });
+    });
+
+    const handleLangChange = useCallback((event) => {
+        const  value = event.target.value;
+
+        const langResult = results.find((r) => (r.lang === value));
+
+        setResult(langResult.result);
     });
 
     return(
@@ -41,9 +84,10 @@ export function Results () {
                                             <Form.Group controlId="languageControl">
                                                 <Form.Select name='language' 
                                                     value={language} 
-                                                    onChange={(event) => {setLanguage(event.target.value)}}>
-                                                    <option value={englishLang}>English</option>
-                                                    <option value={spanishLang}>Español</option>
+                                                    onChange={handleLangChange}>
+                                                    {languages.map(lang => (
+                                                        <option key={lang.id} value={lang.id}>{lang.desc}</option>
+                                                    ))}
                                                 </Form.Select>
                                             </Form.Group>
                                         </Col>

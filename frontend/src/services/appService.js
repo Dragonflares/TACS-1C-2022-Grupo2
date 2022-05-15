@@ -34,12 +34,14 @@ export async function get(resource, queryParams = null, headerExtra = null){
         };
     }
 
-    let queryString = '';
+    let queryString = new URLSearchParams('');
     if(queryParams !== null){
-        queryString = new URLSearchParams(queryParams).toString(); 
+        Object.getOwnPropertyNames(queryParams).forEach(key => {
+            queryString.set(key, queryParams[key]);
+        });
     }
 
-    return axios.get(`${url}/${resource}?${queryString}`, config);
+    return axios.get(`${url}/${resource}?${queryString.toString()}`, config);
 }
 
 export async function put(resource, data, headerExtra = null){
