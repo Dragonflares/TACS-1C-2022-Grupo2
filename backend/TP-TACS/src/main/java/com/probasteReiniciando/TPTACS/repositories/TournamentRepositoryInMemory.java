@@ -62,6 +62,7 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
         if (tournament.isPresent()) {
 
             //TODO en mongo utilizar strategy o algun patron
+            //TODO falta contemplar los dias que un usuario no jugo
             if("result".equals(orderBy.get())) {
 
                 UserResultComparator userResultComparator = new UserResultComparator();
