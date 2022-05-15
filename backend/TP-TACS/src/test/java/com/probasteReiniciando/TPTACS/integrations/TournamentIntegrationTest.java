@@ -7,7 +7,7 @@ import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
-import com.probasteReiniciando.TPTACS.repositories.TournamentRepository;
+import com.probasteReiniciando.TPTACS.repositories.TournamentRepositoryInMemory;
 import com.probasteReiniciando.TPTACS.repositories.UserRepositoryInMemory;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
 import org.junit.Assert;
@@ -44,7 +44,7 @@ public class TournamentIntegrationTest {
     @Test
     public void createTournament() throws Exception {
 
-        TournamentRepository tournamentRepository = new TournamentRepository();
+        TournamentRepositoryInMemory tournamentRepository = new TournamentRepositoryInMemory();
 
         TournamentService tournamentService = new TournamentService(tournamentRepository,null);
 
@@ -76,7 +76,7 @@ public class TournamentIntegrationTest {
     @Test
     public void obtainPublicTournaments() throws Exception {
 
-        TournamentRepository tournamentRepository = new TournamentRepository();
+        TournamentRepositoryInMemory tournamentRepository = new TournamentRepositoryInMemory();
 
         TournamentService tournamentService = new TournamentService(tournamentRepository,null);
 
@@ -144,7 +144,7 @@ public class TournamentIntegrationTest {
     @Test
     public void addUserToPublicTournament() throws Exception {
 
-        TournamentRepository tournamentRepository = new TournamentRepository();
+        TournamentRepositoryInMemory tournamentRepository = new TournamentRepositoryInMemory();
 
         TournamentService tournamentService = new TournamentService(tournamentRepository,userRepository);
 

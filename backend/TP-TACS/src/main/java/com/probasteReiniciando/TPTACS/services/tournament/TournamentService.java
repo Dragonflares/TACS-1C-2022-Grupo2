@@ -6,7 +6,9 @@ import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
+import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
+import com.probasteReiniciando.TPTACS.exceptions.UnAuthorizedException;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TournamentService {
@@ -26,19 +29,24 @@ public class TournamentService {
 
     private ModelMapperTacs modelMapper = new ModelMapperTacs();
 
-
     public TournamentService(ITournamentRepository tournamentRepository, IUserRepository userRepository) {
         this.tournamentRepository = tournamentRepository;
         this.userRepository = userRepository;
     }
 
-    public TournamentDto createTournament(TournamentDto tournamentDto) {
+    public TournamentDto createTournament(TournamentDto tournamentDto, String userLoggedIn) {
 
         TournamentValidator.validateRangeDate(tournamentDto.getStartDate(), tournamentDto.getEndDate());
 
         Tournament tournament =  modelMapper.map(tournamentDto,Tournament.class);
 
+        User owner = userRepository.findByName(userLoggedIn).orElseThrow(() -> new UserNotFoundException(userLoggedIn));
+
+        tournament.setOwner(owner);
+
         tournament = tournamentRepository.createTournament(tournament);
+
+        tournamentDto.setOwner(modelMapper.map(owner, UserDto.class));
 
         tournamentDto.setId(tournament.getId());
 
@@ -53,7 +61,7 @@ public class TournamentService {
         return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
     }
 
-    public List<String> addUser(int tournamentId, String userName)  {
+    public List<String> addUser(int tournamentId, String userName, String userLoggedIn)  {
 
         Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 
@@ -63,9 +71,16 @@ public class TournamentService {
 
             return tournamentRepository.addUser(tournament, user);
 
-
         } else {
-            //punto 3: aca tendriamos que fijarnos si el user logueado es el owner del torneo, sino tirar excepcion (forbiden?)
+
+            if (tournament.getOwner().getUsername().equals(userLoggedIn)) {
+
+            } else {
+
+                throw new UnAuthorizedException(userLoggedIn);
+
+            }
+
         }
 
         return null;
@@ -75,4 +90,25 @@ public class TournamentService {
         return tournamentRepository.obtainResults(id);
     } //TODO revisar
 
+
+    public List<String> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order) {
+        return tournamentRepository.obtainParticipants(tournamentId,orderBy,order);
+
+
+    }
+
+    public Tournament updateTournament(int tournamentId, TournamentDto tournamentDto, String userLoggedIn) {
+
+        Tournament tournament = tournamentRepository.obtainTournament(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
+
+        if (!tournament.getOwner().getUsername().equals(userLoggedIn)) {
+            throw new UnAuthorizedException(userLoggedIn);
+        }
+
+        tournamentRepository.updateTournament(tournamentId, modelMapper.map(tournamentDto,Tournament.class));
+
+        return tournamentRepository.obtainTournament(tournamentId).get();
+
+    }
 }

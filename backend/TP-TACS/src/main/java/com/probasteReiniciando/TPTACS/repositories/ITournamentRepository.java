@@ -20,4 +20,8 @@ public interface ITournamentRepository {
 
     List<String> addUser(Tournament tournament, User user);
 
+    List<String> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order);
+
+    void updateTournament(int tournamentId, Tournament tournament);
+
 }

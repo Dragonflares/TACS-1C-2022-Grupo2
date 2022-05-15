@@ -5,7 +5,7 @@ import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
-import com.probasteReiniciando.TPTACS.repositories.TournamentRepository;
+import com.probasteReiniciando.TPTACS.repositories.TournamentRepositoryInMemory;
 import com.probasteReiniciando.TPTACS.repositories.UserRepositoryInMemory;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class TournamentServiceTest {
 
     @MockBean
     private UserRepositoryInMemory userRepository;
-    private TournamentRepository tournamentRepository = new TournamentRepository();
+    private TournamentRepositoryInMemory tournamentRepository = new TournamentRepositoryInMemory();
 
 
     @Test

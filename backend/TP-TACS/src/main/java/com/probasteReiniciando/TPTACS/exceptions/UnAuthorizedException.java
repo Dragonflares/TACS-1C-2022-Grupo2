@@ -1,6 +1,6 @@
 package com.probasteReiniciando.TPTACS.exceptions;
 
-public class UnAuthorizedException extends RuntimeException{
+public class UnAuthorizedException extends RuntimeException {
 
     public UnAuthorizedException(String param) {
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin()
@@ -22,11 +23,9 @@ public class TournamentController {
     @Autowired
     private ModelMapperTacs modelMapper;
 
-
     @PostMapping(produces = "application/json")
-    public TournamentDto createTournament(@RequestBody TournamentDto tournament,@RequestAttribute(name="userAttributeName") String username) {
-        log.info(username);
-        return modelMapper.map(tournamentService.createTournament(tournament),TournamentDto.class);
+    public TournamentDto createTournament(@RequestBody TournamentDto tournament,@RequestAttribute(name="userAttributeName") String userLoggedIn) {
+        return modelMapper.map(tournamentService.createTournament(tournament, userLoggedIn),TournamentDto.class);
     }
 
     @GetMapping(produces = "application/json")
@@ -41,14 +40,24 @@ public class TournamentController {
 
 
     @PatchMapping(path="/{tournamentId}/participants", produces = "application/json")
-    public List<String> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user)  {
-        return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername()),String.class);
+    public List<String> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
+        return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn),String.class);
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
-    @GetMapping(path="/{id}/participants", produces = "application/json")
-    public List<String> obtainParticipants(@PathVariable int id, @RequestParam String orderBy, @RequestParam String order) {
-        return List.of(Integer.toString(id), Integer.toString(id + 324));
+    @GetMapping(path="/{tournamentId}/participants", produces = "application/json")
+    public List<String> obtainParticipants(@PathVariable int tournamentId, @RequestParam Optional<String> orderBy, @RequestParam Optional<String> order) {
+
+        return modelMapper.mapList(tournamentService.obtainParticipants(tournamentId, orderBy, order),String.class);
+
+    }
+
+    @PatchMapping(path="/{tournamentId}", produces = "application/json")
+    public TournamentDto updateTournament
+            (@PathVariable int tournamentId, @RequestBody TournamentDto tournament, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
+
+        return modelMapper.map(tournamentService.updateTournament(tournamentId, tournament, userLoggedIn),TournamentDto.class);
+
     }
 
 
