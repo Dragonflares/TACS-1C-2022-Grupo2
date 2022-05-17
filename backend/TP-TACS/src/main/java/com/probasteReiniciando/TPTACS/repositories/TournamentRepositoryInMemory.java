@@ -1,6 +1,7 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.domain.*;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -105,9 +106,16 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
 
     }
 
+    @Override
+    public List<Tournament> findByOwner(String owner, int offset, int limit) {
+
+       List<Tournament> tournamentsFromOwner = this.tournaments.stream().filter(x -> x.getOwner().equals(owner)).collect(Collectors.toList());
+
+       return null;
+    }
+
     private void incrementId() {
         currentId++;
     }
-
 
 }

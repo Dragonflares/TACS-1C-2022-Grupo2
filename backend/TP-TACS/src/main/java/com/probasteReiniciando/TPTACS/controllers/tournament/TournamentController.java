@@ -60,5 +60,18 @@ public class TournamentController {
 
     }
 
+    @PostMapping(path="/{tournamentId}/participants", produces = "aplication/json")
+    public List<String> addAllParticipants(@PathVariable int tournamentId, @RequestBody List<UserDto> users, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
+
+        List<String> participants = null;
+
+        for (UserDto user : users){
+
+            participants = modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn),String.class);
+
+        }
+
+        return participants;
+    }
 
 }

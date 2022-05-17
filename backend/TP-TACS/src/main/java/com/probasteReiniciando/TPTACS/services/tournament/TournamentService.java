@@ -15,6 +15,8 @@ import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
 import com.probasteReiniciando.TPTACS.validators.TournamentValidator;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -111,4 +113,12 @@ public class TournamentService {
         return tournamentRepository.obtainTournament(tournamentId).get();
 
     }
+
+    public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int offset, int limit){
+
+        tournamentRepository.findByOwner(userLoggedIn, offset, limit);
+
+        return null;
+    }
+
 }

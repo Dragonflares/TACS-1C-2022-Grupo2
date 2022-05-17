@@ -4,10 +4,14 @@ import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Repository;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface ITournamentRepository {
 
     List<Tournament> obtainPublicTournaments(int offset, int limit);
@@ -23,5 +27,7 @@ public interface ITournamentRepository {
     List<String> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order);
 
     void updateTournament(int tournamentId, Tournament tournament);
+
+    List<Tournament> findByOwner(String owner, int offset, int limit);
 
 }

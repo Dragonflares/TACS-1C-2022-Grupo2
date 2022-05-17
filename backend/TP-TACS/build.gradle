@@ -29,6 +29,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.7.0'
 }
 
 tasks.named('test') {
