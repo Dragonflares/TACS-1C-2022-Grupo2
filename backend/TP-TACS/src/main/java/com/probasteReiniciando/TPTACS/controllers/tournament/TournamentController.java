@@ -71,7 +71,7 @@ public class TournamentController {
 
         for (UserDto user : users){
 
-            participants = modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn),String.class);
+            participants = tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn);
 
         }
 
