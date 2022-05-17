@@ -14,8 +14,8 @@ import Participants from "./participants";
 const englishLang = 'en';
 const spanishLang = 'es';
 
-const priv = 'private';
-const pub = 'public';
+const priv = 'PRIVATE';
+const pub = 'PUBLIC';
 
 export function Tournament () {
     const {action, id} = useParams();
