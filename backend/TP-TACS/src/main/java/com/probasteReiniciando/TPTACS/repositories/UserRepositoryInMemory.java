@@ -47,7 +47,11 @@ public class UserRepositoryInMemory implements IUserRepository {
 
     @Override
     public void addResult(String userLoggedIn, Result result) {
-        findByName(userLoggedIn).get().getResults().add(result);
+        User actualUser = findByName(userLoggedIn).get();
+        result.setUsername(actualUser.getUsername());
+        actualUser.getResults().add(result);
+        this.repositoryInMemory.removeIf(x -> x.getUsername().equals(actualUser.getUsername()));
+        this.repositoryInMemory.add(actualUser);
     }
 
     @Override

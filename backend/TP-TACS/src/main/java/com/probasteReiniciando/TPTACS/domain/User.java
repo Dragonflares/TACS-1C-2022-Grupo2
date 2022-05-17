@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,6 +23,6 @@ public class User {
     private final Integer discordId;
     
     @EqualsAndHashCode.Exclude
-    private final List<Result> results;
+    private final List<Result> results = new ArrayList<>();
 
 }

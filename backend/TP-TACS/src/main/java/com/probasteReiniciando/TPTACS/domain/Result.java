@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Result {
-    private User user;
+    private String username;
     private Integer points;
     private Language language;
     private LocalDate date;
