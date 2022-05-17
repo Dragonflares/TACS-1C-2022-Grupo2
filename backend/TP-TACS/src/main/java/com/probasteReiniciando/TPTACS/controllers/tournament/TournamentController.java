@@ -3,6 +3,7 @@ package com.probasteReiniciando.TPTACS.controllers.tournament;
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
+import com.probasteReiniciando.TPTACS.exceptions.ErrorParameterException;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,12 @@ public class TournamentController {
     }
 
     @GetMapping(produces = "application/json")
-    public List<TournamentDto> publicTournaments(@RequestParam(defaultValue = "0")  int page, @RequestParam(defaultValue = "10") int limit) {
+    public List<TournamentDto> publicTournaments(@RequestParam(defaultValue = "1")  int page, @RequestParam(defaultValue = "10") int limit) {
+        validateParamsPagination(page,limit);
         return  modelMapper.mapList(tournamentService.obtainPublicTournaments(page, limit),TournamentDto.class);
     }
+
+
 
     @GetMapping(path="/{id}", produces = "application/json")
     public TournamentDto singleTournaments(@PathVariable int id)  {
@@ -72,6 +76,12 @@ public class TournamentController {
         }
 
         return participants;
+    }
+
+
+    private void validateParamsPagination(int page, int limit) {
+        if(page < 1 || limit <0)
+            throw new ErrorParameterException("The page or limit are wrong");
     }
 
 }
