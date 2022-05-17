@@ -11,8 +11,8 @@ import { useHandleHttpResponse } from "../../../shared/hooks/responseHandlerHook
 import { useNavigate } from "react-router-dom";
 import Participants from "./participants";
 
-const englishLang = 'en';
-const spanishLang = 'es';
+const englishLang = 'ENGLISH';
+const spanishLang = 'SPANISH';
 
 const priv = 'PRIVATE';
 const pub = 'PUBLIC';
@@ -26,10 +26,10 @@ export function Tournament () {
     const [validated, setValidated] = useState(false);
     const [tournament, setTournament] = useState({
         name: '',
-        language: 0,
+        language: englishLang,
         startDate: today.toISOString().slice(0,10),
         endDate: tomorrow.toISOString().slice(0,10),
-        privacy: 0
+        privacy: priv
     });
 
     useEffect(() => {
@@ -84,6 +84,7 @@ export function Tournament () {
           return;
 
         if(action  === 'create') {
+            console.log(tournament)
             createTournament(tournament).then(response => {
                 const handled = useHandleHttpResponse(handleToEdit, response.status);
                 handled();
@@ -97,7 +98,7 @@ export function Tournament () {
     });
 
     const handleToEdit = useCallback(() => {
-        navigate(`tournament/edit/${id}`, {replace : true});
+        
     });
 
     const handleDelete  = useCallback(() => {
@@ -145,8 +146,8 @@ export function Tournament () {
                                                             readOnly={action === 'view' || action === 'delete'}
                                                             value={tournament.language} 
                                                             onChange={handleTournamentChange}>
-                                                                <option value={0}>English</option>
-                                                                <option value={1}>Español</option>
+                                                                <option value={englishLang}>English</option>
+                                                                <option value={spanishLang}>Español</option>
                                                         </Form.Select>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>Language</label>   
                                                     </FloatingLabel>
