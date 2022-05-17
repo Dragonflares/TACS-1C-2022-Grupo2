@@ -28,10 +28,9 @@ dependencies {
 	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-
