@@ -45,14 +45,14 @@ public class TournamentController {
 
     @PostMapping(path="/{tournamentId}/participants", produces = "application/json")
     public List<String> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
-        return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn),String.class);
+        return  tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn);
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
     @GetMapping(path="/{tournamentId}/participants", produces = "application/json")
     public List<String> obtainParticipants(@PathVariable int tournamentId, @RequestParam Optional<String> orderBy, @RequestParam Optional<String> order) {
 
-        return modelMapper.mapList(tournamentService.obtainParticipants(tournamentId, orderBy, order),String.class);
+        return tournamentService.obtainParticipants(tournamentId, orderBy, order);
 
     }
 

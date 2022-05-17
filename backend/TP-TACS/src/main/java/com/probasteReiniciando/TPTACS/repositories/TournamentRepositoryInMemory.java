@@ -65,13 +65,13 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
 
             //TODO en mongo utilizar strategy o algun patron
             //TODO falta contemplar los dias que un usuario no jugo
-            if("result".equals(orderBy.get())) {
+            if("result".equals(orderBy.orElseGet(() -> "none"))) {
 
                 UserResultComparator userResultComparator = new UserResultComparator();
 
                 participants = tournament.get().getParticipants().stream().sorted(userResultComparator).map(userStream -> userStream.getUsername()).collect(Collectors.toList());
 
-                if ("desc".equals(order.get())) {
+                if ("desc".equals(order.orElseGet(() -> "none"))) {
 
                     Collections.reverse(participants);
 
