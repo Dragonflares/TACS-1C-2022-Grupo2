@@ -29,7 +29,8 @@ public class TournamentDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    private  Privacy privacy;
+    @Builder.Default
+    private  Privacy privacy = Privacy.PUBLIC;
 
     private  UserDto owner;
     // Podria ser un string nomas porque en el DTO iria lo que a vos te interesa que le llegue al front,

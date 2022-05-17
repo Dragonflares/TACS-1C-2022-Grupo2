@@ -6,16 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @AllArgsConstructor
 @Data
-@Builder
 @NoArgsConstructor
+@Builder
 public class UserDto {
 
+    @NotEmpty
     private String username;
-    private String password;
-    private Integer discordId;
-    private List<Result> results;
 }

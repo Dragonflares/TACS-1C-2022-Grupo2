@@ -1,7 +1,7 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.domain.*;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -15,8 +15,9 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
     private Integer currentId = 0;
 
     @Override
-    public List<Tournament> obtainPublicTournaments(int offset, int limit) {
-        return tournaments.stream().filter(x -> x.getPrivacy().equals(Privacy.PUBLIC) && x.getId() >= offset && x.getId() < offset + limit).collect(Collectors.toList());
+    public List<Tournament> obtainPublicTournaments(int page, int limit) {
+        return tournaments.stream().filter(x -> x.getPrivacy().equals(Privacy.PUBLIC))
+                .skip((long) (page - 1) * limit).limit(limit).toList();
     }
 
     @Override
@@ -64,13 +65,13 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
 
             //TODO en mongo utilizar strategy o algun patron
             //TODO falta contemplar los dias que un usuario no jugo
-            if("result".equals(orderBy.get())) {
+            if("result".equals(orderBy.orElseGet(() -> "none"))) {
 
                 UserResultComparator userResultComparator = new UserResultComparator();
 
                 participants = tournament.get().getParticipants().stream().sorted(userResultComparator).map(userStream -> userStream.getUsername()).collect(Collectors.toList());
 
-                if ("desc".equals(order.get())) {
+                if ("desc".equals(order.orElseGet(() -> "none"))) {
 
                     Collections.reverse(participants);
 
@@ -107,11 +108,10 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
     }
 
     @Override
-    public List<Tournament> findByOwner(String owner, int offset, int limit) {
+    public List<Tournament> findByOwner(String owner, int page, int limit) {
 
-       List<Tournament> tournamentsFromOwner = this.tournaments.stream().filter(x -> x.getOwner().equals(owner)).collect(Collectors.toList());
-
-       return null;
+       return this.tournaments.stream().filter(x -> x.getOwner().getUsername().equals(owner))
+               .skip((long) (page - 1) * limit).limit(limit).toList();
     }
 
     private void incrementId() {

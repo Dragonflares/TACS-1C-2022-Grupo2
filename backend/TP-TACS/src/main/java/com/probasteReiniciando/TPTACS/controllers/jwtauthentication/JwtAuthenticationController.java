@@ -2,6 +2,7 @@ package com.probasteReiniciando.TPTACS.controllers.jwtauthentication;
 
 
 import com.probasteReiniciando.TPTACS.config.JwtTokenUtil;
+import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.JwtRequest;
 import com.probasteReiniciando.TPTACS.dto.JwtResponse;
@@ -37,7 +38,7 @@ public class JwtAuthenticationController {
 	private JwtUserDetailsService userDetailsService;
 
 	@Autowired
-	private ModelMapper modelMapper;
+	private ModelMapperTacs modelMapper;
 
 	@RequestMapping(value = "/accesstoken", method = RequestMethod.POST)
 	public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
@@ -54,8 +55,8 @@ public class JwtAuthenticationController {
 	}
 
 	@RequestMapping(value = "/authorization", method = RequestMethod.POST)
-	public UserDto saveUser(@RequestBody UserLoginDto user) throws Exception {
-		return modelMapper.map(userDetailsService.save(user), UserDto.class);
+	public UserLoginDto saveUser(@RequestBody UserLoginDto user) throws Exception {
+		return modelMapper.map(userDetailsService.save(user), UserLoginDto.class);
 	}
 
 	private void authenticate(String username, String password) {
