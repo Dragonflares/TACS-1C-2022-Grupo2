@@ -28,6 +28,6 @@ public interface ITournamentRepository {
 
     void updateTournament(int tournamentId, Tournament tournament);
 
-    List<Tournament> findByOwner(String owner, int offset, int limit);
+    List<Tournament> findByOwner(String owner, int page, int limit);
 
 }

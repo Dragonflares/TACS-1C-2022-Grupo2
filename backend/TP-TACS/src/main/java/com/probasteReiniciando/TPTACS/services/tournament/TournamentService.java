@@ -55,8 +55,8 @@ public class TournamentService {
         return tournamentDto;
     }
 
-    public List<Tournament> obtainPublicTournaments(int offset, int limit) {
-        return tournamentRepository.obtainPublicTournaments(offset, limit);
+    public List<Tournament> obtainPublicTournaments(int page, int limit) {
+        return tournamentRepository.obtainPublicTournaments(page, limit);
     }
 
     public Tournament getTournamentById(int id) {
@@ -114,11 +114,11 @@ public class TournamentService {
 
     }
 
-    public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int offset, int limit){
+    public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int page, int limit){
 
-        tournamentRepository.findByOwner(userLoggedIn, offset, limit);
+       return tournamentRepository.findByOwner(userLoggedIn, page, limit);
 
-        return null;
+
     }
 
 }

@@ -25,8 +25,7 @@ public class UserController {
     @GetMapping(path = "/tournaments", produces = "aplication/json")
     public List<TournamentDto> obtainTorunamentsByPlayer(@RequestAttribute(name = "userAttributeName") String userLoggedIn, @RequestParam int offset, @RequestParam int limit) {
 
-        modelMapper.mapList(tournamentService.obtainTorunamentsByPlayer(userLoggedIn, offset, limit), TournamentDto.class);
-        return null;
+        return modelMapper.mapList(tournamentService.obtainTorunamentsByPlayer(userLoggedIn, offset, limit), TournamentDto.class);
     }
 
 }

@@ -54,8 +54,8 @@ public class JwtAuthenticationController {
 	}
 
 	@RequestMapping(value = "/authorization", method = RequestMethod.POST)
-	public UserDto saveUser(@RequestBody UserLoginDto user) throws Exception {
-		return modelMapper.map(userDetailsService.save(user), UserDto.class);
+	public UserLoginDto saveUser(@RequestBody UserLoginDto user) throws Exception {
+		return modelMapper.map(userDetailsService.save(user), UserLoginDto.class);
 	}
 
 	private void authenticate(String username, String password) {
