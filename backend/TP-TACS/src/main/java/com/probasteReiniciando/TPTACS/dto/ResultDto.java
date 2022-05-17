@@ -14,6 +14,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ResultDto {
 
+    private  Integer id;
+
     private  String username;
 
     private  Integer points;

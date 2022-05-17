@@ -13,7 +13,8 @@ public class UserRepositoryInMemory implements IUserRepository {
 
     private List<User> repositoryInMemory = new ArrayList<>();
     private UserRepositoryInMemory userRepositoryInMemory;
-    private Integer currentId = 0;
+    private Integer currentIdUser = 0;
+    private Integer currentIdResult = 0;
 
 
     @Override
@@ -28,8 +29,8 @@ public class UserRepositoryInMemory implements IUserRepository {
 
     @Override
     public User createUser(User user)  {
-        modifyId();
-        user.setId(this.currentId);
+        modifyIdUser();
+        user.setId(this.currentIdUser);
         this.save(user);
         return user;
     }
@@ -49,9 +50,25 @@ public class UserRepositoryInMemory implements IUserRepository {
     public void addResult(String userLoggedIn, Result result) {
         User actualUser = findByName(userLoggedIn).get();
         result.setUsername(actualUser.getUsername());
+        modifyIdResult();
+        result.setId(currentIdResult);
         actualUser.getResults().add(result);
         this.repositoryInMemory.removeIf(x -> x.getUsername().equals(actualUser.getUsername()));
-        this.repositoryInMemory.add(actualUser);
+        this.save(actualUser);
+    }
+
+
+
+    @Override
+    public void modifyResult(String userLoggedIn, Result result, Result resultOld) {
+
+        User actualUser = findByName(userLoggedIn).get();
+        result.setUsername(actualUser.getUsername());
+        result.setId(resultOld.getId());
+        actualUser.getResults().add(result);
+        this.repositoryInMemory.removeIf(x -> x.getUsername().equals(actualUser.getUsername()));
+        this.save(actualUser);
+
     }
 
     @Override
@@ -66,8 +83,11 @@ public class UserRepositoryInMemory implements IUserRepository {
         repositoryInMemory.removeIf(x -> x.getId().equals(user.getId()));
     }
 
-    private void modifyId(){
-        this.currentId++;
+    private void modifyIdUser(){
+        this.currentIdUser++;
     }
 
+    private void modifyIdResult(){
+        this.currentIdResult++;
+    }
 }

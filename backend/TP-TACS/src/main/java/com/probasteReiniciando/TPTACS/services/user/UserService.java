@@ -6,11 +6,13 @@ import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.ResultDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import com.probasteReiniciando.TPTACS.exceptions.ResultAlreadyExistsException;
+import com.probasteReiniciando.TPTACS.exceptions.ResultCanNotBeModified;
 import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,5 +59,25 @@ public class UserService {
 
     public List<Result> getResultsByUser(String userLoggedIn) {
         return userRepository.findByName(userLoggedIn).get().getResults();
+    }
+
+    public Result modifyResult(String userLoggedIn, ResultDto resultDto, int resultId) {
+        Result result = modelMapper.map(resultDto,Result.class);
+        List<Result> resultsUser = getResultsByUserAndDateAndId(userLoggedIn, LocalDate.now(),resultId);
+        if(resultsUser.isEmpty() || !resultDto.getDate().equals(LocalDate.now())){
+            throw new ResultCanNotBeModified();
+        }
+
+        userRepository.modifyResult(userLoggedIn,result,resultsUser.get(0));
+
+        return result;
+    }
+
+    private List<Result> getResultsByUserAndDateAndId(String userLoggedIn, LocalDate now, int resultId) {
+        return getResultsByUser(userLoggedIn).stream().filter(x -> x.getDate().equals(now) && x.getId().equals(resultId)).toList();
+    }
+
+    private List<Result> getResultsByUserAndDate(String userLoggedIn, LocalDate now) {
+        return getResultsByUser(userLoggedIn).stream().filter(x -> x.getDate().equals(now)).toList();
     }
 }

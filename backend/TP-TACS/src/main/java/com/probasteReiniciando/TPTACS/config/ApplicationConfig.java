@@ -40,6 +40,7 @@ public class ApplicationConfig {
                 .addMappings(mapper -> mapper.map(Result::getLanguage, ResultDto::setLanguage))
                 .addMappings(mapper -> mapper.map(Result::getPoints, ResultDto::setPoints))
                 .addMappings(mapper -> mapper.map(Result::getUsername, ResultDto::setUsername))
+                .addMappings(mapper -> mapper.map(Result::getId, ResultDto::setId))
         ;
     }
 

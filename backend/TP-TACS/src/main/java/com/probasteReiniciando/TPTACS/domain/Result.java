@@ -1,5 +1,6 @@
 package com.probasteReiniciando.TPTACS.domain;
 
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Result {
+    private Integer id;
     private String username;
     private Integer points;
     private Language language;

@@ -28,8 +28,8 @@ public class ResultController {
     }
 
     @PutMapping(path="/{resultId}", produces = "application/json")
-    public List<Result> modifyResult(@PathVariable int id, @PathVariable int resultId, @RequestBody ResultDto result,@RequestAttribute(name="userAttributeName") String userLoggedIn) {
-        return null;
+    public ResultDto modifyResult(@PathVariable int resultId, @RequestBody ResultDto result,@RequestAttribute(name="userAttributeName") String userLoggedIn) {
+        return modelMapper.map(userService.modifyResult(userLoggedIn,result,resultId),ResultDto.class);
     }
 
     @PostMapping(produces = "application/json")
