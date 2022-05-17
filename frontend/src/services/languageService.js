@@ -13,8 +13,8 @@ export async function getLangauges(){
                 desc: 'English'
             },
             {
-                id: 'esp',
-                desc: 'Spanish'
+                id: 'es',
+                desc: 'Español'
             }
         ],
         status: 200,
