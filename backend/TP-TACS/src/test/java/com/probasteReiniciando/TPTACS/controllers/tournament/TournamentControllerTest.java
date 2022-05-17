@@ -44,7 +44,7 @@ public class TournamentControllerTest {
 
     @Test
     public void getPublicTournaments() throws Exception {
-        when(tournamentService.obtainPublicTournaments(1, 5)).thenReturn(List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build()));
+        when(tournamentService.obtainTournaments(1, 5, Privacy.PUBLIC, "PEPE")).thenReturn(List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build()));
 
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("offset", "1");

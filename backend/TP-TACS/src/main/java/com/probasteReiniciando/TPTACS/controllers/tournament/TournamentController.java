@@ -1,6 +1,7 @@
 package com.probasteReiniciando.TPTACS.controllers.tournament;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
+import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.exceptions.ErrorParameterException;
@@ -30,9 +31,9 @@ public class TournamentController {
     }
 
     @GetMapping(produces = "application/json")
-    public List<TournamentDto> publicTournaments(@RequestParam(defaultValue = "1")  int page, @RequestParam(defaultValue = "10") int limit) {
+    public List<TournamentDto> obtainTournaments (@RequestParam(defaultValue = "1")  int page, @RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "PUBLIC") Privacy privacy, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
         validateParamsPagination(page,limit);
-        return  modelMapper.mapList(tournamentService.obtainPublicTournaments(page, limit),TournamentDto.class);
+        return  modelMapper.mapList(tournamentService.obtainTournaments(page, limit, privacy, userLoggedIn),TournamentDto.class);
     }
 
 

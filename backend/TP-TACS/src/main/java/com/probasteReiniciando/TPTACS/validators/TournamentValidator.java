@@ -42,4 +42,11 @@ public class TournamentValidator {
     }
 
 
+    public static void validateStartDate(LocalDate tournamentStartDate) {
+        if(tournamentStartDate.isBefore(LocalDate.now())){
+            String messageError = String.format("You cant join the tournament. The tournament has already started.");
+            throw new TournamentBadRequestException(messageError);
+        }
+
+    }
 }

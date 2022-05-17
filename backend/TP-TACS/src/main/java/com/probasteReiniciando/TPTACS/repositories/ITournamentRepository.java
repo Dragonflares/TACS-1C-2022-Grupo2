@@ -14,7 +14,9 @@ import java.util.Optional;
 @Repository
 public interface ITournamentRepository {
 
-    List<Tournament> obtainPublicTournaments(int offset, int limit);
+    List<Tournament> obtainPublicTournaments(int page, int limit);
+
+    List<Tournament> obtainPrivateTournaments(int page, int limit, String username);
 
     Optional<Tournament> obtainTournament(int id);
 

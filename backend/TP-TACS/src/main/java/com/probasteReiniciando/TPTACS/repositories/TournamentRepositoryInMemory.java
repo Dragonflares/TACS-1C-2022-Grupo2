@@ -21,6 +21,12 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
     }
 
     @Override
+    public List<Tournament> obtainPrivateTournaments(int page, int limit, String username) {
+        return tournaments.stream().filter(x -> x.getOwner().getUsername().equals(username) || x.getParticipants().stream().anyMatch( p -> p.getUsername().equals(username)))
+                .skip((long) (page - 1) * limit).limit(limit).toList();
+    }
+
+    @Override
     public Optional<Tournament> obtainTournament(int id) {
         return tournaments.stream().filter(x -> x.getId().equals(id)).findFirst();
     }

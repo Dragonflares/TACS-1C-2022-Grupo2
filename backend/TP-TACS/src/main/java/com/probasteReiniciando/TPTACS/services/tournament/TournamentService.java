@@ -13,12 +13,9 @@ import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
 import com.probasteReiniciando.TPTACS.validators.TournamentValidator;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +43,8 @@ public class TournamentService {
 
         tournament.setOwner(owner);
 
+        tournament.setParticipants(new ArrayList<>());
+
         tournament = tournamentRepository.createTournament(tournament);
 
         tournamentDto.setOwner(modelMapper.map(owner, UserDto.class));
@@ -55,8 +54,18 @@ public class TournamentService {
         return tournamentDto;
     }
 
-    public List<Tournament> obtainPublicTournaments(int page, int limit) {
-        return tournamentRepository.obtainPublicTournaments(page, limit);
+    public List<Tournament> obtainTournaments(int page, int limit, Privacy privacy, String username) {
+
+        switch(privacy) {
+
+            case PUBLIC : return tournamentRepository.obtainPublicTournaments(page, limit);
+
+            case PRIVATE : return tournamentRepository.obtainPrivateTournaments(page, limit, username);
+
+            default: return List.of();
+
+        }
+
     }
 
     public Tournament getTournamentById(int id) {
@@ -70,6 +79,8 @@ public class TournamentService {
         User user = userRepository.findByName(userName).orElseThrow(() -> new UserNotFoundException(userName));
 
         if (Privacy.PUBLIC.equals(tournament.getPrivacy())) {
+
+            TournamentValidator.validateStartDate(tournament.getStartDate());
 
             return tournamentRepository.addUser(tournament, user);
 
@@ -116,7 +127,7 @@ public class TournamentService {
 
     public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int page, int limit){
 
-       return tournamentRepository.findByOwner(userLoggedIn, page, limit);
+        return tournamentRepository.findByOwner(userLoggedIn, page, limit);
 
 
     }
