@@ -32,28 +32,35 @@ export function MyTournaments () {
             show: 'Name'
         },
         {
-            name: 'owner',
-            show: 'Owner'
-        },
-        {
             name: 'language',
             show: 'Lang',
         },
         {
-            name: 'ongoing',
-            show: 'Ongoing'
+            name: 'startDate',
+            show: 'Start Date'
+        },
+        {
+            name: 'endDate',
+            show: 'End Date'
+        },
+        {
+            name: 'privacy',
+            show: 'Privacy'
         }
     ];
 
     const getData = async (page, pageSize) =>  {
         
 
-        const offset = ((page - 1) * pageSize);
-        
-        getTournaments(getUserId(), offset, pageSize).then(
+       //const offset = ((page - 1) * pageSize);
+        //page = 1
+        getTournaments(getUserId(), 1, pageSize).then(
             response => {
                 const handled = useHandleHttpResponse(() => {
-                    setData(response.data);
+                    setData({
+                        elements: response.data.response,
+                        count: 100,
+                    });
                 }, response.status);
 
                 handled();

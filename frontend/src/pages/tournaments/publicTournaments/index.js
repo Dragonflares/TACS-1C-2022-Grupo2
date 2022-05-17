@@ -5,8 +5,9 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from "react-bootstrap/Modal";
 import { PaginatedTable } from "../../../shared/components/paginatedTable";
-import { getPublicTournaments } from "../../../services/tournamentService";
+import { addParticipants, getPublicTournaments } from "../../../services/tournamentService";
 import { useHandleHttpResponse } from "../../../shared/hooks/responseHandlerHook";
+import { getUserId } from "../../../services/authService";
 
 export function PublicTournaments () {
     const pageSize = 10;
@@ -28,29 +29,33 @@ export function PublicTournaments () {
             show: 'Name'
         },
         {
-            name: 'owner',
-            show: 'Owner'
-        },
-        {
             name: 'language',
             show: 'Lang',
         },
         {
-            name: 'ongoing',
-            show: 'Ongoing'
+            name: 'startDate',
+            show: 'Start Date'
+        },
+        {
+            name: 'endDate',
+            show: 'End Date'
         }
     ];
 
     const getData = async (page, pageSize) =>  {
         
 
-        const offset = ((page - 1) * pageSize);
-        
-        getPublicTournaments(offset, pageSize).then(
-            response => {//HAY QUE CAMBIAR LA RESPUESTA
+        //const offset = ((page - 1) * pageSize);
+        //page = 1
+        getPublicTournaments(1, pageSize).then(
+            response => {
                 const handled = useHandleHttpResponse(() => {
-                    setData(response.data);
+                    setData({
+                        elements: response.data.response,
+                        count: 100,
+                    });
                 }, response.status);
+
                 handled();
             }
         );
@@ -102,11 +107,19 @@ const elements = [];
     });
 
     const handleJoin = useCallback(() => {
-        setShow(false);
-        setSelected( {
-            id: 0,
-            name: ''
-        });
+        addParticipants(selected.id, [getUserId()]).then(
+            response => {
+                const handled = useHandleHttpResponse(() => {
+                    setSelected( {
+                        id: 0,
+                        name: ''
+                    });
+                }, response.status);
+                
+                handled();
+                setShow(false);
+            }
+        )
     });
 
     return (

@@ -34,14 +34,18 @@ export default function Positions(){
     const getData = async (page, pageSize) =>  {
         
 
-        const offset = ((page - 1) * pageSize);
-        
-        await getPositions(id, offset, pageSize).then(
+        //const offset = ((page - 1) * pageSize);
+        //page = 1
+        await getPositions(id, 1, pageSize).then(
             response => {
                 const handled = useHandleHttpResponse(() => {
-                    setData(response.data);
+                    setData({
+                        elements: response.data.response,
+                        count: 100,
+                    });
                 }, response.status);
-                handled();                
+
+                handled();
             }
         );
         

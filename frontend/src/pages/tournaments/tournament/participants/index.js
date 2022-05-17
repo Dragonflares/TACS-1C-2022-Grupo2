@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Button, Form, InputGroup, Row, FloatingLabel } from 'react-bootstrap';
 import { Input } from "react-bootstrap-typeahead";
-import { getParticipants } from "../../../../services/tournamentService";
+import { addParticipants, getParticipants } from "../../../../services/tournamentService";
 import { PaginatedTable } from "../../../../shared/components/paginatedTable";
 import SearchMultipleAutocomplete from "../../../../shared/components/selectAutocomplete";
 import { useHandleHttpResponse } from "../../../../shared/hooks/responseHandlerHook";
@@ -26,12 +26,15 @@ export default function Participants({id , action}){
 
     const getData = async (page, pageSize) =>  {
         
-        const offset = ((page - 1) * pageSize);
-        
-        getParticipants(id, offset, pageSize).then(
-            response => {//HAY QUE CAMBIAR LA RESPUESTA
+        //const offset = ((page - 1) * pageSize);
+        //page = 1
+        getParticipants(id, 1, pageSize).then(
+            response => {
                 const handled = useHandleHttpResponse(() => {
-                    setData(response.data);
+                    setData({
+                        elements: response.data.response,
+                        count: 100,
+                    });
                 }, response.status);
 
                 handled();
@@ -104,6 +107,16 @@ export default function Participants({id , action}){
             setValid(valid => false);
             return;
         }
+
+        addParticipants(id, participants).then(
+            response => {
+                const handled = useHandleHttpResponse(() => {
+                    
+                }, response.status);
+                
+                handled();
+            }
+        )
     });
 
     const handleDataFormat = useCallback((participant) => {

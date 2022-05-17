@@ -26,32 +26,42 @@ export function Tournament () {
     const [validated, setValidated] = useState(false);
     const [tournament, setTournament] = useState({
         name: '',
-        language: 'eng',
+        language: 0,
         startDate: today.toISOString().slice(0,10),
         endDate: tomorrow.toISOString().slice(0,10),
-        privacy: 'public'
+        privacy: 0
     });
 
     useEffect(() => {
-        if(!useValidateMode(action)){
-            useNavigate('error/400');
-        }
-
-        if(action !== 'create'){
-            if(!useValidateNumericId(id)){
+        const init = () => {
+            if(!useValidateMode(action)){
                 useNavigate('error/400');
             }
-
-            getTournament(id).then(
-                response => {
-                    const handled = useHandleHttpResponse(() => {
-                        setTournament(response.data);
-                    }, response.status);
-
-                    handled();
+    
+            if(action !== 'create'){
+                if(!useValidateNumericId(id)){
+                    useNavigate('error/400');
                 }
-            );
+    
+                getTournament(id).then(
+                    response => {
+                        const handled = useHandleHttpResponse(() => {
+                            setTournament({
+                                name: response.data.response.name,
+                                language: response.data.response.language === 'SPANISH' ? 1 : 0,
+                                startDate: response.data.response.startDate,
+                                endDate: response.data.response.endDate,
+                                privacy: response.data.response.privacy === 'PRIVATE' ? 1 : 0,
+                            });
+                        }, response.status);
+    
+                        handled();
+                    }
+                );
+            }
         }
+
+        init();
     }, []);
 
     const handleTournamentChange = useCallback((e) =>{
@@ -135,8 +145,8 @@ export function Tournament () {
                                                             readOnly={action === 'view' || action === 'delete'}
                                                             value={tournament.language} 
                                                             onChange={handleTournamentChange}>
-                                                                <option value={englishLang}>English</option>
-                                                                <option value={spanishLang}>Español</option>
+                                                                <option value={0}>English</option>
+                                                                <option value={1}>Español</option>
                                                         </Form.Select>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>Language</label>   
                                                     </FloatingLabel>
@@ -228,7 +238,7 @@ export function Tournament () {
                                 </Form>
                             </Tab>
                             {
-                                true ? 
+                                action !== 'create'  ? 
                                 <Tab eventKey={'participants'} title={'Participants'}>
                                     <Participants action={action} id={id}/>
                                 </Tab>
