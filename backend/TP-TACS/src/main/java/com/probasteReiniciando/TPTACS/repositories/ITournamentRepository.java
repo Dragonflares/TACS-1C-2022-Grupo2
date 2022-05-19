@@ -14,6 +14,10 @@ import java.util.Optional;
 @Repository
 public interface ITournamentRepository {
 
+    Integer quantityOfPublicTournaments();
+
+    Integer quantityOfPrivateTournaments(String username);
+
     List<Tournament> obtainPublicTournaments(int page, int limit);
 
     List<Tournament> obtainPrivateTournaments(int page, int limit, String username);

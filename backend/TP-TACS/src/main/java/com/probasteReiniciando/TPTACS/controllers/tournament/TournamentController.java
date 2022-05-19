@@ -36,6 +36,12 @@ public class TournamentController {
         return  modelMapper.mapList(tournamentService.obtainTournaments(page, limit, privacy, userLoggedIn),TournamentDto.class);
     }
 
+    @GetMapping(path = "/quantity" ,produces = "application/json")
+    public Integer quantityTournaments (@RequestParam(defaultValue = "PUBLIC") Privacy privacy, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
+
+        return  tournamentService.getQuantityOfTournaments(privacy, userLoggedIn);
+    }
+
 
 
     @GetMapping(path="/{id}", produces = "application/json")

@@ -132,4 +132,18 @@ public class TournamentService {
 
     }
 
+    public Integer getQuantityOfTournaments(Privacy privacy, String userLoggedIn) {
+        Integer value = 0;
+        switch(privacy) {
+
+            case PUBLIC : value = tournamentRepository.quantityOfPublicTournaments();
+            break;
+
+            case PRIVATE : value =  tournamentRepository.quantityOfPrivateTournaments(userLoggedIn);
+            break;
+
+        }
+        return value;
+    }
+
 }

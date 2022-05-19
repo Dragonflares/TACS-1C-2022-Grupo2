@@ -1,7 +1,6 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.domain.*;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -13,6 +12,19 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
     private List<Tournament> tournaments = new ArrayList<>();
 
     private Integer currentId = 0;
+
+
+    @Override
+    public Integer quantityOfPublicTournaments() {
+        return tournaments.stream().filter(x -> x.getPrivacy().equals(Privacy.PUBLIC))
+                .toList().size();
+    }
+
+    @Override
+    public Integer quantityOfPrivateTournaments(String username) {
+        return tournaments.stream().filter(x -> x.getOwner().getUsername().equals(username) || x.getParticipants().stream().anyMatch( p -> p.getUsername().equals(username)))
+                .toList().size();
+    }
 
     @Override
     public List<Tournament> obtainPublicTournaments(int page, int limit) {
