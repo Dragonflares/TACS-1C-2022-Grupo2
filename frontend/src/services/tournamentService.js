@@ -9,6 +9,7 @@ const positionsSubResource = 'positions';
 
 export async function getPublicTournaments(page, limit){
     return get(`${resource}`, {
+        privacy: 'PUBLIC',
         page: page,
         limit: limit
     });

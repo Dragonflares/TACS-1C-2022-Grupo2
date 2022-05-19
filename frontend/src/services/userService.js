@@ -17,7 +17,8 @@ export async function updateUser(data){
 }
 
 export async function getTournaments(page, limit){
-    return get(`${resource}/${tournamentsSubResource}`, {
+    return get(`${tournamentsSubResource}`, {
+        privacy: 'PRIVATE',
         page: page,
         limit: limit
     });
