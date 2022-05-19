@@ -61,6 +61,10 @@ public class UserService {
         return userRepository.findByName(userLoggedIn).get().getResults();
     }
 
+    public List<Result> getTodayResultsByUser(String userLoggedIn) {
+        return userRepository.findByName(userLoggedIn).get().getResults().stream().filter(result -> result.getDate().equals(LocalDate.now())).toList();
+    }
+
     public Result modifyResult(String userLoggedIn, ResultDto resultDto, int resultId) {
         Result result = modelMapper.map(resultDto,Result.class);
         List<Result> resultsUser = getResultsByUserAndDateAndId(userLoggedIn, LocalDate.now(),resultId);

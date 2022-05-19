@@ -24,7 +24,7 @@ public class ResultController {
 
     @GetMapping(path= "/user",produces = "application/json")
     public List<ResultDto> getResults(@RequestAttribute(name="userAttributeName") String userLoggedIn) {
-        return modelMapper.mapList(userService.getResultsByUser(userLoggedIn),ResultDto.class);
+        return modelMapper.mapList(userService.getTodayResultsByUser(userLoggedIn),ResultDto.class);
     }
 
     @PutMapping(path="/{resultId}", produces = "application/json")
