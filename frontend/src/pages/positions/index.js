@@ -6,7 +6,6 @@ import { PaginatedTable } from "../../shared/components/paginatedTable";
 import { Row } from "react-bootstrap";
 import { getPositions } from "../../services/tournamentService";
 import { useParams } from "react-router-dom";
-import { useHandleHttpResponse } from "../../shared/hooks/responseHandlerHook";
 
 export default function Positions(){
     const [id] = useParams();
@@ -38,14 +37,12 @@ export default function Positions(){
         //page = 1
         await getPositions(id, 1, pageSize).then(
             response => {
-                const handled = useHandleHttpResponse(() => {
+                if(response.status){
                     setData({
                         elements: response.data.response,
                         count: 100,
                     });
-                }, response.status);
-
-                handled();
+                }
             }
         );
         
@@ -92,15 +89,22 @@ export default function Positions(){
                         <Card.Body>
                             <Card.Title>My Tournaments</Card.Title>
                             <Row>
-                                <PaginatedTable 
-                                    headings={headings}
-                                    data={data}
-                                    pageSize={pageSize}
-                                    onPageChange={handlePageChange}
-                                    onClick={handleRowClick}
-                                    hover={false}
-                                    key='positions'
-                                />   
+                                {
+                                    data.count > 0 ?
+                                    <>
+                                        <PaginatedTable 
+                                            headings={headings}
+                                            data={data}
+                                            pageSize={pageSize}
+                                            onPageChange={handlePageChange}
+                                            onClick={handleRowClick}
+                                            hover={false}
+                                            key='positions'
+                                        />
+                                    </>
+                                    :
+                                    <h3>NO SIGNED PARTICIPANTS</h3>
+                                }   
                             </Row>                                                     
                         </Card.Body>
                     </Card>

@@ -6,8 +6,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from "react-bootstrap/Modal";
 import { PaginatedTable } from "../../../shared/components/paginatedTable";
 import { addParticipants, getPublicTournaments } from "../../../services/tournamentService";
-import { useHandleHttpResponse } from "../../../shared/hooks/responseHandlerHook";
-import { getUserId } from "../../../services/authService";
 
 export function PublicTournaments () {
     const pageSize = 10;
@@ -49,14 +47,12 @@ export function PublicTournaments () {
         //page = 1
         getPublicTournaments(1, pageSize).then(
             response => {
-                const handled = useHandleHttpResponse(() => {
+                if(response.status === 200){
                     setData({
                         elements: response.data.response,
                         count: 100,
                     });
-                }, response.status);
-
-                handled();
+                }
             }
         );
         
@@ -107,16 +103,14 @@ const elements = [];
     });
 
     const handleJoin = useCallback(() => {
-        addParticipants(selected.id, [getUserId()]).then(
+        addParticipants(selected.id).then(
             response => {
-                const handled = useHandleHttpResponse(() => {
+                if(response.status === 200){
                     setSelected( {
                         id: 0,
                         name: ''
                     });
-                }, response.status);
-                
-                handled();
+                }
                 setShow(false);
             }
         )
@@ -129,14 +123,23 @@ const elements = [];
                     <Card>
                         <Card.Body>
                             <Card.Title>Public Tournaments</Card.Title>
-                            <PaginatedTable 
-                                headings={headings}
-                                data={data}
-                                pageSize={pageSize}
-                                onPageChange={handlePageChange}
-                                onClick={handleRowClick}
-                                key='publicTournaments'
-                            />
+                            {
+                                data.count > 0 ?
+                                    <>
+                                        <PaginatedTable 
+                                            headings={headings}
+                                            data={data}
+                                            pageSize={pageSize}
+                                            onPageChange={handlePageChange}
+                                            onClick={handleRowClick}
+                                            key='publicTournaments'
+                                        />
+                                    </>
+                                :
+                                <h3>
+                                    NO PUBLIC TOURNAMENTS
+                                </h3>
+                            }
                         </Card.Body>
                     </Card>
                 </Container>        

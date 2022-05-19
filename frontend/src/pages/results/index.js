@@ -6,9 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { getLangauges } from "../../services/languageService";
-import { useHandleHttpResponse } from "../../shared/hooks/responseHandlerHook";
 import { getDailyResults, updateDailyResults } from "../../services/userService";
-import { getUserId } from "../../services/authService";
 
 export function Results () {
     const [language, setLanguage] = useState('');
@@ -17,26 +15,22 @@ export function Results () {
     const [languages, setLanguages] = useState([]);
     const [results, setResults] = useState([]);
 
+    const init = () => {
+        getLangauges().then(response => {
+            if(response.status === 200){
+                setLanguages(response.data);
+            }
+        });
+
+        getDailyResults().then(response => {
+            if(response.status === 200){
+                setResults(response.data);
+                setLanguage(response.data[0].language);
+            }
+        });
+    };
+
     useEffect(() => {
-        const init = () => {
-            getLangauges().then(response => {
-                const handled = useHandleHttpResponse(() => {
-                    setLanguages(response.data);
-                }, response.status);
-
-                handled();
-            });
-    
-            getDailyResults(getUserId()).then(response => {
-                const handled = useHandleHttpResponse(() => {
-                    setResults(response.data);
-                    setLanguage(response.data[0].language);
-                }, response.status);
-                
-                handled();
-            });
-        };
-
         init();
     }, []);
 
@@ -51,15 +45,13 @@ export function Results () {
         if(!language || !result || language === '')
           return;
     
-        updateDailyResults(getUserId(), {
+        updateDailyResults({
             language: language,
             result: result
         }).then((response) => {
-            const handled =  useHandleHttpResponse(() => {
-                window.location.reload();
-            }, response.status);
-
-            handled();
+            if(response.status === 200){
+                init();
+            }
         });
     });
 

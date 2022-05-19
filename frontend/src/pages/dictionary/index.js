@@ -8,7 +8,6 @@ import Button from 'react-bootstrap/Button';
 import { getLangauges } from '../../services/languageService';
 
 import { getMeaning } from '../../services/dictionaryService';
-import { useHandleHttpResponse } from '../../shared/hooks/responseHandlerHook';
 export class Dictionary extends Component {
     constructor(props){
         super(props);
@@ -22,13 +21,11 @@ export class Dictionary extends Component {
 
     componentDidMount(){
         getLangauges().then(response => {
-            const handled = useHandleHttpResponse(() => {
+           if(response.status === 200){
                 this.setState({
                     languages: response.data,
                 });
-            }, response.status);
-
-            handled();
+           }
         });
     } 
 

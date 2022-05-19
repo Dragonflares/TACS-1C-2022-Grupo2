@@ -4,7 +4,7 @@ import Config from '../appConfig.json';
 
 const url = Config.ApiURL;
 
-const resource='users';
+const resource='user';
 const resultSubResource='results';
 const tournamentsSubResource='tournaments';
 
@@ -16,17 +16,17 @@ export async function updateUser(data){
     return put(`${resource}/${data.id}`, data); 
 }
 
-export async function getTournaments(userId, offset, limit){
-    return get(`${resource}/${userId}/${tournamentsSubResource}`, {
-        offset: offset,
+export async function getTournaments(page, limit){
+    return get(`${resource}/${tournamentsSubResource}`, {
+        page: page,
         limit: limit
     });
 }
 
-export async function getDailyResults(userId){
-    return get(`${resource}/${userId}/${resultSubResource}`);
+export async function getDailyResults(){
+    return get(`${resource}/${resultSubResource}`);
 }
 
 export async function updateDailyResults(userId, data){
-    return put(`${resource}/${userId}/${resultSubResource}`, data);
+    return put(`${resource}/${resultSubResource}`, data);
 }

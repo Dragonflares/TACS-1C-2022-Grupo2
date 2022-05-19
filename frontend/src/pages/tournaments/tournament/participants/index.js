@@ -4,7 +4,6 @@ import { Input } from "react-bootstrap-typeahead";
 import { addParticipants, getParticipants } from "../../../../services/tournamentService";
 import { PaginatedTable } from "../../../../shared/components/paginatedTable";
 import SearchMultipleAutocomplete from "../../../../shared/components/selectAutocomplete";
-import { useHandleHttpResponse } from "../../../../shared/hooks/responseHandlerHook";
 
 export default function Participants({id , action}){
 
@@ -30,14 +29,12 @@ export default function Participants({id , action}){
         //page = 1
         getParticipants(id, 1, pageSize).then(
             response => {
-                const handled = useHandleHttpResponse(() => {
+                if(response.status === 200){
                     setData({
                         elements: response.data.response,
                         count: 100,
                     });
-                }, response.status);
-
-                handled();
+                }
             }
         );
         
@@ -110,11 +107,7 @@ export default function Participants({id , action}){
 
         addParticipants(id, participants).then(
             response => {
-                const handled = useHandleHttpResponse(() => {
-                    
-                }, response.status);
-                
-                handled();
+               
             }
         )
     });
@@ -126,7 +119,7 @@ export default function Participants({id , action}){
     return(
         <>
             {
-                true ? 
+                action === 'edit' ? 
                 <Row>
                     <Form onSubmit={handleSubmit} noValidate validated={validated}>
                         <Form.Group className='_6lux' controlId="formParticipantAdd">
@@ -147,15 +140,24 @@ export default function Participants({id , action}){
                 </Row>
                 :<></>
             }
-            <PaginatedTable 
-                data={data}
-                headings={headings}
-                onPageChange={handlePageChange}
-                onClick={handleRowClick}
-                hover={false}
-                key={'participants-table'}
-                pageSize={pageSize}
-            />
+            {
+                data.count > 0 ? 
+                <>
+                    <PaginatedTable 
+                        data={data}
+                        headings={headings}
+                        onPageChange={handlePageChange}
+                        onClick={handleRowClick}
+                        hover={false}
+                        key={'participants-table'}
+                        pageSize={pageSize}
+                    />
+                </>
+                :
+                <h3>
+                    NO SIGNED PARTICIPANTS
+                </h3>
+            }
         </>
     );
 }
