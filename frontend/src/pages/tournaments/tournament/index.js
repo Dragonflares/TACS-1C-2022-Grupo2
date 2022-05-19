@@ -1,61 +1,63 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { createTournament, updateTournament, getTournament } from "../../../services/tournamentService";
+import { createTournament, updateTournament, getTournament, deleteTournament } from "../../../services/tournamentService";
 import { useValidateMode } from "../../../shared/hooks/validateModeHook";
 import { useValidateNumericId } from "../../../shared/hooks/validateNumericId";
 import { 
     Tabs, Tab, Card, Container, Row, Button,
     Col, Form, InputGroup, FloatingLabel
 } from "react-bootstrap";
-import { useHandleHttpResponse } from "../../../shared/hooks/responseHandlerHook";
-import { useNavigate } from "react-router-dom";
 import Participants from "./participants";
+import { getPrivacies } from "../../../services/privacyService";
 
 const englishLang = 'ENGLISH';
 const spanishLang = 'SPANISH';
 
-const priv = 'PRIVATE';
-const pub = 'PUBLIC';
-
-export function Tournament () {
+export function Tournament ({redirectFromRoot}) {
     const {action, id} = useParams();
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const navigate = useNavigate();
     const [validated, setValidated] = useState(false);
+    const [privacies, setPrivacies] = useState([]);
     const [tournament, setTournament] = useState({
         name: '',
         language: englishLang,
         startDate: today.toISOString().slice(0,10),
         endDate: tomorrow.toISOString().slice(0,10),
-        privacy: priv
+        privacy: 'PRIVATE'
     });
 
     useEffect(() => {
-        const init = () => {
+        const init =  () => {
             if(!useValidateMode(action)){
-                useNavigate('error/400');
+                redirectFromRoot('error');
             }
-    
+            
+            getPrivacies().then(response => {
+                if(response.status === 200){
+                    setPrivacies(response.data.response);
+                }
+            });
+
             if(action !== 'create'){
                 if(!useValidateNumericId(id)){
-                    useNavigate('error/400');
+                    redirectFromRoot('error');
                 }
     
                 getTournament(id).then(
                     response => {
-                        const handled = useHandleHttpResponse(() => {
+                        if(response.status === 200){
                             setTournament({
                                 name: response.data.response.name,
-                                language: response.data.response.language === 'SPANISH' ? 1 : 0,
+                                language: response.data.response.language,
                                 startDate: response.data.response.startDate,
                                 endDate: response.data.response.endDate,
-                                privacy: response.data.response.privacy === 'PRIVATE' ? 1 : 0,
+                                privacy: response.data.response.privacy,
                             });
-                        }, response.status);
-    
-                        handled();
+                        }else{
+                            redirectFromRoot('error');
+                        }
                     }
                 );
             }
@@ -84,25 +86,32 @@ export function Tournament () {
           return;
 
         if(action  === 'create') {
-            console.log(tournament)
             createTournament(tournament).then(response => {
-                const handled = useHandleHttpResponse(handleToEdit, response.status);
-                handled();
+                if(response.status === 200) {
+                    redirectFromRoot(`tournament/view/${response.data.response.id}`);
+                }else{
+                    redirectFromRoot('error');
+                }
             });
         }else{
             updateTournament(id, tournament).then(response => {
-                const handled = useHandleHttpResponse(handleToEdit, response.status);
-                handled();
+                if(response.status === 200) {
+                    redirectFromRoot(`tournament/view/${id}`);
+                }else{
+                    redirectFromRoot('error');
+                }
             });
         }
     });
 
-    const handleToEdit = useCallback(() => {
-        
-    });
-
     const handleDelete  = useCallback(() => {
-
+        deleteTournament(id).then(response => {
+            if(response.status === 200){
+                redirectFromRoot(`tournaments`);                
+            }else{
+                redirectFromRoot('error');
+            }
+        })   
     });
 
     return(
@@ -142,13 +151,26 @@ export function Tournament () {
                                             <Form.Group className='_6lux' controlId="formTournamentLang">
                                                 <InputGroup>
                                                     <FloatingLabel className='group-first-element'>
-                                                        <Form.Select name="language" required
-                                                            readOnly={action === 'view' || action === 'delete'}
-                                                            value={tournament.language} 
-                                                            onChange={handleTournamentChange}>
-                                                                <option value={englishLang}>English</option>
-                                                                <option value={spanishLang}>Español</option>
-                                                        </Form.Select>
+                                                        {
+                                                            action === 'create' || action === 'edit' ? 
+                                                            <Form.Select 
+                                                                name="language" required
+                                                                readOnly={action === 'view' || action === 'delete'}
+                                                                value={tournament.language} 
+                                                                onChange={handleTournamentChange}>
+                                                                    <option value={englishLang}>ENGLISH</option>
+                                                                    <option value={spanishLang}>ESPAÑOL</option>
+                                                            </Form.Select>
+                                                            :
+                                                            <>
+                                                                <Form.Control 
+                                                                    name="language" type="text"
+                                                                    readOnly={true}
+                                                                    value={tournament.language} />
+                                                                <Form.Text className="text-muted">
+                                                                </Form.Text>
+                                                            </>
+                                                        }
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>Language</label>   
                                                     </FloatingLabel>
                                                 </InputGroup>
@@ -157,14 +179,29 @@ export function Tournament () {
                                         <Col md={3} xs={12}>
                                             <Form.Group className='_6lux' controlId="formTournamentPrivacy">
                                                 <InputGroup>
-                                                    <FloatingLabel className='group-first-element'>
-                                                        <Form.Select name="privacy" required
-                                                            readOnly={action === 'view' || action === 'delete'}
-                                                            value={tournament.privacy} 
-                                                            onChange={handleTournamentChange}>
-                                                                <option value={priv}>Private</option>
-                                                                <option value={pub}>Public</option>
-                                                        </Form.Select>
+                                                    <FloatingLabel className='group-first-element'>                                                        
+                                                        {
+                                                            action === 'create' || action === 'edit' ? 
+                                                            <Form.Select name="privacy" required
+                                                                readOnly={action === 'view' || action === 'delete'}
+                                                                value={tournament.privacy} 
+                                                                onChange={handleTournamentChange}>
+                                                                    {
+                                                                        privacies.map(p => (
+                                                                            <option key={p.id} value={p.id}>{p.desc}</option>
+                                                                        ))
+                                                                    }
+                                                            </Form.Select>
+                                                            :
+                                                            <>
+                                                                <Form.Control 
+                                                                    name="privacy" type="text"
+                                                                    readOnly={true}
+                                                                    value={tournament.privacy} />
+                                                                <Form.Text className="text-muted">
+                                                                </Form.Text>
+                                                            </>
+                                                        }
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>Privacy</label>   
                                                     </FloatingLabel>
                                                 </InputGroup>
@@ -214,16 +251,7 @@ export function Tournament () {
                                             </Button>
                                             :
                                             action === 'view' ? 
-                                            <Button 
-                                                style={{
-                                                    margin: '1em 0 0 0 ',
-                                                }}
-                                                variant={'success'}
-                                                type={'button'}
-                                                onClick={handleToEdit}    
-                                            >
-                                                Edit
-                                            </Button>
+                                            <></>
                                             :
                                             <Button
                                                 style={{

@@ -7,9 +7,10 @@ const nonParticipantsSubResource = 'nonParticipants';
 const positionsSubResource = 'positions';
 
 
-export async function getPublicTournaments(offset, limit){
+export async function getPublicTournaments(page, limit){
     return get(`${resource}`, {
-        offset: offset,
+        privacy: 'PUBLIC',
+        page: page,
         limit: limit
     });
 }
@@ -36,9 +37,9 @@ export async function getNonParticipants(tournamentId, search){
     });
 }
 
-export async function getParticipants(tournamentId, offset, limit){
+export async function getParticipants(tournamentId, page, limit){
     return get(`${resource}/${tournamentId}/${participantsSubResource}`, {
-        offset: offset,
+        page: page,
         limit: limit
     });
 }
@@ -47,9 +48,9 @@ export async function addParticipants(tournamentId, data){
     return post(`${resource}/${tournamentId}/${participantsSubResource}`, data);
 }
 
-export async function getPositions(tournamentId, offset, limit){
+export async function getPositions(tournamentId, page, limit){
     return get(`${resource}/${tournamentId}/${positionsSubResource}`, {
-        offset: offset,
+        page: page,
         limit: limit
     });
 }

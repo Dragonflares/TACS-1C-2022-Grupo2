@@ -7,10 +7,8 @@ import { PaginatedTable } from "../../../shared/components/paginatedTable";
 import { Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import OptionsPopUp from "./optionsPopUp";
-import { useHandleHttpResponse } from "../../../shared/hooks/responseHandlerHook";
 import { getPublicTournaments } from "../../../services/tournamentService";
 import { getTournaments } from "../../../services/userService";
-import { getUserId } from "../../../services/authService";
 
 export function MyTournaments () {
     const pageSize = 10;
@@ -54,16 +52,14 @@ export function MyTournaments () {
 
        //const offset = ((page - 1) * pageSize);
         //page = 1
-        getTournaments(getUserId(), 1, pageSize).then(
+        getTournaments(1, pageSize).then(
             response => {
-                const handled = useHandleHttpResponse(() => {
+                if(response.status === 200){
                     setData({
                         elements: response.data.response,
                         count: 100,
                     });
-                }, response.status);
-
-                handled();
+                }
             }
         );
         
@@ -124,14 +120,21 @@ export function MyTournaments () {
                                 </Button>
                             </Row>
                             <Row>
-                                <PaginatedTable 
-                                    headings={headings}
-                                    data={data}
-                                    pageSize={pageSize}
-                                    onPageChange={handlePageChange}
-                                    onClick={handleRowClick}
-                                    key='myTournaments'
-                                />   
+                                {
+                                    data.count > 0 ?
+                                    <>
+                                        <PaginatedTable 
+                                            headings={headings}
+                                            data={data}
+                                            pageSize={pageSize}
+                                            onPageChange={handlePageChange}
+                                            onClick={handleRowClick}
+                                            key='myTournaments'
+                                        />  
+                                    </>
+                                    :
+                                    <h3>NO TOURNAMENTS</h3>
+                                } 
                             </Row>                                                     
                         </Card.Body>
                     </Card>

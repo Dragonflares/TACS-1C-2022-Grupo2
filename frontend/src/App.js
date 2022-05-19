@@ -26,8 +26,9 @@ export function App (){
   const [auth, setAuth] = useState(isAuthenticated());
   
   const redirectOnNotAuth = () => {
-    setAuth(isAuthenticated());
-    if(!auth && location.pathname !== 'log-in'){
+    const authenticaded = isAuthenticated();
+    setAuth(authenticaded);
+    if(!authenticaded && location.pathname !== 'log-in'){
       navigate('log-in');
     }
   };
@@ -51,6 +52,10 @@ export function App (){
     navigate('');
   });
 
+  const handleRedirect = useCallback((to) => {
+    navigate(to);
+  });
+
   return(
       
     <div className="App">
@@ -63,7 +68,7 @@ export function App (){
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                   <Nav className="me-auto">
-                    <Nav.Link as={NavLink} to="/help">Help</Nav.Link>
+                    <Nav.Link as={NavLink} to="/helper">Helper</Nav.Link>
                     <Nav.Link as={NavLink} to="/dictionary">Dictionary</Nav.Link>
                     <NavDropdown title="Tournaments" id="basic-nav-dropdown">
                       <NavDropdown.Item  as={NavLink} to="/tournaments">My Tournaments</NavDropdown.Item>
@@ -89,14 +94,14 @@ export function App (){
           <Route path='/' element={<Home />} />
           <Route path='/log-in' element={<LogIn isLoged={handleLogIn}/>} />
           <Route path='/dictionary' element={<Dictionary />} />
-          <Route path='/help' element={<Helper/>} />
+          <Route path='/helper' element={<Helper/>} />
           <Route path='/result' element={<Results/>}/>
           <Route path='/public-tournaments' element={<PublicTournaments/>}/>
           <Route path='/tournaments' element={<MyTournaments/>}/>
-          <Route path='/tournament/:action/:id' element={<Tournament/>}/>
-          <Route path='/tournament/:action' element={<Tournament/>}/>
+          <Route path='/tournament/:action/:id' element={<Tournament redirectFromRoot={handleRedirect}/>}/>
+          <Route path='/tournament/:action' element={<Tournament redirectFromRoot={handleRedirect}/>}/>
           <Route path='/positions/:id' element={<Positions />}/>
-          <Route path='/error/:code' element={<ErrorPage />}/>
+          <Route path='/error' element={<ErrorPage />}/>
           <Route path='*' element={<ErrorPage />}/>
         </Routes> 
     </div>
