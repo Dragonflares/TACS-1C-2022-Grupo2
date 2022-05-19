@@ -1,8 +1,8 @@
-import { Plugin } from '../../lib';
+import { Plugin } from '../../../lib';
 import * as Managers from './managers';
 import * as Commands from './commands';
 
-export class HelperPlugin extends Plugin{
+export class WordlePlugin extends Plugin{
 	constructor(bot){
 		super(bot);
 
