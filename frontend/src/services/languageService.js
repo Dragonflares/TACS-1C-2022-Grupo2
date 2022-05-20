@@ -9,11 +9,11 @@ export async function getLangauges(){
     return {
         data: [
             {
-                id: 'en',
+                id: 'ENGLISH',
                 desc: 'English'
             },
             {
-                id: 'es',
+                id: 'SPANISH',
                 desc: 'Español'
             }
         ],
