@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from "react-bootstrap/Modal";
 import { PaginatedTable } from "../../../shared/components/paginatedTable";
 import { addParticipants, getPublicTournaments } from "../../../services/tournamentService";
+import { getUserDataStruct } from '../../../services/userService'
 
 export function PublicTournaments () {
     const pageSize = 10;
@@ -103,7 +104,7 @@ const elements = [];
     });
 
     const handleJoin = useCallback(() => {
-        addParticipants(selected.id).then(
+        addParticipants(selected.id,getUserDataStruct()).then(
             response => {
                 if(response.status === 200){
                     setSelected( {

@@ -14,6 +14,7 @@ export function auth(data){
         (response) => {
             if(response.status === 200){
                 localStorage.setItem('jwt', response.data.response.token);
+                localStorage.setItem('loggedUser', data.username)
                 return {
                     status :response.status
                 }            

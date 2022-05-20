@@ -16,6 +16,14 @@ export async function updateUser(data){
     return put(`${resource}/${data.id}`, data); 
 }
 
+export function getUserDataStruct () {
+    var data = {
+        username: localStorage.getItem('loggedUser')
+    }
+    console.log(data)
+    return data
+}
+
 export async function getTournaments(page, limit){
     return get(`${tournamentsSubResource}`, {
         privacy: 'PRIVATE',
