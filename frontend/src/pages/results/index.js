@@ -6,10 +6,10 @@ import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { getLangauges } from "../../services/languageService";
-import { getDailyResults, updateDailyResults } from "../../services/userService";
+import { getDailyResults, createDailyResults, getUserDataStruct } from "../../services/userService";
 
 export function Results () {
-    const [language, setLanguage] = useState('');
+    const [language, setLanguage] = useState('ENGLISH');
     const [result, setResult] = useState(0);
     const [validated, setValidated] = useState(false);
     const [languages, setLanguages] = useState([]);
@@ -23,7 +23,7 @@ export function Results () {
         });
 
         getDailyResults().then(response => {
-            if(response.status === 200){
+            if(response.status === 200 && !response.data ){
                 setResults(response.data);
                 setLanguage(response.data[0].language);
             }
@@ -34,20 +34,27 @@ export function Results () {
         init();
     }, []);
 
-    const handleSubmit = useCallback(async (event) => {       
+    const handleSubmit = useCallback((event) => {       
         event.preventDefault();
         event.stopPropagation();
-    
-        if(!validated){
+        console.log("handleSubmit ")
+
+/*         if(!validated){
             setValidated(validated => !validated);
-        }
-    
-        if(!language || !result || language === '')
+        } */
+        console.log(language);
+        console.log(result);
+
+        if(!language || !result || language === '') {
           return;
-    
-        updateDailyResults({
+        }
+          console.log("before createDailyResults ")
+
+        createDailyResults({
+            user: getUserDataStruct(),
             language: language,
-            result: result
+            date: new Date().toISOString().slice(0, 10),
+            points: result
         }).then((response) => {
             if(response.status === 200){
                 init();
@@ -57,10 +64,13 @@ export function Results () {
 
     const handleLangChange = useCallback((event) => {
         const  value = event.target.value;
+        if(results.length > 0) {
+            const langResult = results.find((r) => (r.lang === value));
 
-        const langResult = results.find((r) => (r.lang === value));
-
-        setResult(langResult.result);
+            setResult(langResult.result);
+        } else {
+            setLanguage(value);
+        }
     });
 
     return(
@@ -69,7 +79,7 @@ export function Results () {
                     <Container fluid>
                         <Card  className="py-2">
                             <Card.Body>
-                                <Card.Title>Load Result</Card.Title>
+                                <Card.Title>Add Result</Card.Title>
                                 <Form onSubmit={handleSubmit} noValidate validated={validated}>
                                     <Row>
                                         <Col xs={12} md={3} className="py-1">
@@ -93,7 +103,7 @@ export function Results () {
                                         </Col>
                                         <Col md={2} className="py-1">
                                             <div className={"d-grid gap-2"}>
-                                                <Button type="submit">Search</Button>
+                                                <Button type="submit">Add</Button>
                                             </div>
                                         </Col>
                                     </Row>

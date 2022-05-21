@@ -33,9 +33,9 @@ export async function getTournaments(page, limit){
 }
 
 export async function getDailyResults(){
-    return get(`${resource}/${resultSubResource}`);
+    return get(`${resultSubResource}/${resource}`);
 }
 
-export async function updateDailyResults(userId, data){
-    return put(`${resource}/${resultSubResource}`, data);
+export async function createDailyResults(data){
+    return post(`${resultSubResource}`, data);
 }
