@@ -160,6 +160,27 @@ public class TournamentControllerTest {
 
         Assert.assertEquals(mapper.mapList(positionsExpected,PositionDto.class), actualPositions);
 
+    }
+
+    @Test
+    public void obtainParticipants() throws Exception {
+
+       List<String> participantsExpected = List.of("pepe","juan");
+
+        when(tournamentService.obtainParticipants(1, Optional.empty(), Optional.empty())).thenReturn(participantsExpected);
+
+        MvcResult result = mockMvc
+                .perform(get("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8"))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+
+        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
+        JsonNode data = jsonNode.get("response");
+
+        List<String> actualParticipants = new ArrayList<>(Arrays.asList(objectMapper.treeToValue(data, String[].class)));
+
+        Assert.assertEquals(participantsExpected,actualParticipants);
 
     }
 
@@ -168,7 +189,6 @@ public class TournamentControllerTest {
     quantityTournaments
     singleTournaments
 obtainParticipants
-obtainPositions
 updateTournament
 addAllParticipants
      */
