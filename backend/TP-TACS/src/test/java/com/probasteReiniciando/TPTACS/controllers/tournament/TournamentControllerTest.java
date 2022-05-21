@@ -184,14 +184,12 @@ public class TournamentControllerTest {
 
     }
 
-
-    /*
-    quantityTournaments
-    singleTournaments
-obtainParticipants
-updateTournament
-addAllParticipants
-     */
+    //TODO
+    public void quantityTournaments () throws Exception {}
+    //TODO
+    public void updateTournament () throws Exception {}
+    //TODO
+    public void addAllParticipants () throws Exception {}
 
 
 
