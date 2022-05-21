@@ -1,10 +1,7 @@
 package com.probasteReiniciando.TPTACS.services.tournament;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
-import com.probasteReiniciando.TPTACS.domain.Privacy;
-import com.probasteReiniciando.TPTACS.domain.Result;
-import com.probasteReiniciando.TPTACS.domain.Tournament;
-import com.probasteReiniciando.TPTACS.domain.User;
+import com.probasteReiniciando.TPTACS.domain.*;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
@@ -15,9 +12,12 @@ import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
 import com.probasteReiniciando.TPTACS.validators.TournamentValidator;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TournamentService {
@@ -26,7 +26,7 @@ public class TournamentService {
 
     final private IUserRepository userRepository;
 
-    private ModelMapperTacs modelMapper = new ModelMapperTacs();
+    final private ModelMapperTacs modelMapper = new ModelMapperTacs();
 
     public TournamentService(ITournamentRepository tournamentRepository, IUserRepository userRepository) {
         this.tournamentRepository = tournamentRepository;
@@ -56,15 +56,13 @@ public class TournamentService {
 
     public List<Tournament> obtainTournaments(int page, int limit, Privacy privacy, String username) {
 
-        switch(privacy) {
+        return switch (privacy) {
 
-            case PUBLIC : return tournamentRepository.obtainPublicTournaments(page, limit);
+            case PUBLIC -> tournamentRepository.obtainPublicTournaments(page, limit);
 
-            case PRIVATE : return tournamentRepository.obtainPrivateTournaments(page, limit, username);
+            case PRIVATE -> tournamentRepository.obtainPrivateTournaments(page, limit, username);
 
-            default: return List.of();
-
-        }
+        };
 
     }
 
@@ -88,6 +86,8 @@ public class TournamentService {
 
             if (tournament.getOwner().getUsername().equals(userLoggedIn)) {
 
+                return tournamentRepository.addUser(tournament, user);
+
             } else {
 
                 throw new UnAuthorizedException(userLoggedIn);
@@ -96,7 +96,6 @@ public class TournamentService {
 
         }
 
-        return null;
     }
 
     public List<Result> getResults(int id) {
@@ -121,11 +120,11 @@ public class TournamentService {
 
         tournamentRepository.updateTournament(tournamentId, modelMapper.map(tournamentDto, Tournament.class));
 
-        return tournamentRepository.obtainTournament(tournamentId).get();
+        return tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 
     }
 
-    public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int page, int limit){
+    public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int page, int limit) {
 
         return tournamentRepository.findByOwner(userLoggedIn, page, limit);
 
@@ -133,17 +132,56 @@ public class TournamentService {
     }
 
     public Integer getQuantityOfTournaments(Privacy privacy, String userLoggedIn) {
-        Integer value = 0;
-        switch(privacy) {
 
-            case PUBLIC : value = tournamentRepository.quantityOfPublicTournaments();
-            break;
+        return switch (privacy) {
 
-            case PRIVATE : value =  tournamentRepository.quantityOfPrivateTournaments(userLoggedIn);
-            break;
+            case PUBLIC -> tournamentRepository.quantityOfPublicTournaments();
+
+            case PRIVATE -> tournamentRepository.quantityOfPrivateTournaments(userLoggedIn);
+
+        };
+
+    }
+
+    public List<Position> obtainPositions(int tournamentId, Optional<String> order) {
+
+        List<Position> positions = new ArrayList<>();
+
+        Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
+
+        LocalDate tournamentStartDate = tournament.getStartDate();
+
+        LocalDate tournamentEndDate = tournament.getEndDate();
+
+        List<LocalDate> tournamentDates = tournamentStartDate.datesUntil(tournamentEndDate.plusDays(1)).toList();
+
+        for (User participant : tournament.getParticipants()) {
+
+            int points = 0;
+
+            for(LocalDate localDateIndex : tournamentDates) {
+
+                Optional<Result> result = participant.getResults().stream().filter(r -> r.getDate().equals(localDateIndex)).findFirst();
+
+                if (result.isPresent())
+                    points += result.get().getPoints();
+                else
+                    points += 7;
+
+            }
+
+            positions.add(Position.builder().points(points).user(participant).build());
 
         }
-        return value;
+
+        positions = positions.stream().sorted(PositionComparator.getInstance()).collect(Collectors.toList());
+
+        if(order.isPresent() && "desc".equals(order.get())){
+            Collections.reverse(positions);
+        }
+
+        return positions;
+
     }
 
 }

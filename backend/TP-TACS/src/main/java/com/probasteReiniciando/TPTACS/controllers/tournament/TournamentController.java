@@ -2,6 +2,7 @@ package com.probasteReiniciando.TPTACS.controllers.tournament;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
+import com.probasteReiniciando.TPTACS.dto.PositionDto;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.exceptions.ErrorParameterException;
@@ -60,6 +61,13 @@ public class TournamentController {
     public List<String> obtainParticipants(@PathVariable int tournamentId, @RequestParam Optional<String> orderBy, @RequestParam Optional<String> order) {
 
         return tournamentService.obtainParticipants(tournamentId, orderBy, order);
+
+    }
+
+    @GetMapping(path="/{tournamentId}/positions", produces = "application/json")
+    public List<PositionDto> obtainPositions(@PathVariable int tournamentId, @RequestParam Optional<String> order) {
+
+        return modelMapper.mapList(tournamentService.obtainPositions(tournamentId, order),PositionDto.class);
 
     }
 
