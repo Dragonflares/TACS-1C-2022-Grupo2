@@ -33,11 +33,9 @@ public class TournamentService {
         this.userRepository = userRepository;
     }
 
-    public TournamentDto createTournament(TournamentDto tournamentDto, String userLoggedIn) {
+    public Tournament createTournament(Tournament tournament, String userLoggedIn) {
 
-        TournamentValidator.validateRangeDate(tournamentDto.getStartDate(), tournamentDto.getEndDate());
-
-        Tournament tournament = modelMapper.map(tournamentDto, Tournament.class);
+        TournamentValidator.validateRangeDate(tournament.getStartDate(), tournament.getEndDate());
 
         User owner = userRepository.findByName(userLoggedIn).orElseThrow(() -> new UserNotFoundException(userLoggedIn));
 
@@ -45,13 +43,8 @@ public class TournamentService {
 
         tournament.setParticipants(new ArrayList<>());
 
-        tournament = tournamentRepository.createTournament(tournament);
+        return tournamentRepository.createTournament(tournament);
 
-        tournamentDto.setOwner(modelMapper.map(owner, UserDto.class));
-
-        tournamentDto.setId(tournament.getId());
-
-        return tournamentDto;
     }
 
     public List<Tournament> obtainTournaments(int page, int limit, Privacy privacy, String username) {
@@ -70,7 +63,7 @@ public class TournamentService {
         return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
     }
 
-    public List<String> addUser(int tournamentId, String userName, String userLoggedIn) {
+    public List<User> addUser(int tournamentId, String userName, String userLoggedIn) {
 
         Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 
@@ -80,13 +73,18 @@ public class TournamentService {
 
             TournamentValidator.validateStartDate(tournament.getStartDate());
 
-            return tournamentRepository.addUser(tournament, user);
+            tournamentRepository.addUser(tournament, user);
+
+            return tournamentRepository.obtainParticipants(tournamentId,Optional.empty(),Optional.empty());
 
         } else {
 
             if (tournament.getOwner().getUsername().equals(userLoggedIn)) {
 
-                return tournamentRepository.addUser(tournament, user);
+                tournamentRepository.addUser(tournament, user);
+
+                return tournamentRepository.obtainParticipants(tournamentId,Optional.empty(),Optional.empty());
+
 
             } else {
 
@@ -103,13 +101,13 @@ public class TournamentService {
     } //TODO revisar
 
 
-    public List<String> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order) {
+    public List<User> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order) {
         return tournamentRepository.obtainParticipants(tournamentId, orderBy, order);
 
 
     }
 
-    public Tournament updateTournament(int tournamentId, TournamentDto tournamentDto, String userLoggedIn) {
+    public Tournament updateTournament(int tournamentId, Tournament updatedTournament, String userLoggedIn) {
 
         Tournament tournament = tournamentRepository.obtainTournament(tournamentId)
                 .orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
@@ -118,7 +116,7 @@ public class TournamentService {
             throw new UnAuthorizedException(userLoggedIn);
         }
 
-        tournamentRepository.updateTournament(tournamentId, modelMapper.map(tournamentDto, Tournament.class));
+        tournamentRepository.updateTournament(tournamentId, updatedTournament);
 
         return tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 

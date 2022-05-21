@@ -28,9 +28,9 @@ public interface ITournamentRepository {
 
     Tournament createTournament(Tournament tournament);
 
-    List<String> addUser(Tournament tournament, User user);
+    void addUser(Tournament tournament, User user);
 
-    List<String> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order);
+    List<User> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order);
 
     void updateTournament(int tournamentId, Tournament tournament);
 

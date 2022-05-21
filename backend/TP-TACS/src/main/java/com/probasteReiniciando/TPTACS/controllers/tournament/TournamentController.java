@@ -2,6 +2,7 @@ package com.probasteReiniciando.TPTACS.controllers.tournament;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
+import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.dto.PositionDto;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
@@ -27,7 +28,8 @@ public class TournamentController {
     private ModelMapperTacs modelMapper;
 
     @PostMapping(produces = "application/json")
-    public TournamentDto createTournament(@RequestBody TournamentDto tournament,@RequestAttribute(name="userAttributeName") String userLoggedIn) {
+    public TournamentDto createTournament(@RequestBody TournamentDto tournamentDto,@RequestAttribute(name="userAttributeName") String userLoggedIn) {
+        Tournament tournament = modelMapper.map(tournamentDto, Tournament.class);
         return modelMapper.map(tournamentService.createTournament(tournament, userLoggedIn),TournamentDto.class);
     }
 
@@ -39,10 +41,8 @@ public class TournamentController {
 
     @GetMapping(path = "/quantity" ,produces = "application/json")
     public Integer quantityTournaments (@RequestParam(defaultValue = "PUBLIC") Privacy privacy, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
-
         return  tournamentService.getQuantityOfTournaments(privacy, userLoggedIn);
     }
-
 
 
     @GetMapping(path="/{id}", produces = "application/json")
@@ -50,17 +50,16 @@ public class TournamentController {
         return  modelMapper.map(tournamentService.getTournamentById(id),TournamentDto.class);
     }
 
-
     @PostMapping(path="/{tournamentId}/participants", produces = "application/json")
-    public List<String> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
-        return  tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn);
+    public List<UserDto> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
+        return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn),UserDto.class);
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
     @GetMapping(path="/{tournamentId}/participants", produces = "application/json")
-    public List<String> obtainParticipants(@PathVariable int tournamentId, @RequestParam Optional<String> orderBy, @RequestParam Optional<String> order) {
+    public List<UserDto> obtainParticipants(@PathVariable int tournamentId, @RequestParam Optional<String> orderBy, @RequestParam Optional<String> order) {
 
-        return tournamentService.obtainParticipants(tournamentId, orderBy, order);
+        return modelMapper.mapList(tournamentService.obtainParticipants(tournamentId, orderBy, order),UserDto.class);
 
     }
 
@@ -73,26 +72,12 @@ public class TournamentController {
 
     @PatchMapping(path="/{tournamentId}", produces = "application/json")
     public TournamentDto updateTournament
-            (@PathVariable int tournamentId, @RequestBody TournamentDto tournament, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
+            (@PathVariable int tournamentId, @RequestBody TournamentDto tournamentDto, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
 
+        Tournament tournament = modelMapper.map(tournamentDto, Tournament.class);
         return modelMapper.map(tournamentService.updateTournament(tournamentId, tournament, userLoggedIn),TournamentDto.class);
 
-    }
-
-    @PostMapping(path="/{tournamentId}/participants", produces = "aplication/json")
-    public List<String> addAllParticipants(@PathVariable int tournamentId, @RequestBody List<UserDto> users, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
-
-        List<String> participants = null;
-
-        for (UserDto user : users){
-
-            participants = tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn);
-
-        }
-
-        return participants;
-    }
-
+     }
 
     private void validateParamsPagination(int page, int limit) {
         if(page < 1 || limit <0)

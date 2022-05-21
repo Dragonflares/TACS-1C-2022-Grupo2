@@ -8,7 +8,7 @@ import com.probasteReiniciando.TPTACS.dto.PositionDto;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,9 +26,7 @@ import java.util.Optional;
 
 import static com.probasteReiniciando.TPTACS.domain.Privacy.PUBLIC;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -36,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TournamentControllerTest {
 
     @Autowired
-    private MockMvc mockMvc; // injected with @AutoConfigureMockMvc
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -44,11 +42,15 @@ public class TournamentControllerTest {
     @MockBean
     private TournamentService tournamentService;
 
-    private ModelMapperTacs mapper = new ModelMapperTacs();
+    private final ModelMapperTacs mapper = new ModelMapperTacs();
 
     @Test
     public void getPublicTournaments() throws Exception {
-        when(tournamentService.obtainTournaments(1, 5, Privacy.PUBLIC, "PEPE")).thenReturn(List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build()));
+
+        List<Tournament> expectedTournaments = List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build());
+
+        when(tournamentService.obtainTournaments(1, 5, Privacy.PUBLIC, "PEPE")).
+                thenReturn(expectedTournaments);
 
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("offset", "1");
@@ -56,23 +58,25 @@ public class TournamentControllerTest {
 
 
         MvcResult result = mockMvc
-                .perform(get("/tournaments").contentType("application/json").params(requestParams))
+                .perform(get("/tournaments").contentType("application/json").params(requestParams).requestAttr("userAttributeName","PEPE"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
 
         JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
         JsonNode data = jsonNode.get("response");
-        TournamentDto[] tournamentDtos = objectMapper.treeToValue(data, TournamentDto[].class);
-        List<TournamentDto> tournamentDtosList = new ArrayList<>(Arrays.asList(tournamentDtos));
-        Assert.assertEquals(List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENGLISH).build()), tournamentDtosList);
+        List<TournamentDto> actualTournaments = new ArrayList<>(Arrays.asList(objectMapper.treeToValue(data, TournamentDto[].class)));
+
+        Assertions.assertEquals(expectedTournaments, mapper.mapList(actualTournaments, Tournament.class));
 
     }
 
     @Test
     public void getIndividualTournament() throws Exception {
 
-        when(tournamentService.getTournamentById(5)).thenReturn(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).privacy(PUBLIC).build());
+        Tournament expectedTournament = Tournament.builder().name("TournamentExample").language(Language.ENGLISH).privacy(PUBLIC).build();
+
+        when(tournamentService.getTournamentById(5)).thenReturn(expectedTournament);
 
         MvcResult result = mockMvc
                 .perform(get("/tournaments/5").contentType("application/json"))
@@ -82,58 +86,68 @@ public class TournamentControllerTest {
 
         JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
         JsonNode data = jsonNode.get("response");
-        TournamentDto tournamentDto = objectMapper.treeToValue(data, TournamentDto.class);
-        List<TournamentDto> tournamentDtosList = new ArrayList<>(Arrays.asList(tournamentDto));
-        Assert.assertEquals(List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENGLISH).build()), tournamentDtosList);
+        List<TournamentDto> actualTournaments = new ArrayList<>(List.of(objectMapper.treeToValue(data, TournamentDto.class)));
+
+
+        Assertions.assertEquals(List.of(expectedTournament), mapper.mapList(actualTournaments, Tournament.class));
 
     }
 
     @Test
     public void createTournament() throws Exception {
 
-        TournamentDto tournamentDtoBody = TournamentDto.builder()
+        Tournament expectedTournament = Tournament.builder()
                 .name("Champions Wordle")
                 .language(Language.ENGLISH)
                 .privacy(Privacy.PUBLIC).build();
 
-        when(tournamentService.createTournament(tournamentDtoBody,"pepe")).thenReturn(tournamentDtoBody);
+        when(tournamentService.createTournament(expectedTournament,"pepe")).thenReturn(expectedTournament);
 
-        String body = objectMapper.writeValueAsString(tournamentDtoBody);
+        String body = objectMapper.writeValueAsString(mapper.map(expectedTournament,TournamentDto.class));
 
         MvcResult result = mockMvc
-                .perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").content(body).requestAttr("userAttributeName","test"))
+                .perform(
+                        post("/tournaments")
+                                .contentType("application/json")
+                                .characterEncoding("UTF-8")
+                                .content(body)
+                                .requestAttr("userAttributeName","pepe")
+                )
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
 
         JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
         JsonNode data = jsonNode.get("response");
-        TournamentDto tournamentDtoResponse = objectMapper.treeToValue(data, TournamentDto.class);
+        TournamentDto actualTournament = objectMapper.treeToValue(data, TournamentDto.class);
 
-        Assert.assertEquals(tournamentDtoBody.getName(), tournamentDtoResponse.getName());
+        Assertions.assertEquals(expectedTournament, mapper.map(actualTournament, Tournament.class));
 
     }
 
     @Test
     public void addUserToPublicTournament() throws Exception {
 
-        when(tournamentService.addUser(1, "pepe","duenio")).thenReturn(List.of("pepe"));
+        User expectedParticipant = User.builder().username("pepe").build();
 
-        UserDto user = UserDto.builder().username("pepe").build();
+        List<User> expectedParticipants = List.of(expectedParticipant);
 
-        String body = objectMapper.writeValueAsString(user);
+        when(tournamentService.addUser(1, expectedParticipant.getUsername(),"owner")).thenReturn(expectedParticipants);
+
+        String body = objectMapper.writeValueAsString(mapper.map(expectedParticipant,UserDto.class));
 
         MvcResult result = mockMvc
-                .perform(patch("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8").content(body))
+                .perform(post("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8").content(body)
+                        .requestAttr("userAttributeName","owner"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
 
         JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
         JsonNode data = jsonNode.get("response");
-        String[] usernames = objectMapper.treeToValue(data, String[].class);
-        List<String> usernamesList = new ArrayList<>(Arrays.asList(usernames));
-        Assert.assertEquals(List.of("pepe"), usernamesList);
+        List<UserDto> actualParticipants = new ArrayList<>(Arrays.asList(objectMapper.treeToValue(data, UserDto[].class)));
+
+        Assertions.assertEquals(expectedParticipants, mapper.mapList(actualParticipants,User.class));
 
     }
 
@@ -158,14 +172,15 @@ public class TournamentControllerTest {
         PositionDto[] positionsDto = objectMapper.treeToValue(data, PositionDto[].class);
         List<PositionDto> actualPositions = new ArrayList<>(Arrays.asList(positionsDto));
 
-        Assert.assertEquals(mapper.mapList(positionsExpected,PositionDto.class), actualPositions);
+        Assertions.assertEquals(mapper.mapList(positionsExpected,PositionDto.class), actualPositions);
 
     }
+
 
     @Test
     public void obtainParticipants() throws Exception {
 
-       List<String> participantsExpected = List.of("pepe","juan");
+        List<User> participantsExpected = List.of(User.builder().username("pepe").build(),User.builder().username("juan").build());
 
         when(tournamentService.obtainParticipants(1, Optional.empty(), Optional.empty())).thenReturn(participantsExpected);
 
@@ -177,21 +192,44 @@ public class TournamentControllerTest {
 
         JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
         JsonNode data = jsonNode.get("response");
+        List<UserDto> actualParticipants = new ArrayList<>(Arrays.asList(objectMapper.treeToValue(data, UserDto[].class)));
 
-        List<String> actualParticipants = new ArrayList<>(Arrays.asList(objectMapper.treeToValue(data, String[].class)));
-
-        Assert.assertEquals(participantsExpected,actualParticipants);
+        Assertions.assertEquals(mapper.mapList(participantsExpected,UserDto.class), actualParticipants);
 
     }
 
-    //TODO
-    public void quantityTournaments () throws Exception {}
-    //TODO
-    public void updateTournament () throws Exception {}
-    //TODO
-    public void addAllParticipants () throws Exception {}
+    @Test
+    public void updateTournament () throws Exception {
+
+        Tournament expectedTournament = Tournament.builder()
+                .name("Champions Wordle")
+                .language(Language.ENGLISH)
+                .privacy(Privacy.PUBLIC).build();
+
+        when(tournamentService.updateTournament(1, expectedTournament, "pepe")).thenReturn(expectedTournament);
+
+        String body = objectMapper.writeValueAsString(mapper.map(expectedTournament,TournamentDto.class));
+
+        MvcResult result = mockMvc
+                .perform(
+                        patch("/tournaments/1")
+                                .contentType("application/json")
+                                .characterEncoding("UTF-8")
+                                .content(body)
+                                .requestAttr("userAttributeName","pepe")
+                )
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+
+        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
+        JsonNode data = jsonNode.get("response");
+        TournamentDto actualTournament = objectMapper.treeToValue(data, TournamentDto.class);
+
+        Assertions.assertEquals(expectedTournament, mapper.map(actualTournament,Tournament.class));
 
 
+    }
 
 
 }
