@@ -8,7 +8,7 @@ public class ResultAlreadyExistsException extends RuntimeException {
 
     public ResultAlreadyExistsException(String username, LocalDate date, Language language) {
 
-        super("Result with username : " + username + " language " + language.name() + " date " + date + " already exists");
+        super("Result with username " + username + " language " + language.name() + " date " + date + " already exists");
 
     }
 

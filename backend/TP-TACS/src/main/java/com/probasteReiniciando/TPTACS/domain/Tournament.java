@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -38,6 +39,18 @@ public class Tournament {
     public Tournament(String prueba, Language spanish) {
         this.name = prueba;
         this.language = spanish;
+    }
+
+    public List<User> getParticipantsWithOwner() {
+
+        List<User> participantsWithOwner = new ArrayList<>();
+
+        participantsWithOwner.addAll(participants);
+
+        participantsWithOwner.add(owner);
+
+        return participantsWithOwner;
+
     }
 
 }
