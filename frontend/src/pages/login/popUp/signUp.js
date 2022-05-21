@@ -55,10 +55,10 @@ export class SignUpPopUp extends Component {
     }).then(
       response => {
           if(response.status === 200){
-              console.log('Creacion de user correcta');
               this.props.setUser(username);
+              this.props.onSuccess();
           }else{
-              console.log('Fallo Creacion de user');
+            this.props.onError(response.statusText);
           }
           this.handleHide();
       }

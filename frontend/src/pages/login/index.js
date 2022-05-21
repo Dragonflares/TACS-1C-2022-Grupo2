@@ -8,6 +8,7 @@ import Card from 'react-bootstrap/Card';
 import SignUpPopUp from './popUp/signUp';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import {auth} from '../../services/authService';
@@ -54,6 +55,14 @@ export function LogIn ({isLoged}){
     const toggleSigIn = useCallback(() => {
         setShowModal(showModal => !showModal);
     });
+
+    const handleOnSuccess = useCallback(() => {
+        toast.success("Usuario creado existosamente");
+    })
+
+    const handleOnError = useCallback((e) => {
+        toast.error(e);
+    })
 
     return (
         <div className='p-5 mb-100 bg-light text-black'>
@@ -112,13 +121,15 @@ export function LogIn ({isLoged}){
                                                 Sign Up
                                             </Button>
                                         </div>
-                                        <SignUpPopUp show={showModal} setUser={setUsername} handleClose={toggleSigIn} position="right center"/>
+                                        <SignUpPopUp show={showModal} setUser={setUsername} 
+                                        handleClose={toggleSigIn} position="right center" onError={handleOnError} onSuccess={handleOnSuccess}/>
                                     </Row>                             
                                 </Card.Body>
                             </Card>  
                         </Form>
                     </Col>   
-                </Row>   
+                </Row>
+                <ToastContainer/>   
             </Container>
         </div>
     );

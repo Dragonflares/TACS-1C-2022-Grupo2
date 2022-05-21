@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 import {Navbar, Nav, NavDropdown, Container} from 'react-bootstrap';
 import { isAuthenticated, logOut } from './services/authService';

@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Form, InputGroup, Row, FormControl } from 'react-bootstrap';
+import { Button, Form, InputGroup, Row, FloatingLabel } from 'react-bootstrap';
 import { Input } from "react-bootstrap-typeahead";
 import { addParticipants, getParticipants } from "../../../../services/tournamentService";
 import { PaginatedTable } from "../../../../shared/components/paginatedTable";
+import { ToastContainer, toast } from 'react-toastify';
+
 export default function Participants({id , action}){
 
-    const [participants, setParticipants] = useState([]);
+    const [participant, setParticipant] = useState("");
     const pageSize = 5;
     const [data, setData] = useState({
         elements: [],
@@ -68,28 +70,6 @@ export default function Participants({id , action}){
     const handleRowClick = useCallback((element) => {        
     });
 
-    
-    const handleSearch = useCallback(async (search) => {
-        //return getParticipants(id);
-        console.log(search)
-        return {
-            data: [
-                {
-                    name: 'a',
-                    id: 1
-                },
-                {
-                    name: 'b',
-                    id: 2
-                },
-                {
-                    name: 'c',
-                    id: 3
-                }
-            ]
-        }
-    });
-    
     const handleSubmit = useCallback((event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -98,14 +78,13 @@ export default function Participants({id , action}){
             setValidated(validated => !validated);
         }
         
-        if(participants.length === 0){
-            setValid(valid => false);
-            return;
-        }
+        addParticipants(id, {username:participant}).then(
+            async response => {
+               if(response.status === 200){
+                   await getData(1,pageSize);
+               } else {
 
-        addParticipants(id, participants).then(
-            response => {
-               
+               }
             }
         )
     });
@@ -122,15 +101,14 @@ export default function Participants({id , action}){
                     <Form onSubmit={handleSubmit} noValidate validated={validated}>
                         <Form.Group className='_6lux' controlId="formParticipantAdd">
                             <InputGroup>
-                                <FormControl
-                                 validated={validated}
-                                 valid={valid}
-                                 dataFormater={handleDataFormat}
-                                 onSearch={handleSearch}
-                                 onSelection={(selection) => {setParticipants(selection)}}
-                                 required={true}
-                                 placeholder={'Add Participants'}
-                                />
+                                <FloatingLabel className='group-first-element'>
+                                            <Form.Control name="participant" type="text" placeholder="Add participant" required
+                                                value={participant} 
+                                                onChange={(event) => {setParticipant(event.target.value)}}/>
+                                            <Form.Text className="text-muted">
+                                            </Form.Text>
+                                        <label style={{paddingLeft:0, marginLeft: '1em'}}>Add participant</label>   
+                                </FloatingLabel>
                                 <Button type={'submit'}>Add</Button>
                             </InputGroup>
                         </Form.Group>
@@ -156,6 +134,7 @@ export default function Participants({id , action}){
                     NO SIGNED PARTICIPANTS
                 </h3>
             }
+            <ToastContainer/>
         </>
     );
 }
