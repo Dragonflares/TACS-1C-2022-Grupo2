@@ -12,7 +12,7 @@ export class Dictionary extends Component {
     constructor(props){
         super(props);
         this.state = {
-            language: 'en',
+            language: 'ENGLISH',
             search: '',
             result: null,
             languages: [],
