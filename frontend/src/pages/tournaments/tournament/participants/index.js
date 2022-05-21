@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Form, InputGroup, Row, FloatingLabel } from 'react-bootstrap';
+import { Button, Form, InputGroup, Row, FormControl } from 'react-bootstrap';
 import { Input } from "react-bootstrap-typeahead";
 import { addParticipants, getParticipants } from "../../../../services/tournamentService";
 import { PaginatedTable } from "../../../../shared/components/paginatedTable";
-import SearchMultipleAutocomplete from "../../../../shared/components/selectAutocomplete";
-
 export default function Participants({id , action}){
 
     const [participants, setParticipants] = useState([]);
@@ -124,15 +122,15 @@ export default function Participants({id , action}){
                     <Form onSubmit={handleSubmit} noValidate validated={validated}>
                         <Form.Group className='_6lux' controlId="formParticipantAdd">
                             <InputGroup>
-                                <SearchMultipleAutocomplete
-                                        validated={validated}
-                                        valid={valid}
-                                        dataFormater={handleDataFormat}
-                                        onSearch={handleSearch}
-                                        onSelection={(selection) => {setParticipants(selection)}}
-                                        required={true}
-                                        placeholder={'Add Participants'}
-                                />                   
+                                <FormControl
+                                 validated={validated}
+                                 valid={valid}
+                                 dataFormater={handleDataFormat}
+                                 onSearch={handleSearch}
+                                 onSelection={(selection) => {setParticipants(selection)}}
+                                 required={true}
+                                 placeholder={'Add Participants'}
+                                />
                                 <Button type={'submit'}>Add</Button>
                             </InputGroup>
                         </Form.Group>
