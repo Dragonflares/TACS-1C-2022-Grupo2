@@ -7,6 +7,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { getLanguages } from "../../services/languageService";
 import { getDailyResults, createDailyResults, getUserDataStruct } from "../../services/userService";
+import { ToastContainer, toast } from 'react-toastify';
 
 export function Results () {
     const [language, setLanguage] = useState('ENGLISH');
@@ -17,16 +18,16 @@ export function Results () {
 
     const init = () => {
         getLanguages().then(response => {
-            if(response.status === 200){
                 setLanguages(response.data);
-            }
+        }).catch(e => {
+            toast.error(e.response.data.response.message);
         });
 
         getDailyResults().then(response => {
-            if(response.status === 200 && !response.data ){
                 setResults(response.data);
                 setLanguage(response.data[0].language);
-            }
+        }).catch(e => {
+            toast.error(e.response.data.response.message);
         });
     };
 
@@ -55,10 +56,10 @@ export function Results () {
             language: language,
             date: new Date().toISOString().slice(0, 10),
             points: result
-        }).then((response) => {
-            if(response.status === 200){
+        }).then(() => {
                 init();
-            }
+        }).catch(e=> {
+            toast.error(e.response.data.response.message);
         });
     });
 
@@ -111,6 +112,7 @@ export function Results () {
                             </Card.Body>
                         </Card>
                     </Container>
+                    <ToastContainer/>
                 </Col>
             </div>
     );

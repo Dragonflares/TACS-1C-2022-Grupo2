@@ -53,7 +53,7 @@ export function LogIn ({isLoged}){
     });
 
     const handleOnSuccess = useCallback(() => {
-        toast.success("Usuario creado existosamente");
+        toast.success("User successfully created");
     })
 
     const handleOnError = useCallback((e) => {
