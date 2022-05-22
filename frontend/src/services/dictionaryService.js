@@ -2,7 +2,7 @@ import {get} from './appService'
 import { getAuthHeader } from './appService';
 
 
-const resource = 'dictionary';
+const resource = 'meanings';
 
 export async function getMeaning(word, language){
     return get(`${resource}`, {
