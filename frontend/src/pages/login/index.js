@@ -45,7 +45,7 @@ export function LogIn ({isLoged}){
             }
         ).catch(e => {
             toast.error(e.response.data.response.message);
-        });
+        })
     });
 
     const toggleSigIn = useCallback(() => {

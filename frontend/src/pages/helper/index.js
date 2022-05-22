@@ -5,15 +5,14 @@ import {
 } from "react-bootstrap";
 import { getLanguages } from '../../services/languageService';
 import { getHelperWord } from '../../services/helperService';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const englishLang = 'ENGLISH';
 const spanishLang = 'SPANISH';
 
 export function Helper() {
-    const [data, setData] = useState({
-        elements: []
-    })
+    const [data, setData] = useState("")
     const [language, setLanguage] = useState('ENGLISH')
     const [greenWords, setGreenWords] = useState({
         0:'',
@@ -34,12 +33,15 @@ export function Helper() {
         }).then(
             response => {
                 if (response.status === 200) {
-                    setData({
-                        elements: response.data.response
+                    var finalPhrase = ''
+                    response.data.response.forEach(element => {
+                        finalPhrase += element.phrase + ','
                     })
+                    setData(finalPhrase)
                 }
             }
-        )
+        ).catch( e => 
+            {toast.error(e.response.data.response.message);})
     }
 
     const handleSubmit = () => {
@@ -87,8 +89,6 @@ export function Helper() {
         const target = event.target;
         const value = target.value;
         var GreenLetters = greenWords
-        console.log(value)
-        console.log(GreenLetters)
         GreenLetters[columnName] = value
         setGreenWords(GreenLetters)
     }
@@ -181,16 +181,16 @@ export function Helper() {
                             </Form>
                         </Card.Body>
                     </Card>
-                    {/*                         {
-                            this.state.result?
+                    {
+                            data != "" ?
                             <>
                                 <Card  className="py-2">
                                     <Card.Body>
                                         <Card.Title>
-                                            {state.meaning}
+                                            {"Possible Words"}
                                         </Card.Title>
                                         <Card.Text>
-                                            {state.result}
+                                            {data}
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
@@ -198,9 +198,10 @@ export function Helper() {
                             :
                             <>
                             </>
-                        } */}
+                        }
                 </Container>
             </Col>
+            <ToastContainer/>
         </div>
     )
 }

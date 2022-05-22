@@ -60,7 +60,7 @@ export class SignUpPopUp extends Component {
       }
     ).catch(e => {
       this.props.onError(e);
-    });
+    })
   }
 
   handleHide = () => {
