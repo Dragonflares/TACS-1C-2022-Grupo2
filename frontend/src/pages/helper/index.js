@@ -59,14 +59,18 @@ export function Helper() {
     const handlegreyWordsChange = useCallback((event) => {
         const target = event.target;
         const value = target.value;
-
+        var regex = /^[A-Za-z]*$/
+        if(!regex.test(value))
+            return
         setGreyWords(value)
     })
 
     const handleyellowWordsChange = useCallback((event) => {
         const target = event.target;
         const value = target.value;
-
+        var regex = /^[A-Za-z]*$/
+        if(!regex.test(value))
+            return
         setYellowWords(value)
     })
 
@@ -89,6 +93,7 @@ export function Helper() {
     function ManageGreenWord(event, columnName){
         const target = event.target;
         const value = target.value;
+
         var GreenLetters = greenWords
         GreenLetters[columnName] = value
         setGreenWords(GreenLetters)
