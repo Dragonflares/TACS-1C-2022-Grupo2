@@ -1,6 +1,7 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.domain.*;
+import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -63,7 +64,7 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
 
     public void addUser(Tournament tournament, User user) {
 
-       tournament.getParticipants().add(user);
+        tournament.getParticipants().add(user);
 
     }
 

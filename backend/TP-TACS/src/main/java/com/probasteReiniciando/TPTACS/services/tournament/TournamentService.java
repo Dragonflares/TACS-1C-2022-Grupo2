@@ -6,6 +6,7 @@ import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
 import com.probasteReiniciando.TPTACS.exceptions.UnAuthorizedException;
+import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
@@ -69,6 +70,9 @@ public class TournamentService {
 
         User user = userRepository.findByName(userName).orElseThrow(() -> new UserNotFoundException(userName));
 
+        if(tournament.getParticipants().stream().anyMatch(user1 -> user1.getUsername().equals(user.getUsername()))) {
+            throw new UserAlreadyExistsException(user.getUsername() + " is already in tournament");
+        }
         if (Privacy.PUBLIC.equals(tournament.getPrivacy())) {
 
             TournamentValidator.validateStartDate(tournament.getStartDate());
