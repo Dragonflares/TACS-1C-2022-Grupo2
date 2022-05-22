@@ -13,19 +13,15 @@ export function Home(){
                     <Col xs={12} md={{offset: 2, span: 8}}>
                         <Row>
                             <Col xs={12} md={{offset: 3, span: 6}}>
-                                <Image src='images/WordleLogo.png' fluid/>
+                                <Image src='images/home_logo.png' alt="WORDLE TOURNEY"fluid/>
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <p>orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+                                <p><b>Wordle Tourney</b> is your all-in-one companion for Wordle!</p>
+                                <p>Participate in <b>custom tournaments</b>, or find the answers you are looking for with the <b>Helper</b> and <b>Dictionary</b>.</p>
                             </Col>
-                        </Row>
-                        <Row>
-                            <Col xs={12} md={{offset: 3, span: 6}}>
-                                <Image src='images/Instructions.png' fluid/>    
-                            </Col>
-                        </Row>              
+                        </Row>           
                     </Col>
                 </div>                
             </Container>
