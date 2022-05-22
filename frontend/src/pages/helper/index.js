@@ -138,7 +138,7 @@ export function Helper() {
                                                                 value={language}
                                                                 onChange={handleLanguageChange}>
                                                                 <option value={englishLang}>ENGLISH</option>
-                                                                <option value={spanishLang}>ESPAÑOL</option>
+                                                                <option value={spanishLang}>SPANISH</option>
                                                             </Form.Select>
                                                         }
                                                         <label style={{ paddingLeft: 0, marginLeft: '1em' }}>Language</label>

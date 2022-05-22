@@ -23,7 +23,7 @@ export class Dictionary extends Component {
     componentDidMount(){
         getLanguages().then(response => {
                 this.setState({
-                    languages: response.data,
+                    languages: response.data.response.languages,
                 });
         }).catch(e => {
             toast.error(e.response.data.response.message);
@@ -40,15 +40,19 @@ export class Dictionary extends Component {
         });
     }
 
-    handleSubmit = () => {
+    handleSubmit = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
         const {language, search} = this.state;
 
-        getMeaning(search, language).then(response => {
+        getMeaning(search.toLowerCase(), language).then(response => {
                 this.setState({
                     search: search,
                     result: response.data.response.phrase
                 })
         }).catch(e => {
+            console.log(e)
             toast.error(e.response.data.response.message);
         })
     }
@@ -61,7 +65,7 @@ export class Dictionary extends Component {
                         <Card  className="py-2">
                             <Card.Body>
                                 <Card.Title>Dictionary</Card.Title>
-                                <Form>
+                                <Form onSubmit={this.handleSubmit}>
                                     <Row>
                                         <Col xs={12} md={3} className="py-1">
                                             <Form.Group controlId="languageControl">
@@ -69,7 +73,7 @@ export class Dictionary extends Component {
                                                     value={this.state.language} 
                                                     onChange={this.handleChange}>
                                                     {this.state.languages.map(lang => (
-                                                        <option key={lang.id} value={lang.id}>{lang.desc}</option>
+                                                        <option key={lang} value={lang}>{lang}</option>
                                                     ))}
                                                 </Form.Select>
                                             </Form.Group>
@@ -84,7 +88,7 @@ export class Dictionary extends Component {
                                         </Col>
                                         <Col md={2} className="py-1">
                                             <div className={"d-grid gap-2"}>
-                                                <Button type="button" onClick={this.handleSubmit}>Search</Button>
+                                                <Button type="submit">Search</Button>
                                             </div>
                                         </Col>
                                     </Row>

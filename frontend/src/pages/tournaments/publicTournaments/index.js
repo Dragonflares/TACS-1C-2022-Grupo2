@@ -111,8 +111,8 @@ export function PublicTournaments () {
                 toast.error(e.response.data.response.message)
             }
         ).finally(() => {
+            //REFRESH TABLE?
             setShow(false);
-            getData(1, pageSize);
         });
     });
 

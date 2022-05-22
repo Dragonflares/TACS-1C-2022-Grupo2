@@ -18,7 +18,7 @@ export function Results () {
 
     const init = () => {
         getLanguages().then(response => {
-                setLanguages(response.data);
+                setLanguages(response.data.response.languages);
         }).catch(e => {
             toast.error(e.response.data.response.message);
         })
@@ -91,7 +91,7 @@ export function Results () {
                                                     value={language} 
                                                     onChange={handleLangChange}>
                                                     {languages.map(lang => (
-                                                        <option key={lang.id} value={lang.id}>{lang.desc}</option>
+                                                        <option key={lang} value={lang}>{lang}</option>
                                                     ))}
                                                 </Form.Select>
                                             </Form.Group>

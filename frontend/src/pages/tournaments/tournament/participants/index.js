@@ -65,7 +65,7 @@ export default function Participants({id , action}){
         addParticipants(id, {username:participant}).then(
             response => {
                 getData();
-                toast.success("participante agregado correctamente")
+                toast.success("Successfully added participant!")
             }
         ).catch( e => {
                 toast.error(e.response.data.response.message);

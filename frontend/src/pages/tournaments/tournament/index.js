@@ -10,25 +10,27 @@ import {
 import Participants from "./participants";
 import { getPrivacies } from "../../../services/privacyService";
 import { ToastContainer, toast } from 'react-toastify';
-
-const englishLang = 'ENGLISH';
-const spanishLang = 'SPANISH';
+import { getLanguages } from "../../../services/languageService";
 
 export function Tournament ({redirectFromRoot}) {
     const {action, id} = useParams();
     const today = new Date();
     const tomorrow = new Date();
+    const pastTomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
+    pastTomorrow.setDate(pastTomorrow.getDate() + 2);
+
     const [validated, setValidated] = useState(false);
     const [privacies, setPrivacies] = useState([]);
+    const [languages, setLanguages] = useState([]);
     const [validDate, setValidDate] = useState({
     });
     const [validName, setValidName] = useState({});
     const [tournament, setTournament] = useState({
         name: '',
-        language: englishLang,
-        startDate: today.toISOString().slice(0,10),
-        endDate: tomorrow.toISOString().slice(0,10),
+        language: 'ENGLISH',
+        startDate: tomorrow.toISOString().slice(0,10),
+        endDate: pastTomorrow.toISOString().slice(0,10),
         privacy: 'PRIVATE'
     });
 
@@ -38,8 +40,14 @@ export function Tournament ({redirectFromRoot}) {
                 redirectFromRoot('error');
             }
             
+            getLanguages().then(response => {
+                setLanguages(response.data.response.languages);
+            }).catch(e => {
+                toast.error(e.response.data.response.message);
+            })
+
             getPrivacies().then(response => {
-                    setPrivacies(response.data.response);
+                    setPrivacies(response.data.response.privacys);
             }).catch(e => {
                 toast.error(e.response.data.response.message);
             })
@@ -91,7 +99,7 @@ export function Tournament ({redirectFromRoot}) {
             return;
         }
 
-        if(tournament.endDate < tournament.startDate || tournament.startDate < today.toISOString().slice(0,10)){
+        if(tournament.endDate < tournament.startDate || tournament.startDate <= today.toISOString().slice(0,10)){
             setValidated(false);
             setValidName({
                 isValid: true,
@@ -178,8 +186,9 @@ export function Tournament ({redirectFromRoot}) {
                                                                 readOnly={action === 'view' || action === 'delete'}
                                                                 value={tournament.language} 
                                                                 onChange={handleTournamentChange}>
-                                                                    <option value={englishLang}>ENGLISH</option>
-                                                                    <option value={spanishLang}>ESPAÑOL</option>
+                                                                    {languages.map(lang => (
+                                                                         <option key={lang} value={lang}>{lang}</option>
+                                                                    ))}
                                                             </Form.Select>
                                                             :
                                                             <>
@@ -208,7 +217,7 @@ export function Tournament ({redirectFromRoot}) {
                                                                 onChange={handleTournamentChange}>
                                                                     {
                                                                         privacies.map(p => (
-                                                                            <option key={p.id} value={p.id}>{p.desc}</option>
+                                                                            <option key={p} value={p}>{p}</option>
                                                                         ))
                                                                     }
                                                             </Form.Select>
