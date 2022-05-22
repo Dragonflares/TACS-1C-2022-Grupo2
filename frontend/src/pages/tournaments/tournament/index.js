@@ -21,6 +21,9 @@ export function Tournament ({redirectFromRoot}) {
     tomorrow.setDate(tomorrow.getDate() + 1);
     const [validated, setValidated] = useState(false);
     const [privacies, setPrivacies] = useState([]);
+    const [validDate, setValidDate] = useState({
+    });
+    const [validName, setValidName] = useState({});
     const [tournament, setTournament] = useState({
         name: '',
         language: englishLang,
@@ -28,7 +31,6 @@ export function Tournament ({redirectFromRoot}) {
         endDate: tomorrow.toISOString().slice(0,10),
         privacy: 'PRIVATE'
     });
-    const [validDate, setValidDate] = useState(true);
 
     useEffect(() => {
         const init =  () => {
@@ -83,14 +85,31 @@ export function Tournament ({redirectFromRoot}) {
         if(!validated){
             setValidated(validated => !validated);
         }
-    
-        if(tournament.name === '' || !tournament.startDate || !tournament.endDate)
-          return;
 
-        if(tournament.endDate < tournament.startDate || tournament.startDate <= today.toISOString){
-            setValidDate(false);
-            toast.error("Dates are invalid");
+        if(tournament.name === '' || !tournament.startDate || !tournament.endDate)
+        {
+            toast.error("Fill required fields");
+
             return;
+        }
+
+        if(tournament.endDate < tournament.startDate || tournament.startDate < today.toISOString().slice(0,10)){
+            setValidated(false);
+            setValidName({
+                isValid: true,
+                isInvalid: false,
+            });
+            setValidDate({
+                isValid: false,
+                isInvalid: true,
+            });
+            toast.error("Dates invalid!");
+            return;
+        }else{
+            setValidName({
+            });
+            setValidDate({
+            });
         }
 
         if(action  === 'create') {
@@ -141,7 +160,8 @@ export function Tournament ({redirectFromRoot}) {
                                                         <Form.Control name="name" type="text" placeholder="Name" required
                                                             readOnly={action === 'view' || action === 'delete'}
                                                             value={tournament.name} 
-                                                            onChange={handleTournamentChange}/>
+                                                            onChange={handleTournamentChange}
+                                                            {...validName}/>
                                                         <Form.Text className="text-muted">
                                                         </Form.Text>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>Name</label>   
@@ -217,10 +237,9 @@ export function Tournament ({redirectFromRoot}) {
                                                     <FloatingLabel className='group-first-element'>
                                                         <Form.Control name="startDate" type="date" placeholder="Start Date" required
                                                             readOnly={action === 'view' || action === 'delete'}
-                                                            value={tournament.startDate} 
-                                                            isValid={validDate} 
-                                                            isInvalid={!validDate}
-                                                            onChange={handleTournamentChange}/>
+                                                            value={tournament.startDate}
+                                                            onChange={handleTournamentChange}
+                                                            {...validDate}/>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>Start Date</label>   
                                                     </FloatingLabel>
                                                 </InputGroup>
@@ -233,9 +252,8 @@ export function Tournament ({redirectFromRoot}) {
                                                         <Form.Control name="endDate" type="date" placeholder="End Date" required
                                                             readOnly={action === 'view' || action === 'delete'}
                                                             value={tournament.endDate}
-                                                            isValid={validDate} 
-                                                            isInvalid={!validDate}
-                                                            onChange={handleTournamentChange}/>
+                                                            onChange={handleTournamentChange}
+                                                            {...validDate}/>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>End Date</label>   
                                                     </FloatingLabel>
                                                 </InputGroup>
