@@ -5,8 +5,9 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from "react-bootstrap/Modal";
 import { PaginatedTable } from "../../../shared/components/paginatedTable";
-import { addParticipants, getPublicTournaments } from "../../../services/tournamentService";
+import { addParticipants, getPublicTournaments, getPublicTournamentsCount } from "../../../services/tournamentService";
 import { getUserDataStruct } from '../../../services/userService'
+import { ToastContainer, toast } from 'react-toastify';
 
 export function PublicTournaments () {
     const pageSize = 10;
@@ -41,53 +42,46 @@ export function PublicTournaments () {
         }
     ];
 
-    const getData = async (page, pageSize) =>  {
-        
-
-        //const offset = ((page - 1) * pageSize);
-        //page = 1
-        getPublicTournaments(1, pageSize).then(
+    const getData = (page, pageSize) =>  {
+        getPublicTournaments(page, pageSize).then(
             response => {
-                if(response.status === 200){
-                    setData({
+                setData(p => (
+                    {
+                        ...p,
                         elements: response.data.response,
-                        count: 100,
-                    });
-                }
+                    }
+                ))
+
+                getPublicTournamentsCount().then(
+                    resp => {
+                        setData(p => ({
+                            ...p,
+                            count: resp.data.response,
+                        }))
+                    }
+                ).catch(
+                    e => {
+                        toast.error(e.response.data.response.message);
+                    }
+                )         
+            }
+        ).catch(
+            e => {
+                toast.error(e.response.data.response.message);
             }
         );
-        
-        /* MOCK
-const elements = [];
-        for(let i = offset + 1; i < offset + pageSize + 1; i++){
-            elements.push({
-                id: i,
-                name: `tourn nr0 ${i}`,
-                owner: 'pepe',
-                language: 'english',
-                ongoing: 'Si'
-            });
-        }
-
-        const mock = {
-            elements : elements,
-            count : 100,
-        }
-
-        setData(mock);
-        */
     };
 
     useEffect(() => {
         const init = async () => {
-            await getData(1, pageSize);
+            getData(1, pageSize);
         };
 
         init();
     }, []);
 
     const handlePageChange = useCallback(async (page, pageSize) => {
-        await getData(page, pageSize);
+        getData(page, pageSize);
     });
 
     const handleRowClick = useCallback((element) => {
@@ -106,15 +100,20 @@ const elements = [];
     const handleJoin = useCallback(() => {
         addParticipants(selected.id,getUserDataStruct()).then(
             response => {
-                if(response.status === 200){
-                    setSelected( {
-                        id: 0,
-                        name: ''
-                    });
-                }
-                setShow(false);
+                toast.success(`Successfully joined ${selected.name}!`);
+                setSelected( {
+                    id: 0,
+                    name: ''
+                });
             }
-        )
+        ).catch(
+            e => {            
+                toast.error(e.response.data.response.message)
+            }
+        ).finally(() => {
+            setShow(false);
+            getData(1, pageSize);
+        });
     });
 
     return (
@@ -158,6 +157,7 @@ const elements = [];
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <ToastContainer/>
         </>
     )
 }

@@ -44,7 +44,6 @@ export default function Positions(){
             }
         ).catch(
             e => {
-                console.log(e.response.data);
                 toast.error(e.response.data.response.message);
             }
         );        

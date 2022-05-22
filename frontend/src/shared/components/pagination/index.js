@@ -19,11 +19,11 @@ export function PaginationComponent({
     });
 
     const onNext = async () => {
-        await onPageChange(currentPage + 1);
+        onPageChange(currentPage + 1);
     };
 
     const onPrevious = async () => {
-        await onPageChange(currentPage - 1);
+        onPageChange(currentPage - 1);
     };
 
     let lastPage = paginationRange[paginationRange.length - 1];
