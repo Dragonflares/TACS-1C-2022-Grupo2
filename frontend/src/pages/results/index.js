@@ -24,8 +24,10 @@ export function Results () {
         })
 
         getDailyResults().then(response => {
+            if(!response.data){
                 setResults(response.data);
                 setLanguage(response.data[0].language);
+            }
         }).catch(e => {
             toast.error(e.response.data.response.message);
         })
@@ -58,7 +60,7 @@ export function Results () {
             points: result
         }).then(() => {
                 init();
-        }).catch(e=> {
+        }).catch( e => {
             toast.error(e.response.data.response.message);
         })
     });
@@ -67,7 +69,6 @@ export function Results () {
         const  value = event.target.value;
         if(results.length > 0) {
             const langResult = results.find((r) => (r.lang === value));
-
             setResult(langResult.result);
         } else {
             setLanguage(value);
