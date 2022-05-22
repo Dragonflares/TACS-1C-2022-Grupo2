@@ -2,8 +2,6 @@ package com.probasteReiniciando.TPTACS.services.tournament;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.domain.*;
-import com.probasteReiniciando.TPTACS.dto.TournamentDto;
-import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
 import com.probasteReiniciando.TPTACS.exceptions.UnAuthorizedException;
 import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
@@ -14,10 +12,7 @@ import com.probasteReiniciando.TPTACS.validators.TournamentValidator;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -133,15 +128,17 @@ public class TournamentService {
 
     }
 
-    public Integer getQuantityOfTournaments(Privacy privacy, String userLoggedIn) {
+    public QuantityTournament getQuantityOfTournaments(Privacy privacy, String userLoggedIn) {
 
-        return switch (privacy) {
+        Integer quantity = switch (privacy) {
 
             case PUBLIC -> tournamentRepository.quantityOfPublicTournaments();
 
             case PRIVATE -> tournamentRepository.quantityOfPrivateTournaments(userLoggedIn);
 
         };
+
+        return QuantityTournament.builder().quantity(quantity).build();
 
     }
 
@@ -196,5 +193,16 @@ public class TournamentService {
         return positions;
 
     }
+
+    public TournamentsMetadata obtainTournamentMetadata(String userLoggedIn) {
+
+        return TournamentsMetadata.builder()
+                .publicTournamentsQuantity(tournamentRepository.quantityOfPublicTournaments())
+                .privateTournamentsQuantity(tournamentRepository.quantityOfPrivateTournaments(userLoggedIn))
+                .privacys(Arrays.stream(Privacy.values()).map(p -> p.toString()).toList())
+                .build();
+
+    }
+
 
 }

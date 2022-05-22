@@ -3,8 +3,11 @@ package com.probasteReiniciando.TPTACS.controllers.tournament;
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
+import com.probasteReiniciando.TPTACS.domain.TournamentsMetadata;
 import com.probasteReiniciando.TPTACS.dto.PositionDto;
+import com.probasteReiniciando.TPTACS.dto.QuantityTournamentDto;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
+import com.probasteReiniciando.TPTACS.dto.TournamentsMetadataDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.exceptions.ErrorParameterException;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
@@ -40,8 +43,15 @@ public class TournamentController {
     }
 
     @GetMapping(path = "/quantity" ,produces = "application/json")
-    public Integer quantityTournaments (@RequestParam(defaultValue = "PUBLIC") Privacy privacy, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
-        return  tournamentService.getQuantityOfTournaments(privacy, userLoggedIn);
+    public QuantityTournamentDto quantityTournaments (@RequestParam(defaultValue = "PUBLIC") Privacy privacy, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
+        return  modelMapper.map(tournamentService.getQuantityOfTournaments(privacy, userLoggedIn),QuantityTournamentDto.class);
+    }
+
+    @GetMapping(path = "/metadata" ,produces = "application/json")
+    public TournamentsMetadataDto obtainTournamentsMetadata (@RequestAttribute(name="userAttributeName") String userLoggedIn) {
+
+        return modelMapper.map(tournamentService.obtainTournamentMetadata(userLoggedIn),TournamentsMetadataDto.class);
+
     }
 
 

@@ -1,10 +1,12 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.domain.*;
-import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
