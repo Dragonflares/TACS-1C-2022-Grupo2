@@ -59,6 +59,7 @@ export function Results () {
             date: new Date().toISOString().slice(0, 10),
             points: result
         }).then(() => {
+            toast.success("result created");
                 init();
         }).catch( e => {
             toast.error(e.response.data.response.message);
