@@ -61,7 +61,7 @@ export function LogIn ({isLoged}){
     })
 
     const handleOnError = useCallback((e) => {
-        toast.error(e);
+        toast.error(e.response.data.response.message);
     })
 
     return (
