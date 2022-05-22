@@ -23,6 +23,7 @@ export function Helper() {
     })
     const [yellowWords, setYellowWords] = useState('')
     const [greyWords, setGreyWords] = useState('')
+    const [searchExecuted, setSearch] = useState(false)
 
     const getWord = () => {
         getHelperWord({
@@ -45,6 +46,7 @@ export function Helper() {
 
     const handleSubmit = () => {
         getWord()
+        setSearch(true)
     }
 
     const handleLanguageChange = useCallback((event) => {
@@ -190,6 +192,19 @@ export function Helper() {
                                         </Card.Title>
                                         <Card.Text>
                                             {data}
+                                        </Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </>
+                            : searchExecuted ?
+                            <>
+                                <Card  className="py-2">
+                                    <Card.Body>
+                                        <Card.Title>
+                                            {"Possible Words"}
+                                        </Card.Title>
+                                        <Card.Text>
+                                            {"There are no possible words under these parameters"}
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
