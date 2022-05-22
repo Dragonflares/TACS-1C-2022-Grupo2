@@ -26,7 +26,7 @@ public class WebWordFinder implements WordFinder {
         WebClient client = WebClient.create();
         ResponseEntity<String> response = client.get()
                 .uri(urlApi, uri -> uri
-                        .queryParam("text", word)
+                        .queryParam("text", word.toLowerCase())
                         .queryParam("language", language)
                         .build())
                 .header("X-RapidAPI-Host", host)
