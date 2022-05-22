@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { getLanguages } from '../../services/languageService';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { getMeaning } from '../../services/dictionaryService';
 export class Dictionary extends Component {
@@ -21,12 +22,11 @@ export class Dictionary extends Component {
 
     componentDidMount(){
         getLanguages().then(response => {
-           if(response.status === 200){
                 this.setState({
                     languages: response.data,
                 });
-           }
-        });
+        }).catch(e => 
+            {toast.error(e.response.data.response.message);})
     } 
 
     handleChange= (event) => {
@@ -43,13 +43,12 @@ export class Dictionary extends Component {
         const {language, search} = this.state;
 
         getMeaning(search, language).then(response => {
-            if(response){
                 this.setState({
                     search: search,
                     result: response.data.response.phrase
                 })
-            }
-        });
+        }).catch(e => 
+            {toast.error(e.response.data.response.message);})
     }
 
     render() {
@@ -110,6 +109,7 @@ export class Dictionary extends Component {
                         }
                     </Container>
                 </Col>
+                <ToastContainer/>
             </div>
         );
     }

@@ -5,6 +5,7 @@ import {
 } from "react-bootstrap";
 import { getLanguages } from '../../services/languageService';
 import { getHelperWord } from '../../services/helperService';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const englishLang = 'ENGLISH';
@@ -39,7 +40,8 @@ export function Helper() {
                     })
                 }
             }
-        )
+        ).catch( e => 
+            {toast.error(e.response.data.response.message);})
     }
 
     const handleSubmit = () => {
@@ -165,6 +167,7 @@ export function Helper() {
                         } */}
                 </Container>
             </Col>
+            <ToastContainer/>
         </div>
     )
 }
