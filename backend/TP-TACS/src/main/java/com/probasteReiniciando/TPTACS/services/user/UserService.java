@@ -43,9 +43,7 @@ public class UserService {
         return userRepository.createUser(newUser);
     }
 
-    public Result createResult(String userLoggedIn, ResultDto resultDto) {
-
-        Result result = modelMapper.map(resultDto,Result.class);
+    public Result createResult(String userLoggedIn, Result result) {
 
         if(userRepository.resultAlreadyCreated(userLoggedIn, result)){
             throw new ResultAlreadyExistsException(userLoggedIn,result.getDate(),result.getLanguage());
@@ -66,16 +64,17 @@ public class UserService {
         return userRepository.findByName(userLoggedIn).get().getResults().stream().filter(result -> result.getDate().equals(LocalDate.now())).toList();
     }
 
-    public Result modifyResult(String userLoggedIn, ResultDto resultDto, int resultId) {
-        Result result = modelMapper.map(resultDto,Result.class);
+    public Result modifyResult(String userLoggedIn, Result result, int resultId) {
+
         List<Result> resultsUser = getResultsByUserAndDateAndId(userLoggedIn, LocalDate.now(),resultId);
-        if(resultsUser.isEmpty() || !resultDto.getDate().equals(LocalDate.now())){
+        if(resultsUser.isEmpty() || !result.getDate().equals(LocalDate.now())){
             throw new ResultCanNotBeModified();
         }
 
         userRepository.modifyResult(userLoggedIn,result,resultsUser.get(0));
 
         return result;
+
     }
 
     private List<Result> getResultsByUserAndDateAndId(String userLoggedIn, LocalDate now, int resultId) {
