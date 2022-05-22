@@ -156,7 +156,7 @@ public class TournamentService {
         List<LocalDate> tournamentDates;
 
         if(currentDate.isBefore(tournamentStartDate))
-            tournamentDates = List.of();
+            tournamentDates = new ArrayList<>();
         else {
             if (currentDate.isBefore(tournamentEndDate))
                 tournamentDates = tournamentStartDate.datesUntil(currentDate.plusDays(1)).toList();
@@ -164,7 +164,7 @@ public class TournamentService {
                 tournamentDates = tournamentStartDate.datesUntil(tournamentEndDate.plusDays(1)).toList();
         }
 
-        for (User participant : tournament.getParticipantsWithOwner()) {
+        for (User participant : tournament.getParticipants()) {
 
             int points = 0;
 
