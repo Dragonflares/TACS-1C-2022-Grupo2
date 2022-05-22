@@ -5,7 +5,7 @@ const url = Config.ApiURL;
 
 //USO LOCAL STORAGE PROVISORIAMENTE
 export function isAuthenticated(){
-    return localStorage.getItem('jwt') ? true : false;
+    return sessionStorage.getItem('jwt') ? true : false;
 }
 
 //LOCAL STORAGE PROVISIORIO
@@ -13,8 +13,8 @@ export function auth(data){
     return axios.post(`${url}/accesstoken`, data).then(
         (response) => {
             if(response.status === 200){
-                localStorage.setItem('jwt', response.data.response.token);
-                localStorage.setItem('loggedUser', data.username)
+                sessionStorage.setItem('jwt', response.data.response.token);
+                sessionStorage.setItem('loggedUser', data.username)
                 return {
                     status :response.status
                 }            
@@ -29,5 +29,6 @@ export function auth(data){
 }
 
 export function logOut() {
-    localStorage.removeItem('jwt');
+    sessionStorage.removeItem('jwt');
+    sessionStorage.removeItem('loggedUser');
 }

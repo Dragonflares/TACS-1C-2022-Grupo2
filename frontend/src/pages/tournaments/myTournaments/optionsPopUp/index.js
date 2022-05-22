@@ -22,7 +22,7 @@ export default function OptionsPopUp({selected, show, handleClose}) {
                             <Button as={Link} to={`/positions/${selected.id}`}  variant="success">Positions</Button>
                         </Row>
                         {
-                            localStorage.getItem('loggedUser') === selected.owner.username ?
+                            sessionStorage.getItem('loggedUser') === selected.owner.username ?
                             <>
                                 <Row className="_6lux">
                                     <Button as={Link} to={`/tournament/edit/${selected.id}`} variant="primary">Edit</Button>

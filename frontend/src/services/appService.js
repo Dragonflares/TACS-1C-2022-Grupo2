@@ -4,7 +4,7 @@ import Config from '../appConfig.json';
 const url = Config.ApiURL;
 
 export function getAuthHeader () {
-    const token = localStorage.getItem('jwt');
+    const token = sessionStorage.getItem('jwt');
 
     return {
         headers: { Authorization: `Bearer ${token}` }

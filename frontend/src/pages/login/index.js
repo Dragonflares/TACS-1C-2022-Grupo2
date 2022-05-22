@@ -11,7 +11,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { ToastContainer, toast } from 'react-toastify';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
-import {auth} from '../../services/authService';
+import {auth, isAuthenticated} from '../../services/authService';
 
 export function LogIn ({isLoged}){
     
@@ -72,57 +72,64 @@ export function LogIn ({isLoged}){
                 </Row>
                 <Row>
                     <Col md={{span: 6, offset:3}}>
-                        <Form onSubmit={handleSubmit} noValidate validated={validated}>
-                            <Card>
+                        <Card>
+                            {
+                                isAuthenticated() ? 
                                 <Card.Body>
-                                    <Form.Group as={Row} className='_6lux' controlId="formUsername">
-                                        <InputGroup>
-                                            <FloatingLabel className='group-first-element'>
-                                                <Form.Control name="username" type="text" placeholder="Username" required
-                                                    value={username} 
-                                                    onChange={(event) => {setUsername(event.target.value)}}/>
-                                                <Form.Text className="text-muted">
-                                                </Form.Text>
-                                                <label style={{paddingLeft:0, marginLeft: '1em'}}>UserName</label>   
-                                            </FloatingLabel>
-                                        </InputGroup>
-                                    </Form.Group>
-                                    <Form.Group as={Row} className='_6lux' controlId="formPassword">
-                                        <InputGroup>
-                                            <FloatingLabel className='group-first-element'> 
-                                                <Form.Control className="form-control-rounded" 
-                                                    name="password" required
-                                                    id="password" type={type} placeholder="Password" 
-                                                    value={password}                                                    
-                                                    onChange={(event) => {setPassword(event.target.value)}}/>                                               
-                                                <label style={{paddingLeft:0, marginLeft: '1em'}}>Password</label>   
-                                            </FloatingLabel>
-                                            <Button variant="outline-secondary"
-                                                    onClick={showHide}
-                                                    size="sm">
-                                                    {
-                                                        type === 'text'?<AiFillEye color='black'/>:<AiFillEyeInvisible color='black'/>
-                                                    }
-                                            </Button>
-                                        </InputGroup>
-                                    </Form.Group>
-                                    <Row className='_6lux'>
-                                        <div className="d-grid gap-2">
-                                            <Button variant="primary" type='submit'>
-                                                Log In
-                                            </Button>
-                                        </div>
-                                        <div className="d-grid gap-2 pt-1" onClick={toggleSigIn}>
-                                            <Button variant="primary" >
-                                                Sign Up
-                                            </Button>
-                                        </div>
-                                        <SignUpPopUp show={showModal} setUser={setUsername} 
-                                        handleClose={toggleSigIn} position="right center" onError={handleOnError} onSuccess={handleOnSuccess}/>
-                                    </Row>                             
+                                    <Card.Text><h3>Already Logged In</h3></Card.Text>
                                 </Card.Body>
-                            </Card>  
-                        </Form>
+                                :
+                                <Form onSubmit={handleSubmit} noValidate validated={validated}>
+                                    <Card.Body>
+                                        <Form.Group as={Row} className='_6lux' controlId="formUsername">
+                                            <InputGroup>
+                                                <FloatingLabel className='group-first-element'>
+                                                    <Form.Control name="username" type="text" placeholder="Username" required
+                                                        value={username} 
+                                                        onChange={(event) => {setUsername(event.target.value)}}/>
+                                                    <Form.Text className="text-muted">
+                                                    </Form.Text>
+                                                    <label style={{paddingLeft:0, marginLeft: '1em'}}>UserName</label>   
+                                                </FloatingLabel>
+                                            </InputGroup>
+                                        </Form.Group>
+                                        <Form.Group as={Row} className='_6lux' controlId="formPassword">
+                                            <InputGroup>
+                                                <FloatingLabel className='group-first-element'> 
+                                                    <Form.Control className="form-control-rounded" 
+                                                        name="password" required
+                                                        id="password" type={type} placeholder="Password" 
+                                                        value={password}                                                    
+                                                        onChange={(event) => {setPassword(event.target.value)}}/>                                               
+                                                    <label style={{paddingLeft:0, marginLeft: '1em'}}>Password</label>   
+                                                </FloatingLabel>
+                                                <Button variant="outline-secondary"
+                                                        onClick={showHide}
+                                                        size="sm">
+                                                        {
+                                                            type === 'text'?<AiFillEye color='black'/>:<AiFillEyeInvisible color='black'/>
+                                                        }
+                                                </Button>
+                                            </InputGroup>
+                                        </Form.Group>
+                                        <Row className='_6lux'>
+                                            <div className="d-grid gap-2">
+                                                <Button variant="primary" type='submit'>
+                                                    Log In
+                                                </Button>
+                                            </div>
+                                            <div className="d-grid gap-2 pt-1" onClick={toggleSigIn}>
+                                                <Button variant="primary" >
+                                                    Sign Up
+                                                </Button>
+                                            </div>
+                                            <SignUpPopUp show={showModal} setUser={setUsername} 
+                                            handleClose={toggleSigIn} position="right center" onError={handleOnError} onSuccess={handleOnSuccess}/>
+                                        </Row>                             
+                                    </Card.Body>
+                                </Form>
+                            }
+                        </Card>  
                     </Col>   
                 </Row>
             </Container>
