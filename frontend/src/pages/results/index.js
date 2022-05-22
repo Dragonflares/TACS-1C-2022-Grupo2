@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import { getLangauges } from "../../services/languageService";
+import { getLanguages } from "../../services/languageService";
 import { getDailyResults, createDailyResults, getUserDataStruct } from "../../services/userService";
 
 export function Results () {
@@ -16,7 +16,7 @@ export function Results () {
     const [results, setResults] = useState([]);
 
     const init = () => {
-        getLangauges().then(response => {
+        getLanguages().then(response => {
             if(response.status === 200){
                 setLanguages(response.data);
             }

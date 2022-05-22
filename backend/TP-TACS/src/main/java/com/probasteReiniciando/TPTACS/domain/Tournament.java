@@ -45,9 +45,11 @@ public class Tournament {
 
         List<User> participantsWithOwner = new ArrayList<>();
 
-        participantsWithOwner.addAll(participants);
+        if(participants != null)
+            participantsWithOwner.addAll(participants);
 
-        participantsWithOwner.add(owner);
+        if(owner != null)
+            participantsWithOwner.add(owner);
 
         return participantsWithOwner;
 

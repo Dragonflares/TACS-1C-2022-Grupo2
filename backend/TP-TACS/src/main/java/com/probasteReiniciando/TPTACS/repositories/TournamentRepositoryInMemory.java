@@ -60,22 +60,20 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
 
     }
 
-    public List<String> addUser(Tournament tournament, User user) {
+    public void addUser(Tournament tournament, User user) {
 
         if(tournament.getParticipants() == null) {
             tournament.setParticipants(new ArrayList<>());
         }
 
         tournament.getParticipants().add(user);
-        return tournament.getParticipants().stream().map(userStream -> userStream.getUsername()).collect(Collectors.toList());
-
 
     }
 
     @Override
-    public List<String> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order) {
+    public List<User> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order) {
 
-        List<String> participants = new ArrayList<>();
+        List<User> participants = new ArrayList<>();
 
         Optional<Tournament> tournament = obtainTournament(tournamentId);
 
@@ -87,7 +85,7 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
 
                 UserResultComparator userResultComparator = new UserResultComparator();
 
-                participants = tournament.get().getParticipants().stream().sorted(userResultComparator).map(userStream -> userStream.getUsername()).collect(Collectors.toList());
+                participants = tournament.get().getParticipants().stream().sorted(userResultComparator).collect(Collectors.toList());
 
                 if ("desc".equals(order.orElseGet(() -> "none"))) {
 
@@ -97,7 +95,7 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
 
             } else {
 
-                participants = tournament.get().getParticipants().stream().map(userStream -> userStream.getUsername()).collect(Collectors.toList());
+                participants = tournament.get().getParticipants().stream().collect(Collectors.toList());
 
             }
 

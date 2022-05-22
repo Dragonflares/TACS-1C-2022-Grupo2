@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import { getLangauges } from '../../services/languageService';
+import { getLanguages } from '../../services/languageService';
 
 import { getMeaning } from '../../services/dictionaryService';
 export class Dictionary extends Component {
@@ -20,7 +20,7 @@ export class Dictionary extends Component {
     }
 
     componentDidMount(){
-        getLangauges().then(response => {
+        getLanguages().then(response => {
            if(response.status === 200){
                 this.setState({
                     languages: response.data,
