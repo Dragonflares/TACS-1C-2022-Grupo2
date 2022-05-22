@@ -2,27 +2,26 @@ import React, {useState, useCallback, useEffect} from "react";
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
-import { PaginatedTable } from "../../shared/components/paginatedTable";
 import { Row } from "react-bootstrap";
 import { getPositions } from "../../services/tournamentService";
 import { useParams } from "react-router-dom";
+import NonPaginatedTable from "../../shared/components/table";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Positions(){
-    const [id] = useParams();
-    const pageSize = 10;
+    const {id} = useParams();
     const [data, setData] = useState({
-        elements: [],
-        count: 10,
+        elements: []
     });
     
     const headings = [
-        {   
+        {
             name: 'position',
-            show: '#'
+            show: '#',
         },
         {
             name: 'name',
-            show: 'Name'
+            show: 'Name',
         },
         {
             name: 'points',
@@ -30,53 +29,34 @@ export default function Positions(){
         }
     ];
 
-    const getData = async (page, pageSize) =>  {
-        
-
-        //const offset = ((page - 1) * pageSize);
-        //page = 1
-        await getPositions(id, 1, pageSize).then(
+    const getData = () =>  {
+        getPositions(id).then(
             response => {
-                if(response.status){
-                    setData({
-                        elements: response.data.response,
-                        count: 100,
-                    });
-                }
+                setData({
+                    elements: Array.from(response.data.response).map( (p, i) => {
+                        return {
+                            position: i + 1,
+                            name: p.user['username'],
+                            points: p.points
+                        }
+                    }),
+                });
             }
-        );
-        
-       /*MOCK para probar sin API
-        const elements = [];
-                for(let i = offset + 1; i < offset + pageSize + 1; i++){
-                    elements.push({
-                        position: i,
-                        name: `USER ${i}`,
-                        points: 0,
-                    });
-                }
-
-                const mock = {
-                    elements : elements,
-                    count : 20,
-                }
-                setData(mock);
-       */
+        ).catch(
+            e => {
+                console.log(e.response.data);
+                toast.error(e.response.data.response.message);
+            }
+        );        
     };
 
     useEffect(() => {
-        ///validar que id sea del formato correcto
-
         const init = async () => {
-            await getData(1, pageSize);
+            getData();
         };
 
         init();
     }, []);
-
-    const handlePageChange = useCallback(async (page, pageSize) => {
-        await getData(page, pageSize);
-    });
 
     const handleRowClick = useCallback((element) => {
     });
@@ -87,16 +67,14 @@ export default function Positions(){
                 <Container fluid>
                     <Card>
                         <Card.Body>
-                            <Card.Title>My Tournaments</Card.Title>
+                            <Card.Title>TOP 10</Card.Title>
                             <Row>
                                 {
-                                    data.count > 0 ?
+                                    data.elements.length > 0 ?
                                     <>
-                                        <PaginatedTable 
+                                        <NonPaginatedTable 
                                             headings={headings}
                                             data={data}
-                                            pageSize={pageSize}
-                                            onPageChange={handlePageChange}
                                             onClick={handleRowClick}
                                             hover={false}
                                             key='positions'
@@ -108,6 +86,7 @@ export default function Positions(){
                             </Row>                                                     
                         </Card.Body>
                     </Card>
+                    <ToastContainer/>
                 </Container>
             </Col>
         </>
