@@ -28,12 +28,14 @@ public class ResultController {
     }
 
     @PutMapping(path="/{resultId}", produces = "application/json")
-    public ResultDto modifyResult(@PathVariable int resultId, @RequestBody ResultDto result,@RequestAttribute(name="userAttributeName") String userLoggedIn) {
+    public ResultDto modifyResult(@PathVariable int resultId, @RequestBody ResultDto resultDto,@RequestAttribute(name="userAttributeName") String userLoggedIn) {
+        Result result = modelMapper.map(resultDto,Result.class);
         return modelMapper.map(userService.modifyResult(userLoggedIn,result,resultId),ResultDto.class);
     }
 
     @PostMapping(produces = "application/json")
-    public ResultDto createResult(@RequestAttribute(name="userAttributeName") String userLoggedIn, @RequestBody ResultDto result) {
+    public ResultDto createResult(@RequestAttribute(name="userAttributeName") String userLoggedIn, @RequestBody ResultDto resultDto) {
+        Result result = modelMapper.map(resultDto,Result.class);
         return modelMapper.map(userService.createResult(userLoggedIn,result),ResultDto.class);
     }
 }
