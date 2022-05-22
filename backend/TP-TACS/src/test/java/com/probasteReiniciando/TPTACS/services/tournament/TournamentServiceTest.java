@@ -4,21 +4,16 @@ import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
-import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import com.probasteReiniciando.TPTACS.repositories.TournamentRepositoryInMemory;
 import com.probasteReiniciando.TPTACS.repositories.UserRepositoryInMemory;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -29,10 +24,11 @@ public class TournamentServiceTest {
     private TournamentRepositoryInMemory tournamentRepository = new TournamentRepositoryInMemory();
 
 
+    //TODO
     @Test
     public void createTournament() throws TournamentBadRequestException {
 
-        TournamentService tournamentService = new TournamentService(tournamentRepository,userRepository);
+        TournamentService tournamentService = new TournamentService(tournamentRepository, userRepository);
 
         LocalDate startDate = LocalDate.now().plusDays(1);
         LocalDate endDate = startDate.plusDays(10);
@@ -47,10 +43,11 @@ public class TournamentServiceTest {
 
     }
 
+    //TODO
     @Test
     public void createTournamentBadRequestException() {
 
-        TournamentService tournamentService = new TournamentService(tournamentRepository,userRepository);
+        TournamentService tournamentService = new TournamentService(tournamentRepository, userRepository);
 
         LocalDate startDate = LocalDate.now().plusDays(1);
         LocalDate endDate = startDate.plusDays(10);
@@ -61,12 +58,14 @@ public class TournamentServiceTest {
                 .startDate(endDate).endDate(startDate)
                 .privacy(Privacy.PUBLIC).build();
 
-       // TournamentBadRequestException thrown = assertThrows ( TournamentBadRequestException.class,
-         //       () -> tournamentService.createTournament(dto,"pepe"));
+        // TournamentBadRequestException thrown = assertThrows ( TournamentBadRequestException.class,
+        //       () -> tournamentService.createTournament(dto,"pepe"));
 
         //assertTrue(thrown.getMessage().contains("range date is invalid"));
     }
 
+
+    //TODO corregir y tratar de contemplar todos los casos
     @Test
     public void addUserToPublicTournament() throws Exception {
 
@@ -74,7 +73,7 @@ public class TournamentServiceTest {
 
         when(userRepository.findByName("pepe")).thenReturn(Optional.of(userPepe));
 
-        TournamentService tournamentService = new TournamentService(tournamentRepository,userRepository);
+        TournamentService tournamentService = new TournamentService(tournamentRepository, userRepository);
 
         LocalDate startDate = LocalDate.now().plusDays(1);
         LocalDate endDate = startDate.plusDays(10);
@@ -90,6 +89,21 @@ public class TournamentServiceTest {
 
         //Assert.assertEquals(users, List.of(userPepe.getUsername()));
 
+    }
+
+    //TODO
+    @Test
+    public void obtainPositions() {
+    }
+
+    //TODO
+    @Test
+    public void updateTournament() {
+    }
+
+    //TODO
+    @Test
+    public void obtainTournaments() {
     }
 
 }
