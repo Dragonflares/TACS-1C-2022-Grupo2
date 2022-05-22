@@ -53,15 +53,12 @@ export class SignUpPopUp extends Component {
       username : username,
       password : password
     }).then(
-      response => {
-          if(response.status === 200){
+      () => {
               this.props.setUser(username);
               this.props.onSuccess();
-          }
-          this.handleHide();
+              this.handleHide();
       }
-    ).catch((e) => {
-      console.log(e.response.data.response.message);
+    ).catch(e => {
       this.props.onError(e);
     });
   }
