@@ -3,6 +3,7 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Image from 'react-bootstrap/Image';
 import { PaginatedTable } from "../../../shared/components/paginatedTable";
 import { Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -33,7 +34,7 @@ export function MyTournaments () {
         },
         {
             name: 'language',
-            show: 'Lang',
+            show: 'Language',
         },
         {
             name: 'startDate',
@@ -105,7 +106,7 @@ export function MyTournaments () {
                             <Card.Title>My Tournaments</Card.Title>
                             <Row>
                                 <Button as={Link} to={"/tournament/create"} variant="primary" style={{float: 'left'}}>
-                                    Add
+                                    Create New Tournament
                                 </Button>
                             </Row>
                             <Row>
@@ -122,7 +123,24 @@ export function MyTournaments () {
                                         />  
                                     </>
                                     :
-                                    <h3>NO TOURNAMENTS</h3>
+                                    <Container fluid>
+                                    <div style={{marginTop: 5 +'%'}}>
+                                        <Col xs={12} md={{offset: 2, span: 8}}>
+                                            <Row>
+                                                <Col xs={12} md={{offset: 3, span: 6}}>
+                                                    <Image src='images/404.png' fluid/>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col>
+                                                    <i><p>No tournaments found.</p>
+                                                    <p>Try creating a new one!</p></i>
+                                                </Col>
+                                            </Row>
+                                                       
+                                        </Col>
+                                    </div>                
+                                </Container>
                                 } 
                             </Row>                                                     
                         </Card.Body>

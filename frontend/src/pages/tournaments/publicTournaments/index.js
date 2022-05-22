@@ -3,6 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Image from 'react-bootstrap/Image';
+import { Row } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { PaginatedTable } from "../../../shared/components/paginatedTable";
 import { addParticipants, getPublicTournaments, getPublicTournamentsCount } from "../../../services/tournamentService";
@@ -30,7 +32,7 @@ export function PublicTournaments () {
         },
         {
             name: 'language',
-            show: 'Lang',
+            show: 'Language',
         },
         {
             name: 'startDate',
@@ -134,9 +136,24 @@ export function PublicTournaments () {
                                         />
                                     </>
                                 :
-                                <h3>
-                                    NO PUBLIC TOURNAMENTS
-                                </h3>
+                                <Container fluid>
+                                <div style={{marginTop: 5 +'%'}}>
+                                    <Col xs={12} md={{offset: 2, span: 8}}>
+                                        <Row>
+                                            <Col xs={12} md={{offset: 3, span: 6}}>
+                                                <Image src='images/404.png' fluid/>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                <i><p>No public tournaments found.</p>
+                                                <p>Try creating a new one!</p></i>
+                                            </Col>
+                                        </Row>
+                                                   
+                                    </Col>
+                                </div>                
+                            </Container>
                             }
                         </Card.Body>
                     </Card>
