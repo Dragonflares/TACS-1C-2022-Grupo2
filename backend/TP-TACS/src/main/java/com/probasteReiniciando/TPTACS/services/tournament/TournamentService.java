@@ -63,14 +63,15 @@ public class TournamentService {
 
         Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 
+        TournamentValidator.validateStartDate(tournament.getStartDate());
+
         User user = userRepository.findByName(userName).orElseThrow(() -> new UserNotFoundException(userName));
 
         if(tournament.getParticipants().stream().anyMatch(user1 -> user1.getUsername().equals(user.getUsername()))) {
             throw new UserAlreadyExistsException(user.getUsername() + " is already in tournament");
         }
-        if (Privacy.PUBLIC.equals(tournament.getPrivacy())) {
 
-            TournamentValidator.validateStartDate(tournament.getStartDate());
+        if (Privacy.PUBLIC.equals(tournament.getPrivacy())) {
 
             tournamentRepository.addUser(tournament, user);
 
@@ -83,7 +84,6 @@ public class TournamentService {
                 tournamentRepository.addUser(tournament, user);
 
                 return tournamentRepository.obtainParticipants(tournamentId,Optional.empty(),Optional.empty());
-
 
             } else {
 
@@ -124,7 +124,6 @@ public class TournamentService {
     public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int page, int limit) {
 
         return tournamentRepository.findByOwner(userLoggedIn, page, limit);
-
 
     }
 

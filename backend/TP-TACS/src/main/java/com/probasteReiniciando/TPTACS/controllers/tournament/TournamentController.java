@@ -3,7 +3,6 @@ package com.probasteReiniciando.TPTACS.controllers.tournament;
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
-import com.probasteReiniciando.TPTACS.domain.TournamentsMetadata;
 import com.probasteReiniciando.TPTACS.dto.PositionDto;
 import com.probasteReiniciando.TPTACS.dto.QuantityTournamentDto;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
