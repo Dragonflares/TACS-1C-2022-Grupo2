@@ -76,13 +76,19 @@ public class HelperService {
 
     public List<WordDto> findWords(HelpDto helpDto, List<String> words) {
         List<WordDto> wordDtosResult = new ArrayList<>();
+        HelpDto helpDtoModified = removeEmptyGreenWords(helpDto);
         words = words.stream()
-                .filter(word -> validatesGreyWords(word,helpDto.getGreyWords()))
-                .filter(word -> validatesYellowWords(word,helpDto.getYellowWords()))
-                .filter(word -> validatesGreenWords(word,helpDto.getGreenWords()))
+                .filter(word -> validatesGreyWords(word,helpDtoModified.getGreyWords()))
+                .filter(word -> validatesYellowWords(word,helpDtoModified.getYellowWords()))
+                .filter(word -> validatesGreenWords(word,helpDtoModified.getGreenWords()))
                 .collect(Collectors.toList());
         words.forEach(word -> wordDtosResult.add(WordDto.builder().phrase(word.toLowerCase()).build()));
         return wordDtosResult;
+    }
+
+    private HelpDto removeEmptyGreenWords(HelpDto helpDto) {
+        helpDto.getGreenWords().values().removeIf(String::isEmpty);
+        return helpDto;
     }
 
 
