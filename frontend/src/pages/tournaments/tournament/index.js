@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import Participants from "./participants";
 import { getPrivacies } from "../../../services/privacyService";
+import { ToastContainer, toast } from 'react-toastify';
 
 const englishLang = 'ENGLISH';
 const spanishLang = 'SPANISH';
@@ -27,6 +28,7 @@ export function Tournament ({redirectFromRoot}) {
         endDate: tomorrow.toISOString().slice(0,10),
         privacy: 'PRIVATE'
     });
+    const [validDate, setValidDate] = useState(true);
 
     useEffect(() => {
         const init =  () => {
@@ -77,7 +79,7 @@ export function Tournament ({redirectFromRoot}) {
     const handleSubmit = useCallback((event) => {       
         event.preventDefault();
         event.stopPropagation();
-    
+
         if(!validated){
             setValidated(validated => !validated);
         }
@@ -85,22 +87,22 @@ export function Tournament ({redirectFromRoot}) {
         if(tournament.name === '' || !tournament.startDate || !tournament.endDate)
           return;
 
+        if(tournament.endDate < tournament.startDate || tournament.startDate <= today.toISOString){
+            setValidDate(false);
+            toast.error("Dates are invalid");
+            return;
+        }
+
         if(action  === 'create') {
             createTournament(tournament).then(response => {
-                if(response.status === 200) {
                     redirectFromRoot(`tournament/view/${response.data.response.id}`);
-                }else{
-                    redirectFromRoot('error');
-                }
-            });
+            }).catch(e => 
+                toast.error(e.response.data.response.message));
         }else{
-            updateTournament(id, tournament).then(response => {
-                if(response.status === 200) {
+            updateTournament(id, tournament).then(() => {
                     redirectFromRoot(`tournament/view/${id}`);
-                }else{
-                    redirectFromRoot('error');
-                }
-            });
+            }).catch(e => 
+                toast.error(e.response.data.response.message));
         }
     });
 
@@ -216,6 +218,8 @@ export function Tournament ({redirectFromRoot}) {
                                                         <Form.Control name="startDate" type="date" placeholder="Start Date" required
                                                             readOnly={action === 'view' || action === 'delete'}
                                                             value={tournament.startDate} 
+                                                            isValid={validDate} 
+                                                            isInvalid={!validDate}
                                                             onChange={handleTournamentChange}/>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>Start Date</label>   
                                                     </FloatingLabel>
@@ -228,7 +232,9 @@ export function Tournament ({redirectFromRoot}) {
                                                     <FloatingLabel className='group-first-element'>
                                                         <Form.Control name="endDate" type="date" placeholder="End Date" required
                                                             readOnly={action === 'view' || action === 'delete'}
-                                                            value={tournament.endDate} 
+                                                            value={tournament.endDate}
+                                                            isValid={validDate} 
+                                                            isInvalid={!validDate}
                                                             onChange={handleTournamentChange}/>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>End Date</label>   
                                                     </FloatingLabel>
@@ -278,6 +284,7 @@ export function Tournament ({redirectFromRoot}) {
                     </Card.Body>
                 </Card>
             </Col>
+            <ToastContainer/>
         </Container>        
     );
 }

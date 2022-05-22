@@ -40,16 +40,12 @@ export function LogIn ({isLoged}){
         auth({
             username : username,
             password : password
-        }).then(
-            response => {
-                if(response.status === 200){
-                    console.log('Autenticacion correcta');
+        }).then(() => {
                     isLoged();
-                }else{
-                    console.log('Fallo autenticacion');
-                }
             }
-        );
+        ).catch(e => {
+            toast.error(e.response.data.response.message);
+        });
     });
 
     const toggleSigIn = useCallback(() => {
@@ -61,7 +57,7 @@ export function LogIn ({isLoged}){
     })
 
     const handleOnError = useCallback((e) => {
-        toast.error(e);
+        toast.error(e.response.data.response.message);
     })
 
     return (

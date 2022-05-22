@@ -82,15 +82,12 @@ export default function Participants({id , action}){
             async response => {
                if(response.status === 200){
                    await getData(1,pageSize);
+                   toast.success("participante agregado correctamente")
                } else {
 
                }
             }
         )
-    });
-
-    const handleDataFormat = useCallback((participant) => {
-        return participant.name
     });
 
     return(
