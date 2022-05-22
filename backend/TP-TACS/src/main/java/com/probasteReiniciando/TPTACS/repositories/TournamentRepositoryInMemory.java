@@ -52,7 +52,7 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
     public Tournament createTournament(Tournament tournament) {
 
         incrementId();
-
+        tournament.setParticipants(List.of(tournament.getOwner()));
         tournaments.add(tournament);
         tournament.setId(currentId);
 
