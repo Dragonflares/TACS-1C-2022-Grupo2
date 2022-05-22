@@ -2,7 +2,7 @@ import { get } from "./appService";
 
 const resource = 'languages';
 
-export async function getLangauges(){
+export async function getLanguages(){
     // cuando se implmente en la api
     //return get(`resource`);
 
