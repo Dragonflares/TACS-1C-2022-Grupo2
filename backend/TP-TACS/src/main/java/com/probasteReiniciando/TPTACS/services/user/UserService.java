@@ -51,6 +51,7 @@ public class UserService {
             throw new ResultAlreadyExistsException(userLoggedIn,result.getDate(),result.getLanguage());
         }
 
+
         userRepository.addResult(userLoggedIn,result);
 
         return result;
