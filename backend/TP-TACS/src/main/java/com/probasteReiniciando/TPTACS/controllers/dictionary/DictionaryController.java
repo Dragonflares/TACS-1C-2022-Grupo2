@@ -29,7 +29,7 @@ public class DictionaryController {
     @Autowired
     private ModelMapperTacs modelMapper;
 
-    @GetMapping(path="/dictionary", produces = "application/json")
+    @GetMapping(path="/meanings", produces = "application/json")
     public WordDto wordDefinition(@RequestParam String word, @RequestParam String language) throws  JsonProcessingException {
         return dictionaryService.findWord(word,Language.getLanguage(validateLanguage(language)));
     }
