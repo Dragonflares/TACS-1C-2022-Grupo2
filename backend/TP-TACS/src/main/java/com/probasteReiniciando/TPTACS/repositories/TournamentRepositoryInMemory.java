@@ -52,7 +52,8 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
     public Tournament createTournament(Tournament tournament) {
 
         incrementId();
-        tournament.setParticipants(List.of(tournament.getOwner()));
+
+        tournament.getParticipants().add(tournament.getOwner());
         tournaments.add(tournament);
         tournament.setId(currentId);
 
@@ -62,11 +63,7 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
 
     public void addUser(Tournament tournament, User user) {
 
-        if(tournament.getParticipants() == null) {
-            tournament.setParticipants(new ArrayList<>());
-        }
-
-        tournament.getParticipants().add(user);
+       tournament.getParticipants().add(user);
 
     }
 

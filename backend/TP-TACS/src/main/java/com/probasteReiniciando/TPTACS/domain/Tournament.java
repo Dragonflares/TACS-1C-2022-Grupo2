@@ -29,7 +29,8 @@ public class Tournament {
 
     private User owner;
 
-    private List<User> participants;
+    @Builder.Default
+    private List<User> participants = new ArrayList<>();
 
     private List<Position> positions;
 
