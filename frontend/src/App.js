@@ -79,8 +79,8 @@ export function App (){
                     </NavDropdown>                      
                   </Nav>
                   <Nav>
-                    <Nav.Link rel="noopener noreferrer"  href='https://wordle.danielfrg.com/'  target="_bank">Play in English</Nav.Link>
-                    <Nav.Link rel="noopener noreferrer"  href="https://www.nytimes.com/games/wordle/index.html" target="_blank">Juega en Español</Nav.Link>
+                    <Nav.Link rel="noopener noreferrer"  href='https://www.nytimes.com/games/wordle/index.html'  target="_bank">Play in English</Nav.Link>
+                    <Nav.Link rel="noopener noreferrer"  href="https://wordle.danielfrg.com/" target="_blank">Juega en Español</Nav.Link>
                     <Nav.Link onClick={handleLogOut}>Log Out</Nav.Link>
                   </Nav>
                 </Navbar.Collapse>
