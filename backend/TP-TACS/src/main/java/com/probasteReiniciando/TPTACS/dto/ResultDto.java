@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -17,6 +19,7 @@ public class ResultDto {
     private  Integer id;
 
     private  String username;
+
 
     private  Integer points;
 

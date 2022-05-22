@@ -123,8 +123,7 @@ public class HelperService {
     private boolean validatesYellowWords(String word, String yellowWords) {
         Boolean condition = true;
         if(yellowWords != null ) {
-            char[] array = yellowWords.toCharArray();
-
+            char[] array = yellowWords.toLowerCase().toCharArray();
             for (int i = 0; i < array.length && condition; i++) {
 
                 char y = array[i];
@@ -146,7 +145,7 @@ public class HelperService {
     private boolean validatesGreyWords(String word, String greyWords) {
         Boolean condition= true;
         if(greyWords != null) {
-            char[] array = greyWords.toCharArray();
+            char[] array = greyWords.toLowerCase().toCharArray();
 
             for (int i = 0; i < array.length && condition; i++) {
 

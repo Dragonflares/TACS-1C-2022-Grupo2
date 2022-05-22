@@ -64,7 +64,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({UserAlreadyExistsException.class, TournamentBadRequestException.class,ErrorParameterException.class,ResultAlreadyExistsException.class,ResultCanNotBeModified.class,DictionaryBadRequestException.class})
+    @ExceptionHandler({UserAlreadyExistsException.class, TournamentBadRequestException.class,ErrorParameterException.class,ResultAlreadyExistsException.class,ResultCanNotBeModified.class,DictionaryBadRequestException.class, ResultBadRequestException.class})
     public ResponseEntity<ApiError> handleConflict(RuntimeException exception)
     {
 
