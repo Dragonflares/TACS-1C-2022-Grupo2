@@ -42,10 +42,6 @@ export function PublicTournaments () {
     ];
 
     const getData = async (page, pageSize) =>  {
-        
-
-        //const offset = ((page - 1) * pageSize);
-        //page = 1
         getPublicTournaments(1, pageSize).then(
             response => {
                 if(response.status === 200){
@@ -56,26 +52,6 @@ export function PublicTournaments () {
                 }
             }
         );
-        
-        /* MOCK
-const elements = [];
-        for(let i = offset + 1; i < offset + pageSize + 1; i++){
-            elements.push({
-                id: i,
-                name: `tourn nr0 ${i}`,
-                owner: 'pepe',
-                language: 'english',
-                ongoing: 'Si'
-            });
-        }
-
-        const mock = {
-            elements : elements,
-            count : 100,
-        }
-
-        setData(mock);
-        */
     };
 
     useEffect(() => {

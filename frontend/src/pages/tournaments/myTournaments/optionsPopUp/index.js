@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 export default function OptionsPopUp({selected, show, handleClose}) {
 
     return(
+
         <>
             <Modal size={'sm'} fullscreen={'sm-down'} show={show} onHide={handleClose} backdrop="static" centered>
                 <Modal.Header closeButton>
@@ -19,6 +20,7 @@ export default function OptionsPopUp({selected, show, handleClose}) {
                             <Button as={Link} to={`/positions/${selected.id}`}  variant="success">Positions</Button>
                         </Row>
                         {
+                            localStorage.getItem('loggedUser') === selected.owner.username ?
                             <>
                                 <Row className="_6lux">
                                     <Button as={Link} to={`/tournament/edit/${selected.id}`} variant="primary">Edit</Button>
@@ -30,6 +32,7 @@ export default function OptionsPopUp({selected, show, handleClose}) {
                                     <Button as={Link} to={`/positions/delete/${selected.id}`} variant="danger">Delete</Button>
                                 </Row>
                             </>
+                            : <></>
                         }
                     </Col>
                 </Modal.Body>
