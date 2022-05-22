@@ -42,11 +42,9 @@ export default function Positions(){
                     }),
                 });
             }
-        ).catch(
-            e => {
+        ).catch( e => {
                 toast.error(e.response.data.response.message);
-            }
-        );        
+            })        
     };
 
     useEffect(() => {
@@ -85,8 +83,8 @@ export default function Positions(){
                             </Row>                                                     
                         </Card.Body>
                     </Card>
-                    <ToastContainer/>
                 </Container>
+                <ToastContainer/>
             </Col>
         </>
     )

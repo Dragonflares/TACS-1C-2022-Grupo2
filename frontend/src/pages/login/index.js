@@ -125,8 +125,8 @@ export function LogIn ({isLoged}){
                         </Form>
                     </Col>   
                 </Row>
-                <ToastContainer/>   
             </Container>
+            <ToastContainer/>   
         </div>
     );
 }

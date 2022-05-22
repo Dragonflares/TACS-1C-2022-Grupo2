@@ -39,10 +39,10 @@ export function Tournament ({redirectFromRoot}) {
             }
             
             getPrivacies().then(response => {
-                if(response.status === 200){
                     setPrivacies(response.data.response);
-                }
-            });
+            }).catch(e => {
+                toast.error(e.response.data.response.message);
+            })
 
             if(action !== 'create'){
                 if(!useValidateNumericId(id)){
@@ -51,7 +51,6 @@ export function Tournament ({redirectFromRoot}) {
     
                 getTournament(id).then(
                     response => {
-                        if(response.status === 200){
                             setTournament({
                                 name: response.data.response.name,
                                 language: response.data.response.language,
@@ -59,11 +58,10 @@ export function Tournament ({redirectFromRoot}) {
                                 endDate: response.data.response.endDate,
                                 privacy: response.data.response.privacy,
                             });
-                        }else{
-                            redirectFromRoot('error');
-                        }
                     }
-                );
+                ).catch(e => {
+                    toast.error(e.response.data.response.message);
+                })
             }
         }
 
@@ -115,23 +113,23 @@ export function Tournament ({redirectFromRoot}) {
         if(action  === 'create') {
             createTournament(tournament).then(response => {
                     redirectFromRoot(`tournament/view/${response.data.response.id}`);
-            }).catch(e => 
-                toast.error(e.response.data.response.message));
+            }).catch(e => {
+                toast.error(e.response.data.response.message);
+            })
         }else{
             updateTournament(id, tournament).then(() => {
                     redirectFromRoot(`tournament/view/${id}`);
-            }).catch(e => 
-                toast.error(e.response.data.response.message));
+            }).catch(e => { 
+                toast.error(e.response.data.response.message);
+            })
         }
     });
 
     const handleDelete  = useCallback(() => {
         deleteTournament(id).then(response => {
-            if(response.status === 200){
-                redirectFromRoot(`tournaments`);                
-            }else{
-                redirectFromRoot('error');
-            }
+            redirectFromRoot(`tournaments`);                
+        }).catch(e => {
+            toast.error(e.response.data.response.message);
         })   
     });
 

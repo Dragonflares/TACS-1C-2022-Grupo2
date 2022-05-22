@@ -21,14 +21,14 @@ export function Results () {
                 setLanguages(response.data);
         }).catch(e => {
             toast.error(e.response.data.response.message);
-        });
+        })
 
         getDailyResults().then(response => {
                 setResults(response.data);
                 setLanguage(response.data[0].language);
         }).catch(e => {
             toast.error(e.response.data.response.message);
-        });
+        })
     };
 
     useEffect(() => {
@@ -60,7 +60,7 @@ export function Results () {
                 init();
         }).catch(e=> {
             toast.error(e.response.data.response.message);
-        });
+        })
     });
 
     const handleLangChange = useCallback((event) => {

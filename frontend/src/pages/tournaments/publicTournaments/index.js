@@ -59,17 +59,13 @@ export function PublicTournaments () {
                             count: resp.data.response,
                         }))
                     }
-                ).catch(
-                    e => {
+                ).catch( e => {
                         toast.error(e.response.data.response.message);
-                    }
-                )         
+                    })         
             }
-        ).catch(
-            e => {
+        ).catch( e => {
                 toast.error(e.response.data.response.message);
-            }
-        );
+            })
     };
 
     useEffect(() => {

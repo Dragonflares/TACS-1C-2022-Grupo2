@@ -32,16 +32,15 @@ export function Helper() {
             greyWords: greyWords
         }).then(
             response => {
-                if (response.status === 200) {
                     var finalPhrase = ''
                     response.data.response.forEach(element => {
                         finalPhrase += element.phrase + ','
                     })
                     setData(finalPhrase)
-                }
             }
-        ).catch( e => 
-            {toast.error(e.response.data.response.message);})
+        ).catch( e => {
+            toast.error(e.response.data.response.message);
+        })
     }
 
     const handleSubmit = () => {

@@ -25,8 +25,9 @@ export class Dictionary extends Component {
                 this.setState({
                     languages: response.data,
                 });
-        }).catch(e => 
-            {toast.error(e.response.data.response.message);})
+        }).catch(e => {
+            toast.error(e.response.data.response.message);
+        })
     } 
 
     handleChange= (event) => {
@@ -47,8 +48,9 @@ export class Dictionary extends Component {
                     search: search,
                     result: response.data.response.phrase
                 })
-        }).catch(e => 
-            {toast.error(e.response.data.response.message);})
+        }).catch(e => {
+            toast.error(e.response.data.response.message);
+        })
     }
 
     render() {

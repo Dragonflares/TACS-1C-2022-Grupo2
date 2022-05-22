@@ -33,11 +33,9 @@ export default function Participants({id , action}){
                     )),
                 });
             }
-        ).catch(
-            e => {
+        ).catch( e => {
                 toast.error(e.response.data.response.message);
-            }
-        );
+            })
     };
 
     useEffect(() => {
@@ -69,11 +67,9 @@ export default function Participants({id , action}){
                 getData();
                 toast.success("participante agregado correctamente")
             }
-        ).catch(
-            e => {
+        ).catch( e => {
                 toast.error(e.response.data.response.message);
-            }
-        )
+            })
     });
 
     return(
