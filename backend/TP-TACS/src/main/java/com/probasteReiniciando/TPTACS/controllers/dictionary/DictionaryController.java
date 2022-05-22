@@ -30,7 +30,7 @@ public class DictionaryController {
     private ModelMapperTacs modelMapper;
 
     @GetMapping(path="/dictionary", produces = "application/json")
-    public WordDto wordDefinition(@RequestParam String word, @RequestParam Language language) throws  JsonProcessingException {
+    public WordDto wordDefinition(@RequestParam String word, @RequestParam String language) throws  JsonProcessingException {
         return dictionaryService.findWord(word,Language.getLanguage(validateLanguage(language)));
     }
 
@@ -39,12 +39,12 @@ public class DictionaryController {
         return LanguagesDto.builder().languages(Arrays.asList(Language.values())).build();
     }
 
-    private Language validateLanguage(Language language) {
-        if(!EnumUtils.isValidEnum(Language.class, language.name())) {
+    private Language validateLanguage(String language) {
+        if(!EnumUtils.isValidEnum(Language.class, language)) {
             String messageError = String.format("%s is not a valid language or is not supported", language);
             throw new DictionaryBadRequestException(messageError);
         }
-        return language;
+        return Language.valueOf(language);
     }
 
 

@@ -52,7 +52,7 @@ public class DictionaryControllerTest {
 
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("word", "test");
-        requestParams.add("language", "en");
+        requestParams.add("language", "ENGLISH");
 
 
         MvcResult result = mockMvc
