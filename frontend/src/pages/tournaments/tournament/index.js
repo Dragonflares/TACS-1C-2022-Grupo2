@@ -112,13 +112,13 @@ export function Tournament ({redirectFromRoot}) {
 
         if(action  === 'create') {
             createTournament(tournament).then(response => {
-                    redirectFromRoot(`tournament/view/${response.data.response.id}`);
+                    redirectFromRoot(`tournament/edit/${response.data.response.id}`);
             }).catch(e => {
                 toast.error(e.response.data.response.message);
             })
         }else{
             updateTournament(id, tournament).then(() => {
-                    redirectFromRoot(`tournament/view/${id}`);
+                    redirectFromRoot(`tournament/edit/${id}`);
             }).catch(e => { 
                 toast.error(e.response.data.response.message);
             })
