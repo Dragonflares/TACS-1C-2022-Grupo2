@@ -42,18 +42,4 @@ public class Tournament {
         this.language = spanish;
     }
 
-    public List<User> getParticipantsWithOwner() {
-
-        List<User> participantsWithOwner = new ArrayList<>();
-
-        if(participants != null)
-            participantsWithOwner.addAll(participants);
-
-        if(owner != null)
-            participantsWithOwner.add(owner);
-
-        return participantsWithOwner;
-
-    }
-
 }
