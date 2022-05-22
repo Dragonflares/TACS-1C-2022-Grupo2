@@ -16,7 +16,7 @@ export default function Positions(){
     
     const headings = [
         {
-            name: 'position',
+            name: 'id',
             show: '#',
         },
         {
@@ -35,7 +35,7 @@ export default function Positions(){
                 setData({
                     elements: Array.from(response.data.response).map( (p, i) => {
                         return {
-                            position: i + 1,
+                            id: i + 1,
                             name: p.user['username'],
                             points: p.points
                         }

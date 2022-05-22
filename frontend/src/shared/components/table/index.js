@@ -18,7 +18,7 @@ export default function NonPaginatedTable ({headings, data, hover= true, onClick
             <tbody>
                 {Array.from(data.elements).map((element) => {
                         return (
-                        <tr key={element.position} onClick={() => onClick(element)}>
+                        <tr key={element.id} onClick={() => onClick(element)}>
                             {
                                 Array.from(headings).map((header, index) => {
                                     return (

@@ -1,20 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Button, Form, InputGroup, Row, FloatingLabel } from 'react-bootstrap';
 import { Input } from "react-bootstrap-typeahead";
-import { addParticipants, getParticipants } from "../../../../services/tournamentService";
+import { addParticipants, getParticipants, getPositions } from "../../../../services/tournamentService";
 import { PaginatedTable } from "../../../../shared/components/paginatedTable";
 import { ToastContainer, toast } from 'react-toastify';
+import NonPaginatedTable from "../../../../shared/components/table";
 
 export default function Participants({id , action}){
 
     const [participant, setParticipant] = useState("");
-    const pageSize = 5;
     const [data, setData] = useState({
         elements: [],
-        count: 10,
     });
     const [validated, setValidated] = useState(false);
-    const [valid, setValid] = useState(true);
 
     const headings = [
         {   
@@ -23,49 +21,32 @@ export default function Participants({id , action}){
         }
     ];
 
-    const getData = async (page, pageSize) =>  {
-        
-        //const offset = ((page - 1) * pageSize);
-        //page = 1
-        getParticipants(id, 1, pageSize).then(
+    const getData = () =>  {
+        getPositions(id).then(
             response => {
-                if(response.status === 200){
-                    setData({
-                        elements: response.data.response,
-                        count: 100,
-                    });
-                }
+                setData({
+                    elements: Array.from(response.data.response).map((p, i) => (
+                        {
+                            id: i,
+                            name: p.user.username,
+                        }
+                    )),
+                });
+            }
+        ).catch(
+            e => {
+                toast.error(e.response.data.response.message);
             }
         );
-        
-        /*
-            const elements = [];
-        for(let i = offset + 1; i < offset + pageSize + 1; i++){
-            elements.push({
-                id: i,
-                name: `asdsda`
-            });
-        }
-
-        const mock = {
-            elements : elements,
-            count : 100,
-        }
-
-        setData(mock);
-        */
     };
 
     useEffect(() => {
-        const init = async () => {
-            await getData(1, pageSize);
+        const init = () => {
+            getData();
         };
         init();
     }, []);
 
-    const handlePageChange = useCallback(async (page, pageSize) => {
-        await getData(page, pageSize);
-    });
 
     const handleRowClick = useCallback((element) => {        
     });
@@ -78,14 +59,19 @@ export default function Participants({id , action}){
             setValidated(validated => !validated);
         }
         
-        addParticipants(id, {username:participant}).then(
-            async response => {
-               if(response.status === 200){
-                   await getData(1,pageSize);
-                   toast.success("participante agregado correctamente")
-               } else {
+        if(participant === ''){
+            toast.error('Complete fields');
+            return;
+        }
 
-               }
+        addParticipants(id, {username:participant}).then(
+            response => {
+                getData();
+                toast.success("participante agregado correctamente")
+            }
+        ).catch(
+            e => {
+                toast.error(e.response.data.response.message);
             }
         )
     });
@@ -114,18 +100,14 @@ export default function Participants({id , action}){
                 :<></>
             }
             {
-                data.count > 0 ? 
-                <>
-                    <PaginatedTable 
-                        data={data}
-                        headings={headings}
-                        onPageChange={handlePageChange}
-                        onClick={handleRowClick}
-                        hover={false}
-                        key={'participants-table'}
-                        pageSize={pageSize}
-                    />
-                </>
+                data.elements.length > 0 ? 
+                <NonPaginatedTable 
+                    data={data}
+                    headings={headings}
+                    onClick={handleRowClick}
+                    hover={false}
+                    key={'participants-table'}
+                />
                 :
                 <h3>
                     NO SIGNED PARTICIPANTS
