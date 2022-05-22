@@ -12,21 +12,19 @@ const englishLang = 'ENGLISH';
 const spanishLang = 'SPANISH';
 
 export function Helper() {
-    const [data, setData] = useState({
-        elements: []
-    })
+    const [data, setData] = useState("")
     const [language, setLanguage] = useState('ENGLISH')
     const [greenWords, setGreenWords] = useState({
-        0: '',
-        1: '',
-        2: '',
-        3: '',
-        4: ''
+        0:'',
+        1:'',
+        2:'',
+        3:'',
+        4:''
     })
     const [yellowWords, setYellowWords] = useState('')
     const [greyWords, setGreyWords] = useState('')
 
-    const getWord = async () => {
+    const getWord = () => {
         getHelperWord({
             language: language,
             greenWords: greenWords,
@@ -35,9 +33,11 @@ export function Helper() {
         }).then(
             response => {
                 if (response.status === 200) {
-                    setData({
-                        elements: response.data.response
+                    var finalPhrase = ''
+                    response.data.response.forEach(element => {
+                        finalPhrase += element.phrase + ','
                     })
+                    setData(finalPhrase)
                 }
             }
         ).catch( e => 
@@ -69,8 +69,29 @@ export function Helper() {
         setYellowWords(value)
     })
 
+    const handleGreenLetters0 = useCallback((event) => {
+        ManageGreenWord(event,"0")
+    }) 
+    const handleGreenLetters1 = useCallback((event) => {
+        ManageGreenWord(event,"1")
+    }) 
+    const handleGreenLetters2 = useCallback((event) => {
+        ManageGreenWord(event,"2")
+    }) 
+    const handleGreenLetters3 = useCallback((event) => {
+        ManageGreenWord(event,"3")
+    }) 
+    const handleGreenLetters4 = useCallback((event) => {
+        ManageGreenWord(event,"4")
+    }) 
 
-
+    function ManageGreenWord(event, columnName){
+        const target = event.target;
+        const value = target.value;
+        var GreenLetters = greenWords
+        GreenLetters[columnName] = value
+        setGreenWords(GreenLetters)
+    }
 
 
     return (
@@ -82,40 +103,44 @@ export function Helper() {
                             <Card.Title>Helper</Card.Title>
                             <Form>
                                 <Row>
-                                    <Col xs={12} md={15} className="py-1">
-                                        <Form.Group className='_6lux' controlId="formHelperLang">
-                                            <InputGroup>
-                                                <FloatingLabel className='group-first-element'>
-                                                    {
-                                                        <Form.Select
-                                                            name="language" required
-                                                            value={language}
-                                                            onChange={handleLanguageChange}>
-                                                            <option value={englishLang}>ENGLISH</option>
-                                                            <option value={spanishLang}>ESPAÑOL</option>
-                                                        </Form.Select>
-                                                    }
-                                                    <label style={{ paddingLeft: 0, marginLeft: '1em' }}>Language</label>
-                                                </FloatingLabel>
-                                            </InputGroup>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col xs={12} md={7} className="py-1">
-                                        <Form.Group controlId="greyWordsControl">
-                                            <Form.Control type='text' name='greyWords' placeholder='greyWords'
-                                                value={greyWords}
-                                                onChange={handlegreyWordsChange} />
-                                            <Form.Text className="text-muted"></Form.Text>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col xs={12} md={7} className="py-1">
-                                        <Form.Group controlId="yellowWordsControl">
-                                            <Form.Control type='text' name='yellowWords' placeholder='yellowWords'
-                                                value={yellowWords}
-                                                onChange={handleyellowWordsChange} />
-                                            <Form.Text className="text-muted"></Form.Text>
-                                        </Form.Group>
-                                    </Col>
+                                    <Row>
+                                        <Col className="py-1">
+                                            <Row>
+                                            <Form.Group controlId="yellowWordsControl">
+                                                <Form.Control type='text' name='yellowWords' placeholder='Yellow Letters'
+                                                    value={yellowWords}
+                                                    onChange={handleyellowWordsChange} />
+                                                <Form.Text className="text-muted"></Form.Text>
+                                            </Form.Group>
+                                            </Row>
+                                            <Row>
+                                            <Form.Group controlId="greyWordsControl">
+                                                <Form.Control type='text' name='greyWords' placeholder='Grey letters'
+                                                    value={greyWords}
+                                                    onChange={handlegreyWordsChange} />
+                                                <Form.Text className="text-muted"></Form.Text>
+                                            </Form.Group>
+                                            </Row>
+                                        </Col>
+                                        <Col className="py-1">
+                                            <Form.Group className='_6lux' controlId="formHelperLang">
+                                                <InputGroup>
+                                                    <FloatingLabel className='group-first-element'>
+                                                        {
+                                                            <Form.Select
+                                                                name="language" required
+                                                                value={language}
+                                                                onChange={handleLanguageChange}>
+                                                                <option value={englishLang}>ENGLISH</option>
+                                                                <option value={spanishLang}>ESPAÑOL</option>
+                                                            </Form.Select>
+                                                        }
+                                                        <label style={{ paddingLeft: 0, marginLeft: '1em' }}>Language</label>
+                                                    </FloatingLabel>
+                                                </InputGroup>
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
                                     <Row>
 
                                     </Row>
@@ -123,40 +148,49 @@ export function Helper() {
 
                                     <Row>
                                         <Col className="py-1">
-                                            <input type="text" maxlength="1"  class="form-control form-control-sm small-input"/>
+                                            <input name = 'GreenLetter0' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            onChange = {handleGreenLetters0}
+                                            />
                                         </Col>
                                         <Col  className="py-1">
-                                            <input type="text" maxlength="1"  class="form-control form-control-sm small-input"/>
+                                            <input name = 'GreenLetter1' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            onChange = {handleGreenLetters1}
+                                            />
                                         </Col>
                                         <Col  className="py-1">
-                                            <input type="text" maxlength="1"  class="form-control form-control-sm small-input"/>
+                                            <input name = 'GreenLetter2' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            onChange = {handleGreenLetters2}
+                                            />
                                         </Col>
                                         <Col  className="py-1">
-                                            <input type="text" maxlength="1"  class="form-control form-control-sm small-input"/>
+                                            <input name = 'GreenLetter3' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            onChange = {handleGreenLetters3}
+                                            />
                                         </Col>
                                         <Col  className="py-1">
-                                            <input type="text" maxlength="1"  class="form-control form-control-sm small-input"/>
+                                            <input name = 'GreenLetter4' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            onChange = {handleGreenLetters4}
+                                            />
                                         </Col>                                        
                                     </Row>
-                                    <Col md={2} className="py-1">
-                                        <div className={"d-grid gap-2"}>
+                                    <div class="col-xs-1 text-center">
+                                        <br></br>
                                             <Button type="button" onClick={handleSubmit}>Search</Button>
-                                        </div>
-                                    </Col>
+                                    </div>
                                 </Row>
                             </Form>
                         </Card.Body>
                     </Card>
-                    {/*                         {
-                            this.state.result?
+                    {
+                            data != "" ?
                             <>
                                 <Card  className="py-2">
                                     <Card.Body>
                                         <Card.Title>
-                                            {state.meaning}
+                                            {"Possible Words"}
                                         </Card.Title>
                                         <Card.Text>
-                                            {state.result}
+                                            {data}
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
@@ -164,7 +198,7 @@ export function Helper() {
                             :
                             <>
                             </>
-                        } */}
+                        }
                 </Container>
             </Col>
             <ToastContainer/>

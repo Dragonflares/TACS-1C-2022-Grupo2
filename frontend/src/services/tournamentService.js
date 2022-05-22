@@ -37,20 +37,14 @@ export async function getNonParticipants(tournamentId, search){
     });
 }
 
-export async function getParticipants(tournamentId, page, limit){
-    return get(`${resource}/${tournamentId}/${participantsSubResource}`, {
-        page: page,
-        limit: limit
-    });
+export async function getParticipants(tournamentId){
+    return get(`${resource}/${tournamentId}/${participantsSubResource}`);
 }
 
 export async function addParticipants(tournamentId, data){
     return post(`${resource}/${tournamentId}/${participantsSubResource}`, data);
 }
 
-export async function getPositions(tournamentId, page, limit){
-    return get(`${resource}/${tournamentId}/${positionsSubResource}`, {
-        page: page,
-        limit: limit
-    });
+export async function getPositions(tournamentId){
+    return get(`${resource}/${tournamentId}/${positionsSubResource}`);
 }
