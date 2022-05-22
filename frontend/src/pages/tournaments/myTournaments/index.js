@@ -63,7 +63,7 @@ export function MyTournaments () {
                     resp => {
                         setData(p => ({
                             ...p,
-                            count: resp.data.response,
+                            count: resp.data.response.quantity,
                         }))
                     }
                 ).catch( e => {

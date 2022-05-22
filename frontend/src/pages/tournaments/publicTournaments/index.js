@@ -45,6 +45,8 @@ export function PublicTournaments () {
     const getData = (page, pageSize) =>  {
         getPublicTournaments(page, pageSize).then(
             response => {
+                console.log(response)
+
                 setData(p => (
                     {
                         ...p,
@@ -56,7 +58,7 @@ export function PublicTournaments () {
                     resp => {
                         setData(p => ({
                             ...p,
-                            count: resp.data.response,
+                            count: resp.data.response.quantity,
                         }))
                     }
                 ).catch( e => {

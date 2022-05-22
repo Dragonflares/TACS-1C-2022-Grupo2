@@ -27,9 +27,6 @@ export default function OptionsPopUp({selected, show, handleClose}) {
                                 <Row className="_6lux">
                                     <Button as={Link} to={`/tournament/edit/${selected.id}`} variant="primary">Edit</Button>
                                 </Row>
-                                <Row className="_6lux">
-                                    <Button as={Link} to={`/positions/details/${selected.id}`} variant="primary">Details</Button>
-                                </Row>
                                 {
                                     selected.startDate > today.toISOString() ?
                                     <Row className="_6lux">
