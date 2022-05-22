@@ -8,11 +8,11 @@ export function PaginatedTable ({headings, data, pageSize = 10, hover= true, onP
     const [page, setPage] = useState(1);
 
     const pageChangeHandler = useCallback(
-        async (newPage) => {
+        (newPage) => {
             if(newPage !== page){
-                setPage(newPage);
-
-                await onPageChange(newPage, pageSize);        
+                onPageChange(newPage, pageSize).then(
+                    () => {setPage(newPage);}
+                );
             }    
         }
     );

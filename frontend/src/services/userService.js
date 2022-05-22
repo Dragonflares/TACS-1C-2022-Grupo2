@@ -32,6 +32,12 @@ export async function getTournaments(page, limit){
     });
 }
 
+export async function getTournamentsCount(){
+    return get(`${tournamentsSubResource}/quantity`, {
+        privacy: 'PRIVATE'
+    });
+}
+
 export async function getDailyResults(){
     return get(`${resultSubResource}/${resource}`);
 }

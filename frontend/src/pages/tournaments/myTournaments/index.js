@@ -8,7 +8,8 @@ import { Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import OptionsPopUp from "./optionsPopUp";
 import { getPublicTournaments } from "../../../services/tournamentService";
-import { getTournaments } from "../../../services/userService";
+import { getTournaments, getTournamentsCount } from "../../../services/userService";
+import { ToastContainer, toast } from 'react-toastify';
 
 export function MyTournaments () {
     const pageSize = 10;
@@ -21,7 +22,7 @@ export function MyTournaments () {
         {
             id: 0,
             name: '',
-            owner: {userNam: ''},
+            owner: {username: ''},
         }
     );
 
@@ -48,33 +49,49 @@ export function MyTournaments () {
         }
     ];
 
-    const getData = async (page, pageSize) =>  {
-        getTournaments(1, pageSize).then(
+    const getData = (page, pageSize) =>  {
+        getTournaments(page, pageSize).then(
             response => {
-                if(response.status === 200){
-                    setData({
+                setData(p => (
+                    {
+                        ...p,
                         elements: response.data.response,
-                        count: 100,
-                    });
-                }
+                    }
+                ))
+
+                getTournamentsCount().then(
+                    resp => {
+                        setData(p => ({
+                            ...p,
+                            count: resp.data.response,
+                        }))
+                    }
+                ).catch(
+                    e => {
+                        toast.error(e.response.data.response.message);
+                    }
+                )         
+            }
+        ).catch(
+            e => {
+                toast.error(e.response.data.response.message);
             }
         );
     };
 
     useEffect(() => {
         const init = async () => {
-            await getData(1, pageSize);
+            getData(1, pageSize);
         };
 
         init();
     }, []);
 
     const handlePageChange = useCallback(async (page, pageSize) => {
-        await getData(page, pageSize);
+        getData(page, pageSize);
     });
 
     const handleRowClick = useCallback((element) => {
-        console.log(element)
         setSelected(element);
         setShow(true);
     });
@@ -114,9 +131,11 @@ export function MyTournaments () {
                             </Row>                                                     
                         </Card.Body>
                     </Card>
+                    
                 </Container>
             </Col>
             <OptionsPopUp show={show} selected={selected} handleClose={handleHide}/>  
+            <ToastContainer/>
         </>
     )
 }

@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 
 export default function OptionsPopUp({selected, show, handleClose}) {
 
+    const today = new Date();
+
     return(
 
         <>
@@ -28,9 +30,13 @@ export default function OptionsPopUp({selected, show, handleClose}) {
                                 <Row className="_6lux">
                                     <Button as={Link} to={`/positions/details/${selected.id}`} variant="primary">Details</Button>
                                 </Row>
-                                <Row className="_6lux">
-                                    <Button as={Link} to={`/positions/delete/${selected.id}`} variant="danger">Delete</Button>
-                                </Row>
+                                {
+                                    selected.startDate > today.toISOString() ?
+                                    <Row className="_6lux">
+                                        <Button as={Link} to={`/positions/delete/${selected.id}`} variant="danger">Delete</Button>
+                                    </Row>:
+                                    <></>
+                                }
                             </>
                             : <></>
                         }

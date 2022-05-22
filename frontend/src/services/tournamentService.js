@@ -15,6 +15,12 @@ export async function getPublicTournaments(page, limit){
     });
 }
 
+export async function getPublicTournamentsCount(){
+    return get(`${resource}/quantity`, {
+        privacy: 'PUBLIC'
+    });
+}
+
 export async function getTournament(id){
     return get(`${resource}/${id}`);
 }
