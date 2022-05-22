@@ -19,4 +19,7 @@ public interface IUserRepository {
 
     void addResult(String userLoggedIn, Result result);
 
+    void deleteAll();
+
+
 }

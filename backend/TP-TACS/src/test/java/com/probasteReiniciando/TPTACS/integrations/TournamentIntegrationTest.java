@@ -1,5 +1,6 @@
 package com.probasteReiniciando.TPTACS.integrations;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.probasteReiniciando.TPTACS.domain.Language;
@@ -7,10 +8,12 @@ import com.probasteReiniciando.TPTACS.domain.Privacy;
 import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
+import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
 import com.probasteReiniciando.TPTACS.repositories.TournamentRepositoryInMemory;
 import com.probasteReiniciando.TPTACS.repositories.UserRepositoryInMemory;
 import com.probasteReiniciando.TPTACS.services.tournament.TournamentService;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,8 +24,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.io.DataInput;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.random.RandomGenerator;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -38,15 +43,21 @@ public class TournamentIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private UserRepositoryInMemory userRepository;
+    @Autowired
+    private IUserRepository userRepositoryInMemory;
+
+    @Before
+    public void setup() {
+        userRepositoryInMemory.deleteAll();
+
+    }
+
 
     @Test
     public void createTournament() throws Exception {
 
-        TournamentRepositoryInMemory tournamentRepository = new TournamentRepositoryInMemory();
+        userRepositoryInMemory.save(User.builder().username("test").password("test").id(5584898).build());
 
-        TournamentService tournamentService = new TournamentService(tournamentRepository,null);
 
         LocalDate startDate = LocalDate.now().plusDays(2);
         LocalDate endDate = startDate.plusDays(10);
@@ -75,6 +86,8 @@ public class TournamentIntegrationTest {
 
     @Test
     public void obtainPublicTournaments() throws Exception {
+
+        userRepositoryInMemory.save(User.builder().username("test").password("test").id(5584898).build());
 
         TournamentRepositoryInMemory tournamentRepository = new TournamentRepositoryInMemory();
 
@@ -123,12 +136,12 @@ public class TournamentIntegrationTest {
         }
 
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-        requestParams.add("offset", "1");
+        requestParams.add("page", "1");
         requestParams.add("limit", "2");
 
 
         MvcResult result = mockMvc
-                .perform(get("/tournaments").contentType("application/json").params(requestParams))
+                .perform(get("/tournaments").contentType("application/json").params(requestParams).requestAttr("userAttributeName","test"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -144,13 +157,9 @@ public class TournamentIntegrationTest {
     @Test
     public void addUserToPublicTournament() throws Exception {
 
-        TournamentRepositoryInMemory tournamentRepository = new TournamentRepositoryInMemory();
+        userRepositoryInMemory.save(User.builder().username("test").password("test").id(5584898).build());
 
-        TournamentService tournamentService = new TournamentService(tournamentRepository,userRepository);
-
-        User userPepe = User.builder().username("pepe").build();
-
-        when(userRepository.findByName("pepe")).thenReturn(Optional.of(userPepe));
+        userRepositoryInMemory.save(User.builder().username("pepe").password("pepe").id(777895663).build());
 
         LocalDate startDate = LocalDate.now().plusDays(2);
         LocalDate endDate = startDate.plusDays(10);
@@ -161,27 +170,34 @@ public class TournamentIntegrationTest {
                 .startDate(startDate).endDate(endDate)
                 .privacy(Privacy.PUBLIC).build();
 
-        mockMvc.perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").requestAttr("userAttributeName","test")
+        MvcResult resultId =mockMvc.perform(post("/tournaments").contentType("application/json").characterEncoding("UTF-8").requestAttr("userAttributeName","test")
                         .content(objectMapper.writeValueAsString(tournamentDto)))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
+
+        JsonNode jsonNodeId = objectMapper.readTree(resultId.getResponse().getContentAsString());
+        Integer idTournament = jsonNodeId.get("response").get("id").asInt();
 
         UserDto user = UserDto.builder().username("pepe").build();
 
         String body = objectMapper.writeValueAsString(user);
 
         MvcResult result = mockMvc
-                .perform(patch("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8").content(body))
+                .perform(post("/tournaments/"+idTournament+"/participants").contentType("application/json").characterEncoding("UTF-8").requestAttr("userAttributeName","test").content(body))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
 
         JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
         JsonNode data = jsonNode.get("response");
-        String[] usernames = objectMapper.treeToValue(data, String[].class);
-        List<String> usernamesList = new ArrayList<>(Arrays.asList(usernames));
-        Assert.assertEquals(List.of("pepe"), usernamesList);
+        UserDto[] myObjects = objectMapper.convertValue(data, UserDto[].class);
+
+        List<UserDto> usernames = Arrays.asList(myObjects);
+        List<UserDto> usernamesExpected = new ArrayList<>();
+        usernamesExpected.add(UserDto.builder().username("test").build());
+        usernamesExpected.add(UserDto.builder().username("pepe").build());
+        Assert.assertEquals(usernames,usernamesExpected);
 
     }
 
