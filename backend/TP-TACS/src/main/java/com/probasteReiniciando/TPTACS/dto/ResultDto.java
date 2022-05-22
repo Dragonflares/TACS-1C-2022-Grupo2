@@ -20,8 +20,7 @@ public class ResultDto {
 
     private  String username;
 
-    @Min(value = 1, message = "The value must be positive")
-    @Max(value = 7, message = "The value must be under 7")
+
     private  Integer points;
 
     private String language;
