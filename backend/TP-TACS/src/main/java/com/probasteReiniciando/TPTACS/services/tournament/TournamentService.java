@@ -190,7 +190,7 @@ public class TournamentService {
             Collections.reverse(positions);
         }
 
-        return positions;
+        return positions.subList(0,Math.min(positions.size(),10));
 
     }
 
@@ -203,6 +203,5 @@ public class TournamentService {
                 .build();
 
     }
-
 
 }
