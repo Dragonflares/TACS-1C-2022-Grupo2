@@ -57,6 +57,10 @@ public class UserRepositoryInMemory implements IUserRepository {
         this.save(actualUser);
     }
 
+    @Override
+    public void deleteAll() {
+        this.repositoryInMemory.clear();
+    }
 
 
     @Override
