@@ -26,7 +26,6 @@ export function Results () {
         getDailyResults().then(response => {
             if(!response.data){
                 setResults(response.data);
-                setLanguage(response.data[0].language);
             }
         }).catch(e => {
             toast.error(e.response.data.response.message);
@@ -53,10 +52,12 @@ export function Results () {
         }
           console.log("before createDailyResults ")
 
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+
         createDailyResults({
             user: getUserDataStruct(),
             language: language,
-            date: new Date().toISOString().slice(0, 10),
+            date: (new Date(Date.now() - tzoffset)).toISOString().slice(0, 10),
             points: result
         }).then(() => {
             toast.success("result created");

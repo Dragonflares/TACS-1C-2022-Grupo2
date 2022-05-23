@@ -6,8 +6,9 @@ import Modal from "react-bootstrap/Modal";
 import { Link } from "react-router-dom";
 
 export default function OptionsPopUp({selected, show, handleClose}) {
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000;
 
-    const today = new Date();
+    const today = new Date(Date.now - tzoffset);
 
     return(
 

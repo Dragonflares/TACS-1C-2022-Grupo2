@@ -14,9 +14,11 @@ import { getLanguages } from "../../../services/languageService";
 
 export function Tournament ({redirectFromRoot}) {
     const {action, id} = useParams();
-    const today = new Date();
-    const tomorrow = new Date();
-    const pastTomorrow = new Date();
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+
+    const today = new Date(Date.now - tzoffset);
+    const tomorrow = new Date(Date.now - tzoffset);
+    const pastTomorrow = new Date(Date.now - tzoffset);
     tomorrow.setDate(tomorrow.getDate() + 1);
     pastTomorrow.setDate(pastTomorrow.getDate() + 2);
 
