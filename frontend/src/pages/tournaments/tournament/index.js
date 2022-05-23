@@ -14,13 +14,13 @@ import { getLanguages } from "../../../services/languageService";
 
 export function Tournament ({redirectFromRoot}) {
     const {action, id} = useParams();
-    var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+    let tzoffset = (new Date()).getTimezoneOffset() * 60000;
 
-    const today = new Date(Date.now - tzoffset);
-    const tomorrow = new Date(Date.now - tzoffset);
-    const pastTomorrow = new Date(Date.now - tzoffset);
+    const today = new Date(Date.now() - tzoffset).toISOString().slice(0,10);
+    const tomorrow = new Date(Date.now() - tzoffset);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    pastTomorrow.setDate(pastTomorrow.getDate() + 2);
+
+    const tomorrowS = tomorrow.toISOString().slice(0,10);
 
     const [validated, setValidated] = useState(false);
     const [privacies, setPrivacies] = useState([]);
@@ -31,8 +31,8 @@ export function Tournament ({redirectFromRoot}) {
     const [tournament, setTournament] = useState({
         name: '',
         language: 'ENGLISH',
-        startDate: today.toISOString().slice(0,10),
-        endDate: tomorrow.toISOString().slice(0,10),
+        startDate: today,
+        endDate: tomorrowS,
         privacy: 'PRIVATE'
     });
 
@@ -101,7 +101,7 @@ export function Tournament ({redirectFromRoot}) {
             return;
         }
 
-        if(tournament.endDate < tournament.startDate || tournament.startDate < today.toISOString().slice(0,10)){
+        if(tournament.endDate < tournament.startDate || tournament.startDate < today){
             setValidated(false);
             setValidName({
                 isValid: true,

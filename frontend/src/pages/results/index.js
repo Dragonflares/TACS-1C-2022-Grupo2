@@ -52,7 +52,7 @@ export function Results () {
         }
           console.log("before createDailyResults ")
 
-        var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+        let tzoffset = (new Date()).getTimezoneOffset() * 60000;
 
         createDailyResults({
             user: getUserDataStruct(),
