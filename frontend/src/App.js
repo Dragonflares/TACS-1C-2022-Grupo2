@@ -65,7 +65,7 @@ export function App (){
           <>
             <Navbar bg="primary" variant="dark" expand="lg">
               <Container>
-                <Navbar.Brand as={NavLink} to="/">Wordle</Navbar.Brand>
+                <Navbar.Brand as={NavLink} to="/">Wordle Tourney</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                   <Nav className="me-auto">
