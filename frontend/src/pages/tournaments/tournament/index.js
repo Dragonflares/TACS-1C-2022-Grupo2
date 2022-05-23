@@ -31,8 +31,8 @@ export function Tournament ({redirectFromRoot}) {
     const [tournament, setTournament] = useState({
         name: '',
         language: 'ENGLISH',
-        startDate: tomorrow.toISOString().slice(0,10),
-        endDate: pastTomorrow.toISOString().slice(0,10),
+        startDate: today.toISOString().slice(0,10),
+        endDate: tomorrow.toISOString().slice(0,10),
         privacy: 'PRIVATE'
     });
 
@@ -101,7 +101,7 @@ export function Tournament ({redirectFromRoot}) {
             return;
         }
 
-        if(tournament.endDate < tournament.startDate || tournament.startDate <= today.toISOString().slice(0,10)){
+        if(tournament.endDate < tournament.startDate || tournament.startDate < today.toISOString().slice(0,10)){
             setValidated(false);
             setValidName({
                 isValid: true,

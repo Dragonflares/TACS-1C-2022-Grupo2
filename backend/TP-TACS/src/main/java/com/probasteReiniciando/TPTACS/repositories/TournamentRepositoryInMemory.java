@@ -120,6 +120,9 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
         if (tournament.getLanguage() != null) {
             tournament2.setLanguage(tournament.getLanguage());
         }
+        if (tournament.getPrivacy() != null) {
+            tournament2.setPrivacy(tournament.getPrivacy());
+        }
 
     }
 
