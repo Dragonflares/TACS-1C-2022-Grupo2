@@ -19,8 +19,11 @@ export function Tournament ({redirectFromRoot}) {
     const today = new Date(Date.now() - tzoffset).toISOString().slice(0,10);
     const tomorrow = new Date(Date.now() - tzoffset);
     tomorrow.setDate(tomorrow.getDate() + 1);
+    const pastTomorrow = new Date(Date.now() - tzoffset);
+    pastTomorrow.setDate(pastTomorrow.getDate() + 2);
 
     const tomorrowS = tomorrow.toISOString().slice(0,10);
+    const pastTomorrowS = pastTomorrow.toISOString().slice(0,10);
 
     const [validated, setValidated] = useState(false);
     const [privacies, setPrivacies] = useState([]);
@@ -61,6 +64,10 @@ export function Tournament ({redirectFromRoot}) {
     
                 getTournament(id).then(
                     response => {
+                            if(tournament.startDate < today){
+                                redirectFromRoot('error');
+                            }
+
                             setTournament({
                                 name: response.data.response.name,
                                 language: response.data.response.language,
