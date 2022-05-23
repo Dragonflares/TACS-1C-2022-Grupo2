@@ -17,8 +17,8 @@ export function Tournament ({redirectFromRoot}) {
     const today = new Date();
     const tomorrow = new Date();
     const pastTomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    pastTomorrow.setDate(pastTomorrow.getDate() + 2);
+    tomorrow.setDate(today.getDate() + 1);
+    pastTomorrow.setDate(today.getDate() + 2);
 
     const [validated, setValidated] = useState(false);
     const [privacies, setPrivacies] = useState([]);
@@ -29,8 +29,8 @@ export function Tournament ({redirectFromRoot}) {
     const [tournament, setTournament] = useState({
         name: '',
         language: 'ENGLISH',
-        startDate: tomorrow.toISOString().slice(0,10),
-        endDate: pastTomorrow.toISOString().slice(0,10),
+        startDate: today.toISOString().slice(0,10),
+        endDate: tomorrow.toISOString().slice(0,10),
         privacy: 'PRIVATE'
     });
 
@@ -99,7 +99,7 @@ export function Tournament ({redirectFromRoot}) {
             return;
         }
 
-        if(tournament.endDate < tournament.startDate || tournament.startDate <= today.toISOString().slice(0,10)){
+        if(tournament.endDate < tournament.startDate || tournament.startDate < today.toISOString().slice(0,10)){
             setValidated(false);
             setValidName({
                 isValid: true,
