@@ -24,7 +24,7 @@ export default function OptionsPopUp({selected, show, handleClose}) {
                         </Row>
                         {
                             (sessionStorage.getItem('loggedUser') === selected.owner.username 
-                            && selected.startDate > today.toISOString().slice(0, 10))?
+                            && selected.startDate >= today.toISOString().slice(0, 10))?
                             <>
                                 <Row className="_6lux">
                                     <Button as={Link} to={`/tournament/edit/${selected.id}`} variant="primary">Edit</Button>
