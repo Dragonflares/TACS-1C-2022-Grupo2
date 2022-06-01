@@ -29,6 +29,8 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: '3.4.0'
 	implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.7.0'
 }
 

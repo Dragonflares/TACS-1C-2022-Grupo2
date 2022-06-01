@@ -2,10 +2,10 @@ package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.User;
-
+import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
-public interface IUserRepository {
+public interface IUserRepository extends MongoRepository<User, String>{
 
     Optional<User> findByName(String name);
     Optional<User> findById(int id);
