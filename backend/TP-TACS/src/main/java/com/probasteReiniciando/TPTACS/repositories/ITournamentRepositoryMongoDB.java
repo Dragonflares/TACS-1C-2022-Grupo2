@@ -11,52 +11,42 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ITournamentRepositoryMongoDB extends ITournamentRepository, MongoRepository<Tournament, Integer> {
+public interface ITournamentRepositoryMongoDB extends MongoRepository<Tournament, Integer> {
 
-    @Override
     @Query(value = "'privacy': 'PUBLIC'", count = true)
     Integer quantityOfPublicTournaments();
 
-    @Override
     @Query(value = "'privacy': 'PRIVATE'", count = true)
     Integer quantityOfPrivateTournaments(String username);
 
-    @Override
-    //TODO
-    List<Tournament> obtainPublicTournaments(int page, int limit);
-
-    @Override
-    //TODO
-    List<Tournament> obtainPrivateTournaments(int page, int limit, String username);
-
-    @Override
     @Query(value = "'id': ?0")
     Optional<Tournament> obtainTournament(int id);
 
-    @Override
     @Query(value = "'id': ?0", fields = "{ 'results' : 1}")
     List<Result> obtainResults(int id);
 
-    //TODO
-    @Override
-    Tournament createTournament(Tournament tournament);
-
-    @Override
     @Query(value = "'id': ?0")
-    @Update("{ '$push' : { 'participants' : ?1 } }")
+        //@Update("{ '$push' : { 'participants' : ?1 } }")
     void addUser(int tournamentId, User user);
 
-    @Override
     @Query(value = "'id': ?0", fields = "{ 'participants' : 1}")
     List<User> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order);
 
     //TODO
-    @Override
-    @Update()
-    void updateTournament(int tournamentId, Tournament tournament);
+    //void updateTournament(int tournamentId, Tournament tournament);
 
     //TODO
-    @Override
+    @Query(value = "'owner': ?0")
     List<Tournament> findByOwner(String owner, int page, int limit);
+
+    //TODO
+    @Query(value = "'privacy': 'PUBLIC'")
+    List<Tournament> obtainPublicTournaments(int page, int limit);
+
+    //TODO
+    @Query(value = "'privacy': 'PRIVATE'")
+    List<Tournament> obtainPrivateTournaments(int page, int limit, String username);
+
+
 
 }

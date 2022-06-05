@@ -7,8 +7,11 @@ import com.probasteReiniciando.TPTACS.exceptions.UnAuthorizedException;
 import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
+import com.probasteReiniciando.TPTACS.repositories.ITournamentRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
 import com.probasteReiniciando.TPTACS.validators.TournamentValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,13 +21,15 @@ import java.util.stream.Collectors;
 @Service
 public class TournamentService {
 
-    final private ITournamentRepository tournamentRepository;
+
+    final private ITournamentRepositoryMongoDB tournamentRepository;
 
     final private IUserRepository userRepository;
 
     final private ModelMapperTacs modelMapper = new ModelMapperTacs();
 
-    public TournamentService(ITournamentRepository tournamentRepository, IUserRepository userRepository) {
+    @Autowired
+    public TournamentService(ITournamentRepositoryMongoDB tournamentRepository, IUserRepository userRepository) {
         this.tournamentRepository = tournamentRepository;
         this.userRepository = userRepository;
     }
@@ -39,7 +44,7 @@ public class TournamentService {
 
         tournament.setParticipants(new ArrayList<>());
 
-        return tournamentRepository.createTournament(tournament);
+        return tournamentRepository.insert(tournament);
 
     }
 
@@ -114,8 +119,8 @@ public class TournamentService {
         if (!tournament.getOwner().getUsername().equals(userLoggedIn)) {
             throw new UnAuthorizedException(userLoggedIn);
         }
-
-        tournamentRepository.updateTournament(tournamentId, updatedTournament);
+        updatedTournament.setId(tournamentId);
+        tournamentRepository.save(updatedTournament);
 
         return tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 

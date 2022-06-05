@@ -23,8 +23,6 @@ public interface ITournamentRepository {
 
     List<Result> obtainResults(int id);
 
-    Tournament createTournament(Tournament tournament);
-
     void addUser(int tournamentId, User user);
 
     List<User> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order);
