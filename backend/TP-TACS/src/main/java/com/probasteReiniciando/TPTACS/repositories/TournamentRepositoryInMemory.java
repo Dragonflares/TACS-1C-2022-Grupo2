@@ -1,7 +1,6 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.domain.*;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,12 +8,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Repository
+
 public class TournamentRepositoryInMemory implements ITournamentRepository {
 
     private List<Tournament> tournaments = new ArrayList<>();
 
     private Integer currentId = 0;
+
 
 
     @Override
@@ -64,9 +64,9 @@ public class TournamentRepositoryInMemory implements ITournamentRepository {
 
     }
 
-    public void addUser(Tournament tournament, User user) {
+    public void addUser(int tournamentId, User user) {
 
-        tournament.getParticipants().add(user);
+        obtainTournament(tournamentId).get().getParticipants().add(user);
 
     }
 

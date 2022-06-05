@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public abstract class UserRepositoryInMemory implements IUserRepository {
+public class UserRepositoryInMemory implements IUserRepository {
 
     private List<User> repositoryInMemory = new ArrayList<>();
     private UserRepositoryInMemory userRepositoryInMemory;

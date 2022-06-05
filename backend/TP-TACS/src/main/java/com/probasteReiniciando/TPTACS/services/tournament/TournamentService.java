@@ -73,7 +73,7 @@ public class TournamentService {
 
         if (Privacy.PUBLIC.equals(tournament.getPrivacy())) {
 
-            tournamentRepository.addUser(tournament, user);
+            tournamentRepository.addUser(tournament.getId(), user);
 
             return tournamentRepository.obtainParticipants(tournamentId,Optional.empty(),Optional.empty());
 
@@ -81,7 +81,7 @@ public class TournamentService {
 
             if (tournament.getOwner().getUsername().equals(userLoggedIn)) {
 
-                tournamentRepository.addUser(tournament, user);
+                tournamentRepository.addUser(tournament.getId(), user);
 
                 return tournamentRepository.obtainParticipants(tournamentId,Optional.empty(),Optional.empty());
 

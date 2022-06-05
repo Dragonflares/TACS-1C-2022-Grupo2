@@ -5,7 +5,7 @@ import com.probasteReiniciando.TPTACS.domain.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
-public interface IUserRepository extends MongoRepository<User, String>{
+public interface IUserRepository{
 
     Optional<User> findByName(String name);
     Optional<User> findById(int id);

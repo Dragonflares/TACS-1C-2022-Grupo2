@@ -42,11 +42,10 @@ public interface ITournamentRepositoryMongoDB extends ITournamentRepository, Mon
     @Override
     Tournament createTournament(Tournament tournament);
 
-    //TODO
     @Override
-    @Query(value="")
+    @Query(value = "'id': ?0")
     @Update("{ '$push' : { 'participants' : ?1 } }")
-    void addUser(Tournament tournament, User user);
+    void addUser(int tournamentId, User user);
 
     @Override
     @Query(value = "'id': ?0", fields = "{ 'participants' : 1}")
