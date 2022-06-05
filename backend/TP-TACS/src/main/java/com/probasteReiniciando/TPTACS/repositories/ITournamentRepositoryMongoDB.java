@@ -5,12 +5,14 @@ import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.domain.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.Update;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-
-public interface TournamentRepositoryMongoDB extends ITournamentRepository, MongoRepository<Tournament, Integer> {
+@Repository
+public interface ITournamentRepositoryMongoDB extends ITournamentRepository, MongoRepository<Tournament, Integer> {
 
     @Override
     @Query(value = "'privacy': 'PUBLIC'", count = true)
@@ -32,8 +34,8 @@ public interface TournamentRepositoryMongoDB extends ITournamentRepository, Mong
     @Query(value = "'id': ?0")
     Optional<Tournament> obtainTournament(int id);
 
-    //TODO
     @Override
+    @Query(value = "'id': ?0", fields = "{ 'results' : 1}")
     List<Result> obtainResults(int id);
 
     //TODO
@@ -42,14 +44,17 @@ public interface TournamentRepositoryMongoDB extends ITournamentRepository, Mong
 
     //TODO
     @Override
+    @Query(value="")
+    @Update("{ '$push' : { 'participants' : ?1 } }")
     void addUser(Tournament tournament, User user);
 
-    //TODO
     @Override
+    @Query(value = "'id': ?0", fields = "{ 'participants' : 1}")
     List<User> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order);
 
     //TODO
     @Override
+    @Update()
     void updateTournament(int tournamentId, Tournament tournament);
 
     //TODO
