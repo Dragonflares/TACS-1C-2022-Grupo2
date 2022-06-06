@@ -28,15 +28,6 @@ public class ResultController {
         return modelMapper.mapList(userService.getTodayResultsByUser(userLoggedIn),ResultDto.class);
     }
 
-    @PutMapping(path="/{resultId}", produces = "application/json")
-    public ResultDto modifyResult(@PathVariable int resultId, @RequestBody ResultDto resultDto,@RequestAttribute(name="userAttributeName") String userLoggedIn) {
-        validateResultDto(resultDto);
-        Result result = modelMapper.map(resultDto,Result.class);
-        return modelMapper.map(userService.modifyResult(userLoggedIn,result,resultId),ResultDto.class);
-    }
-
-
-
     @PostMapping(produces = "application/json")
     public ResultDto createResult(@RequestAttribute(name="userAttributeName") String userLoggedIn, @RequestBody ResultDto resultDto) {
         validateResultDto(resultDto);

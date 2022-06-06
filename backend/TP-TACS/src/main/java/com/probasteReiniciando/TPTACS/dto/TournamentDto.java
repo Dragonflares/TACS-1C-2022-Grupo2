@@ -7,6 +7,7 @@ import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -38,6 +39,6 @@ public class TournamentDto {
 
     private  List<UserDto> participants;
 
-    private  List<PositionDto> positions;
+    private  List<PositionDto> positions = new ArrayList<>();
 
 }

@@ -1,14 +1,15 @@
 package com.probasteReiniciando.TPTACS.services.user;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
+import com.probasteReiniciando.TPTACS.dao.ResultDAO;
+import com.probasteReiniciando.TPTACS.dao.UserDAO;
 import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.User;
-import com.probasteReiniciando.TPTACS.dto.ResultDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import com.probasteReiniciando.TPTACS.exceptions.ResultAlreadyExistsException;
-import com.probasteReiniciando.TPTACS.exceptions.ResultCanNotBeModified;
 import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
-import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
+import com.probasteReiniciando.TPTACS.repositories.IResultRepositoryMongoDB;
+import com.probasteReiniciando.TPTACS.repositories.IUserRepositoryMongoDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,25 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    private IUserRepository userRepository;
+    private IUserRepositoryMongoDB userRepository;
+
+    @Autowired
+    private IResultRepositoryMongoDB resultRepository;
 
     private ModelMapperTacs modelMapper = new ModelMapperTacs();
 
     public Optional<User> findByUsername(String username) {
-        return userRepository.findByName(username);
+
+        Optional<UserDAO> userDAO = userRepository.findByName(username);
+
+        Optional<User> user = Optional.empty();
+
+        if(userDAO.isPresent()) {
+            user =  Optional.of(modelMapper.map(userDAO.get(),User.class));
+        }
+
+        return user;
+
     }
 
     public User save(UserLoginDto userParam)  {
@@ -40,42 +54,33 @@ public class UserService {
                 .password(userParam.getPassword())
                 .build();
 
-        return userRepository.createUser(newUser);
+        return modelMapper.map(userRepository.save(modelMapper.map(newUser,UserDAO.class)),User.class);
+
     }
 
     public Result createResult(String userLoggedIn, Result result) {
 
-        if(userRepository.resultAlreadyCreated(userLoggedIn, result)){
+        if(userRepository.resultAlreadyCreated(userLoggedIn, result.getLanguage().name(), result.getDate())){
             throw new ResultAlreadyExistsException(userLoggedIn,result.getDate(),result.getLanguage());
         }
 
-
-        userRepository.addResult(userLoggedIn,result);
+        ResultDAO resultDAO = modelMapper.map(result,ResultDAO.class);
+        resultDAO.setUser(userRepository.findByName(userLoggedIn).get());
+        result = modelMapper.map(resultRepository.save(resultDAO),Result.class);
 
         return result;
 
     }
 
     public List<Result> getResultsByUser(String userLoggedIn) {
-        return userRepository.findByName(userLoggedIn).get().getResults();
+        return modelMapper.map(userRepository.findByName(userLoggedIn).get(),User.class).getResults();
     }
 
     public List<Result> getTodayResultsByUser(String userLoggedIn) {
-        return userRepository.findByName(userLoggedIn).get().getResults().stream().filter(result -> result.getDate().equals(LocalDate.now())).toList();
+        return modelMapper.map(userRepository.findByName(userLoggedIn).get(),User.class).getResults().stream().filter(result -> result.getDate().equals(LocalDate.now())).toList();
     }
 
-    public Result modifyResult(String userLoggedIn, Result result, int resultId) {
 
-        List<Result> resultsUser = getResultsByUserAndDateAndId(userLoggedIn, LocalDate.now(),resultId);
-        if(resultsUser.isEmpty() || !result.getDate().equals(LocalDate.now())){
-            throw new ResultCanNotBeModified();
-        }
-
-        userRepository.modifyResult(userLoggedIn,result,resultsUser.get(0));
-
-        return result;
-
-    }
 
     private List<Result> getResultsByUserAndDateAndId(String userLoggedIn, LocalDate now, int resultId) {
         return getResultsByUser(userLoggedIn).stream().filter(x -> x.getDate().equals(now) && x.getId().equals(resultId)).toList();

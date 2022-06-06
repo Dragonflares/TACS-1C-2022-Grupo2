@@ -1,7 +1,7 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
+import com.probasteReiniciando.TPTACS.dao.TournamentDAO;
 import com.probasteReiniciando.TPTACS.domain.Result;
-import com.probasteReiniciando.TPTACS.domain.Tournament;
 import com.probasteReiniciando.TPTACS.domain.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ITournamentRepositoryMongoDB extends MongoRepository<Tournament, String> {
+public interface ITournamentRepositoryMongoDB extends MongoRepository<TournamentDAO, String> {
 
     @Query(value = "{'privacy': 'PUBLIC'}", count = true)
     Integer quantityOfPublicTournaments();
@@ -20,7 +20,7 @@ public interface ITournamentRepositoryMongoDB extends MongoRepository<Tournament
     Integer quantityOfPrivateTournaments(String username);
 
     @Query(value = "{'id': ?0}")
-    Optional<Tournament> obtainTournament(String id);
+    Optional<TournamentDAO> obtainTournament(String id);
 
     @Query(value = "{'id': ?0}", fields = "{ 'results' : 1}")
     List<Result> obtainResults(String id);
@@ -37,15 +37,15 @@ public interface ITournamentRepositoryMongoDB extends MongoRepository<Tournament
 
     //TODO
     @Query(value = "{'owner': ?0}")
-    List<Tournament> findByOwner(String owner, int page, int limit);
+    List<TournamentDAO> findByOwner(String owner, int page, int limit);
 
     //TODO
     @Query(value = "{'privacy': 'PUBLIC'}")
-    List<Tournament> obtainPublicTournaments(int page, int limit);
+    List<TournamentDAO> obtainPublicTournaments(int page, int limit);
 
     //TODO
     @Query(value = "{'privacy': 'PRIVATE'}")
-    List<Tournament> obtainPrivateTournaments(int page, int limit, String username);
+    List<TournamentDAO> obtainPrivateTournaments(int page, int limit, String username);
 
 
 

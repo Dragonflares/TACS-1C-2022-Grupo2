@@ -1,17 +1,17 @@
 package com.probasteReiniciando.TPTACS.services.tournament;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
+import com.probasteReiniciando.TPTACS.dao.TournamentDAO;
+import com.probasteReiniciando.TPTACS.dao.UserDAO;
 import com.probasteReiniciando.TPTACS.domain.*;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentNotFoundException;
 import com.probasteReiniciando.TPTACS.exceptions.UnAuthorizedException;
 import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
-import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
+import com.probasteReiniciando.TPTACS.repositories.IUserRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.validators.TournamentValidator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,11 +23,11 @@ public class TournamentService {
 
     final private ITournamentRepositoryMongoDB tournamentRepository;
 
-    final private IUserRepository userRepository;
+    final private IUserRepositoryMongoDB userRepository;
 
     final private ModelMapperTacs modelMapper = new ModelMapperTacs();
 
-    public TournamentService(ITournamentRepositoryMongoDB tournamentRepository, IUserRepository userRepository) {
+    public TournamentService(ITournamentRepositoryMongoDB tournamentRepository, IUserRepositoryMongoDB userRepository) {
         this.tournamentRepository = tournamentRepository;
         this.userRepository = userRepository;
     }
@@ -36,13 +36,17 @@ public class TournamentService {
 
         TournamentValidator.validateRangeDate(tournament.getStartDate(), tournament.getEndDate());
 
-        User owner = userRepository.findByName(userLoggedIn).orElseThrow(() -> new UserNotFoundException(userLoggedIn));
+        UserDAO ownerDAO = userRepository.findByName(userLoggedIn).orElseThrow(() -> new UserNotFoundException(userLoggedIn));
+
+        User owner = modelMapper.map(ownerDAO,User.class);
 
         tournament.setOwner(owner);
 
         tournament.setParticipants(new ArrayList<>());
 
-        return tournamentRepository.insert(tournament);
+        TournamentDAO tournamentDAO = modelMapper.map(tournament, TournamentDAO.class);
+
+        return modelMapper.map(tournamentRepository.save(tournamentDAO),Tournament.class);
 
     }
 
@@ -50,25 +54,27 @@ public class TournamentService {
 
         return switch (privacy) {
 
-            case PUBLIC -> tournamentRepository.obtainPublicTournaments(page, limit);
+            case PUBLIC -> modelMapper.mapList(tournamentRepository.obtainPublicTournaments(page, limit),Tournament.class);
 
-            case PRIVATE -> tournamentRepository.obtainPrivateTournaments(page, limit, username);
+            case PRIVATE -> modelMapper.mapList(tournamentRepository.obtainPrivateTournaments(page, limit, username),Tournament.class);
 
         };
 
     }
 
     public Tournament getTournamentById(String id) {
-        return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
+        return modelMapper.map(tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id))),Tournament.class);
     }
 
     public List<User> addUser(String tournamentId, String userName, String userLoggedIn) {
 
-        Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
+        Tournament tournament = modelMapper.map(tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId))),Tournament.class);
 
         TournamentValidator.validateStartDate(tournament.getStartDate());
 
-        User user = userRepository.findByName(userName).orElseThrow(() -> new UserNotFoundException(userName));
+        UserDAO userDAO = userRepository.findByName(userName).orElseThrow(() -> new UserNotFoundException(userName));
+
+        User user = modelMapper.map(userDAO,User.class);
 
         if(tournament.getParticipants().stream().anyMatch(user1 -> user1.getUsername().equals(user.getUsername()))) {
             throw new UserAlreadyExistsException(user.getUsername() + " is already in tournament");
@@ -111,8 +117,8 @@ public class TournamentService {
 
     public Tournament updateTournament(String tournamentId, Tournament updatedTournament, String userLoggedIn) {
 
-        Tournament tournament = tournamentRepository.obtainTournament(tournamentId)
-                .orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
+        Tournament tournament = modelMapper.map(tournamentRepository.obtainTournament(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId))),Tournament.class);
 
         if (!tournament.getOwner().getUsername().equals(userLoggedIn)) {
             throw new UnAuthorizedException(userLoggedIn);
@@ -120,15 +126,15 @@ public class TournamentService {
 
         //TODO
         //updatedTournament.setId(tournamentId);
-        tournamentRepository.save(updatedTournament);
+        tournamentRepository.save(modelMapper.map(updatedTournament,TournamentDAO.class));
 
-        return tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
+        return modelMapper.map(tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId))),Tournament.class);
 
     }
 
     public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int page, int limit) {
 
-        return tournamentRepository.findByOwner(userLoggedIn, page, limit);
+        return modelMapper.mapList(tournamentRepository.findByOwner(userLoggedIn, page, limit),Tournament.class);
 
     }
 
@@ -150,7 +156,7 @@ public class TournamentService {
 
         List<Position> positions = new ArrayList<>();
 
-        Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
+        Tournament tournament = modelMapper.map(tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId))),Tournament.class);
 
         LocalDate tournamentStartDate = tournament.getStartDate();
 

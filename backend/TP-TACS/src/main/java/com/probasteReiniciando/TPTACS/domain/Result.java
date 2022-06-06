@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Result {
-    private Integer id;
+
+    private String id;
     private String username;
     private Integer points;
     private Language language;

@@ -1,22 +1,29 @@
-package com.probasteReiniciando.TPTACS.domain;
+package com.probasteReiniciando.TPTACS.dao;
 
+import com.probasteReiniciando.TPTACS.domain.Language;
+import com.probasteReiniciando.TPTACS.domain.Privacy;
+import com.probasteReiniciando.TPTACS.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Tournament {
+@Document
+public class TournamentDAO {
 
+    @Id
     private String id;
 
     private String name;
@@ -29,11 +36,12 @@ public class Tournament {
 
     private Privacy privacy;
 
-    private User owner;
+    @DBRef
+    private UserDAO owner;
 
     @Builder.Default
-    private List<User> participants = new ArrayList<>();
+    @DBRef
+    private List<UserDAO> participants = new ArrayList<>();
 
-    private List<Position> positions;
 
 }
