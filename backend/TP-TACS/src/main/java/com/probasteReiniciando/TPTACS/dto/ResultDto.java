@@ -18,9 +18,6 @@ public class ResultDto {
 
     private  String id;
 
-    private  String username;
-
-
     private  Integer points;
 
     private String language;
