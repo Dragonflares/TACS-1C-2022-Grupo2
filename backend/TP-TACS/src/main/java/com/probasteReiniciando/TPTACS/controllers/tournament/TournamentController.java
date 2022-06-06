@@ -55,25 +55,25 @@ public class TournamentController {
 
 
     @GetMapping(path="/{id}", produces = "application/json")
-    public TournamentDto singleTournaments(@PathVariable int id)  {
+    public TournamentDto singleTournaments(@PathVariable String id)  {
         return  modelMapper.map(tournamentService.getTournamentById(id),TournamentDto.class);
     }
 
     @PostMapping(path="/{tournamentId}/participants", produces = "application/json")
-    public List<UserDto> addParticipants(@PathVariable int tournamentId, @RequestBody UserDto user, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
+    public List<UserDto> addParticipants(@PathVariable String tournamentId, @RequestBody UserDto user, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
         return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn),UserDto.class);
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
     @GetMapping(path="/{tournamentId}/participants", produces = "application/json")
-    public List<UserDto> obtainParticipants(@PathVariable int tournamentId, @RequestParam Optional<String> orderBy, @RequestParam Optional<String> order) {
+    public List<UserDto> obtainParticipants(@PathVariable String tournamentId, @RequestParam Optional<String> orderBy, @RequestParam Optional<String> order) {
 
         return modelMapper.mapList(tournamentService.obtainParticipants(tournamentId, orderBy, order),UserDto.class);
 
     }
 
     @GetMapping(path="/{tournamentId}/positions", produces = "application/json")
-    public List<PositionDto> obtainPositions(@PathVariable int tournamentId, @RequestParam Optional<String> order) {
+    public List<PositionDto> obtainPositions(@PathVariable String tournamentId, @RequestParam Optional<String> order) {
 
         return modelMapper.mapList(tournamentService.obtainPositions(tournamentId, order),PositionDto.class);
 
@@ -81,7 +81,7 @@ public class TournamentController {
 
     @PatchMapping(path="/{tournamentId}", produces = "application/json")
     public TournamentDto updateTournament
-            (@PathVariable int tournamentId, @RequestBody TournamentDto tournamentDto, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
+            (@PathVariable String tournamentId, @RequestBody TournamentDto tournamentDto, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
 
         Tournament tournament = modelMapper.map(tournamentDto, Tournament.class);
         return modelMapper.map(tournamentService.updateTournament(tournamentId, tournament, userLoggedIn),TournamentDto.class);

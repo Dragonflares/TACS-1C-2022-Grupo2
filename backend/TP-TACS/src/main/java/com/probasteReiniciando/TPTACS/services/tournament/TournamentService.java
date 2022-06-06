@@ -21,14 +21,12 @@ import java.util.stream.Collectors;
 @Service
 public class TournamentService {
 
-
     final private ITournamentRepositoryMongoDB tournamentRepository;
 
     final private IUserRepository userRepository;
 
     final private ModelMapperTacs modelMapper = new ModelMapperTacs();
 
-    @Autowired
     public TournamentService(ITournamentRepositoryMongoDB tournamentRepository, IUserRepository userRepository) {
         this.tournamentRepository = tournamentRepository;
         this.userRepository = userRepository;
@@ -60,11 +58,11 @@ public class TournamentService {
 
     }
 
-    public Tournament getTournamentById(int id) {
+    public Tournament getTournamentById(String id) {
         return tournamentRepository.obtainTournament(id).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(id)));
     }
 
-    public List<User> addUser(int tournamentId, String userName, String userLoggedIn) {
+    public List<User> addUser(String tournamentId, String userName, String userLoggedIn) {
 
         Tournament tournament = tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
 
@@ -100,18 +98,18 @@ public class TournamentService {
 
     }
 
-    public List<Result> getResults(int id) {
+    public List<Result> getResults(String id) {
         return tournamentRepository.obtainResults(id);
     } //TODO revisar
 
 
-    public List<User> obtainParticipants(int tournamentId, Optional<String> orderBy, Optional<String> order) {
+    public List<User> obtainParticipants(String tournamentId, Optional<String> orderBy, Optional<String> order) {
         return tournamentRepository.obtainParticipants(tournamentId, orderBy, order);
 
 
     }
 
-    public Tournament updateTournament(int tournamentId, Tournament updatedTournament, String userLoggedIn) {
+    public Tournament updateTournament(String tournamentId, Tournament updatedTournament, String userLoggedIn) {
 
         Tournament tournament = tournamentRepository.obtainTournament(tournamentId)
                 .orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
@@ -119,7 +117,9 @@ public class TournamentService {
         if (!tournament.getOwner().getUsername().equals(userLoggedIn)) {
             throw new UnAuthorizedException(userLoggedIn);
         }
-        updatedTournament.setId(tournamentId);
+
+        //TODO
+        //updatedTournament.setId(tournamentId);
         tournamentRepository.save(updatedTournament);
 
         return tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId)));
@@ -146,7 +146,7 @@ public class TournamentService {
 
     }
 
-    public List<Position> obtainPositions(int tournamentId, Optional<String> order) {
+    public List<Position> obtainPositions(String tournamentId, Optional<String> order) {
 
         List<Position> positions = new ArrayList<>();
 

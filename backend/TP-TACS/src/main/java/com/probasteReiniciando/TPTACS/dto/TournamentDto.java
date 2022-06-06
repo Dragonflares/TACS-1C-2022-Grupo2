@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class TournamentDto {
 
-    private Integer id;
+    private String id;
 
     @NonNull
     private  String name;
