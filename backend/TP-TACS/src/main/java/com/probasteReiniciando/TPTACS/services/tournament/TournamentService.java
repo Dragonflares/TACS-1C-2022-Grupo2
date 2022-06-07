@@ -130,10 +130,34 @@ public class TournamentService {
             throw new UnAuthorizedException(userLoggedIn);
         }
 
-        tournamentRepository.save(modelMapper.map(updatedTournament,TournamentDAO.class));
+        tournament = mergedTournament(tournament,updatedTournament);
+        tournamentRepository.save(modelMapper.map(tournament,TournamentDAO.class));
 
         return modelMapper.map(tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId))),Tournament.class);
 
+    }
+
+    private Tournament mergedTournament(Tournament tournament, Tournament updatedTournament) {
+
+        if(updatedTournament.getName() != null)
+            tournament.setName(updatedTournament.getName());
+
+        if(updatedTournament.getPrivacy() != null)
+            tournament.setPrivacy(updatedTournament.getPrivacy());
+
+        if(updatedTournament.getStartDate() != null)
+            tournament.setStartDate(updatedTournament.getStartDate());
+
+        if(updatedTournament.getLanguage() != null)
+            tournament.setLanguage(updatedTournament.getLanguage());
+
+        if(updatedTournament.getEndDate() != null)
+            tournament.setEndDate(updatedTournament.getEndDate());
+
+        if(updatedTournament.getParticipants() != null && updatedTournament.getParticipants().size() > 0 )
+            tournament.getParticipants().addAll(updatedTournament.getParticipants());
+
+        return tournament;
     }
 
     public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int page, int limit) {
