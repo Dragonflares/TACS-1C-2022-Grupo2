@@ -51,21 +51,11 @@ export function PublicTournaments () {
 
                 setData(p => (
                     {
-                        ...p,
                         elements: response.data.response.elements,
+                        count: response.data.response.totalCount
                     }
                 ))
-
-                getPublicTournamentsCount().then(
-                    resp => {
-                        setData(p => ({
-                            ...p,
-                            count: resp.data.response.quantity,
-                        }))
-                    }
-                ).catch( e => {
-                        toast.error(e.response.data.response.message);
-                    })         
+     
             }
         ).catch( e => {
                 toast.error(e.response.data.response.message);
