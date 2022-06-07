@@ -59,14 +59,10 @@ public class UserService {
 
     public Result createResult(String userLoggedIn, Result result) {
 
-        LocalTime midnight = LocalTime.MIDNIGHT;
-        LocalDate today = LocalDate.now(ZoneId.);
-        LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
-
         UserDAO userDAO = userRepository.findByName(userLoggedIn).get();
         List<ResultDAO> resultsDAO = userDAO.getResultDAOS();
 
-        String dateString = today.format(DateTimeFormatter.ISO_DATE_TIME);
+        String dateString = "today.format(DateTimeFormatter.ISO_DATE_TIME)";
 
         var exist = userRepository.existResultToday(userLoggedIn, result.getLanguage().name(), dateString);
 

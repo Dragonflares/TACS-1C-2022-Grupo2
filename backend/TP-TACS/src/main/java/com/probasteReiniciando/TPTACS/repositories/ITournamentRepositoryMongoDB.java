@@ -4,6 +4,8 @@ import com.probasteReiniciando.TPTACS.dao.TournamentDAO;
 import com.probasteReiniciando.TPTACS.dao.UserDAO;
 import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -40,13 +42,11 @@ public interface ITournamentRepositoryMongoDB extends MongoRepository<Tournament
     @Query(value = "{'owner': ?0}")
     List<TournamentDAO> findByOwner(String owner, int page, int limit);
 
-    //TODO
-    @Query(value = "{'privacy': 'PUBLIC'}")
-    List<TournamentDAO> obtainPublicTournaments(int page, int limit);
+    @Query(value = "{'privacy': 'PUBLIC', 'participants': { $not : { $elemMatch : { 'username' : ?0 } }  }}")
+    Page<TournamentDAO> obtainPublicTournaments(String username, Pageable pageable);
 
-    //TODO
-    @Query(value = "{'privacy': 'PRIVATE'}")
-    List<TournamentDAO> obtainPrivateTournaments(int page, int limit, String username);
+    @Query(value = "{'participants': { $elemMatch : { 'username' : ?0 }  } }")
+    Page<TournamentDAO> obtainPrivateTournaments(String username, Pageable pageable);
 
 
 
