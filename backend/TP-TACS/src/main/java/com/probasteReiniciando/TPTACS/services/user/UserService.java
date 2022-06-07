@@ -22,7 +22,7 @@ public class UserService {
 
     @Autowired
     private IUserRepositoryMongoDB userRepository;
-    
+
 
     private ModelMapperTacs modelMapper = new ModelMapperTacs();
 
@@ -89,7 +89,7 @@ public class UserService {
     }
 
     public List<Result> getTodayResultsByUser(String userLoggedIn) {
-        return modelMapper.map(userRepository.findByName(userLoggedIn).get(),User.class).getResults().stream().filter(result -> result.getDate().equals(LocalDate.now())).toList();
+        return modelMapper.mapList(userRepository.findByName(userLoggedIn).get().getResultDAOS().stream().filter(result -> result.getDate().equals(LocalDate.now())).toList(),Result.class);
     }
 
 
