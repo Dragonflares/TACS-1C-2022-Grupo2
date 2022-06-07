@@ -8,7 +8,6 @@ import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import com.probasteReiniciando.TPTACS.exceptions.ResultAlreadyExistsException;
 import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
-import com.probasteReiniciando.TPTACS.repositories.IResultRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepositoryMongoDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,7 @@ public class UserService {
 
     @Autowired
     private IUserRepositoryMongoDB userRepository;
-
-    @Autowired
-    private IResultRepositoryMongoDB resultRepository;
+    
 
     private ModelMapperTacs modelMapper = new ModelMapperTacs();
 
@@ -61,7 +58,9 @@ public class UserService {
 
     public Result createResult(String userLoggedIn, Result result) {
 
-        List<ResultDAO> resultsDAO = userRepository.findResultsByName(userLoggedIn);
+
+        UserDAO userDAO = userRepository.findByName(userLoggedIn).get();
+        List<ResultDAO> resultsDAO = userDAO.getResultDAOS();
 
         boolean resultAlreadyCreated = false;
 
@@ -77,8 +76,9 @@ public class UserService {
         }
 
         ResultDAO resultDAO = modelMapper.map(result,ResultDAO.class);
-        resultDAO.setUser(userRepository.findByName(userLoggedIn).get());
-        result = modelMapper.map(resultRepository.save(resultDAO),Result.class);
+        userDAO.getResultDAOS().add(resultDAO);
+        userRepository.save(userDAO);
+        result = modelMapper.map(resultDAO,Result.class);
 
         return result;
 

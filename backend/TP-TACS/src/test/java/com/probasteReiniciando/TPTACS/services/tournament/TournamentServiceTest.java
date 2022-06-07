@@ -3,7 +3,6 @@ package com.probasteReiniciando.TPTACS.services.tournament;
 import com.probasteReiniciando.TPTACS.domain.*;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
-import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

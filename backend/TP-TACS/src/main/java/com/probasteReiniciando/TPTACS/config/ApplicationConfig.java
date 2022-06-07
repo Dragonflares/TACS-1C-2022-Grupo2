@@ -19,6 +19,7 @@ public class ApplicationConfig {
 
         this.tournamentMapping(modelMapper);
         this.resultMapping(modelMapper);
+        this.resultDtoMapping(modelMapper);
 
         return modelMapper;
     }
@@ -39,7 +40,14 @@ public class ApplicationConfig {
                 .addMappings(mapper -> mapper.map(Result::getDate, ResultDto::setDate))
                 .addMappings(mapper -> mapper.map(Result::getLanguage, ResultDto::setLanguage))
                 .addMappings(mapper -> mapper.map(Result::getPoints, ResultDto::setPoints))
-                .addMappings(mapper -> mapper.map(Result::getId, ResultDto::setId))
+        ;
+    }
+
+    private void resultDtoMapping(ModelMapperTacs modelMapper) {
+        modelMapper.createTypeMap(ResultDto.class, Result.class)
+                .addMappings(mapper -> mapper.map(ResultDto::getDate, Result::setDate))
+                .addMappings(mapper -> mapper.map(ResultDto::getLanguage, Result::setLanguage))
+                .addMappings(mapper -> mapper.map(ResultDto::getPoints, Result::setPoints))
         ;
     }
 

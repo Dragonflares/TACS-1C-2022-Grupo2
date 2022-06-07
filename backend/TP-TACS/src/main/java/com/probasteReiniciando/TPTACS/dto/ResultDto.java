@@ -1,5 +1,6 @@
 package com.probasteReiniciando.TPTACS.dto;
 
+import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,11 +17,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ResultDto {
 
-    private  String id;
 
     private  Integer points;
 
-    private String language;
+    private Language language;
 
     private LocalDate date;
 

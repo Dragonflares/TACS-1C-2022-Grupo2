@@ -17,8 +17,6 @@ public interface IUserRepositoryMongoDB extends MongoRepository<UserDAO, String>
     Optional<UserDAO> findByName(String name);
 
 
-    @Query(value = "{'username': ?0}", fields = "{ 'results' : 1}")
-    List<ResultDAO> findResultsByName(String name);
 
     @Query(value = "{'id': ?0}")
     Optional<UserDAO> findById(int id);

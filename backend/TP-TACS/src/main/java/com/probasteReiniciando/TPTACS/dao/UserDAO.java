@@ -27,7 +27,7 @@ public class UserDAO {
 
     private String password;
 
-    @DBRef
-    private List<ResultDAO> results = new ArrayList<>();
+    private List<ResultDAO> resultDAOS = new ArrayList<>();
+
 
 }

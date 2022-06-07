@@ -9,7 +9,6 @@ import com.probasteReiniciando.TPTACS.exceptions.UnAuthorizedException;
 import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepositoryMongoDB;
-import com.probasteReiniciando.TPTACS.repositories.IUserRepository;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.validators.TournamentValidator;
 import org.springframework.stereotype.Service;

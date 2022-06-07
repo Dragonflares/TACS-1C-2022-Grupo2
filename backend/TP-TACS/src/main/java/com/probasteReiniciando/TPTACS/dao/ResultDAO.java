@@ -16,13 +16,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document
 public class ResultDAO {
 
     @Id
     private String id;
-    @DBRef
-    private UserDAO user;
     private Integer points;
     private Language language;
     private LocalDate date;
