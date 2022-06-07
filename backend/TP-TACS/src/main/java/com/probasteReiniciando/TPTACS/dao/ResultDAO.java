@@ -18,8 +18,6 @@ import java.time.LocalDate;
 @Builder
 public class ResultDAO {
 
-    @Id
-    private String id;
     private Integer points;
     private Language language;
     private LocalDate date;

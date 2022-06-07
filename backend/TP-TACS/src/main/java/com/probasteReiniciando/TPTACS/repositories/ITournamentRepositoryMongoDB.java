@@ -31,7 +31,7 @@ public interface ITournamentRepositoryMongoDB extends MongoRepository<Tournament
     void addUser(String tournamentId, User user);
 
     @Query(value = "{'id': ?0}", fields = "{ 'participants' : 1}")
-    List<UserDAO> obtainParticipants(String tournamentId, Optional<String> orderBy, Optional<String> order);
+    List<UserDAO> obtainParticipants(String tournamentId);
 
     //TODO
     //void updateTournament(int tournamentId, Tournament tournament);

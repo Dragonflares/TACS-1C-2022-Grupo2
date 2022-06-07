@@ -84,7 +84,7 @@ public class TournamentService {
             tournament.getParticipants().add(user);
             tournamentRepository.save(modelMapper.map(tournament,TournamentDAO.class));
 
-            return modelMapper.mapList(tournamentRepository.obtainParticipants(tournamentId,Optional.empty(),Optional.empty()),User.class);
+            return modelMapper.mapList(tournamentRepository.findById(tournamentId).get().getParticipants(),User.class);
 
         } else {
 
@@ -92,7 +92,7 @@ public class TournamentService {
 
                 tournamentRepository.addUser(tournament.getId(), user);
 
-                return modelMapper.mapList(tournamentRepository.obtainParticipants(tournamentId,Optional.empty(),Optional.empty()),User.class);
+                return modelMapper.mapList(tournamentRepository.findById(tournamentId).get().getParticipants(), User.class);
 
             } else {
 
@@ -110,7 +110,7 @@ public class TournamentService {
 
 
     public List<User> obtainParticipants(String tournamentId, Optional<String> orderBy, Optional<String> order) {
-        return modelMapper.mapList(tournamentRepository.obtainParticipants(tournamentId, orderBy, order),User.class);
+        return modelMapper.mapList(tournamentRepository.findById(tournamentId).get().getParticipants(), User.class);
 
 
     }
