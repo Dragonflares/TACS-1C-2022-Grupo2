@@ -60,18 +60,20 @@ public class UserService {
 
     public Result createResult(String userLoggedIn, Result result) {
 
-        Date in = new Date();
+/*        Date in = new Date();
         LocalDateTime d = LocalDateTime.ofInstant(DateUtils.atStartOfDay(in).toInstant(),
                 ZoneId.of("UTC"));
         ZoneId zoneId = ZoneId.of("UTC");  //Zone information
         ZonedDateTime zdtAtAmerica = d.atZone( zoneId );
-        ZonedDateTime today = zdtAtAmerica.withZoneSameLocal(ZoneOffset.UTC);
+        ZonedDateTime today = zdtAtAmerica.withZoneSameLocal(ZoneOffset.UTC);*/
 
         UserDAO userDAO = userRepository.findByName(userLoggedIn).get();
         List<ResultDAO> resultsDAO = userDAO.getResultDAOS();
 
-        String dateString = "today.format(DateTimeFormatter.ISO_DATE_TIME)";
+        //String dateString = "today.format(DateTimeFormatter.ISO_DATE_TIME)";
 
+
+        String dateString = Instant.now().atZone(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE);
         var exist = userRepository.existResultToday(userLoggedIn, result.getLanguage().name(), dateString);
 
         if(exist){
@@ -81,7 +83,6 @@ public class UserService {
         ResultDAO resultDAO = modelMapper.map(result,ResultDAO.class);
         userDAO.getResultDAOS().add(resultDAO);
         userRepository.save(userDAO);
-        result = modelMapper.map(resultDAO,Result.class);
 
         return result;
 
@@ -92,16 +93,8 @@ public class UserService {
     }
 
     public List<Result> getTodayResultsByUser(String userLoggedIn) {
-        return modelMapper.mapList(userRepository.findByName(userLoggedIn).get().getResultDAOS().stream().filter(result -> result.getDate().equals(LocalDate.now())).toList(),Result.class);
+        return modelMapper.mapList(userRepository.findByName(userLoggedIn).get().getResultDAOS().stream().filter(result -> result.getDate().equals(Instant.now().atZone(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE))).toList(),Result.class);
     }
 
 
-
-    private List<Result> getResultsByUserAndDateAndId(String userLoggedIn, LocalDate now, int resultId) {
-        return getResultsByUser(userLoggedIn).stream().filter(x -> x.getDate().equals(now) && x.getId().equals(resultId)).toList();
-    }
-
-    private List<Result> getResultsByUserAndDate(String userLoggedIn, LocalDate now) {
-        return getResultsByUser(userLoggedIn).stream().filter(x -> x.getDate().equals(now)).toList();
-    }
 }

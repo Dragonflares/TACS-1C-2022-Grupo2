@@ -20,7 +20,7 @@ public interface IUserRepositoryMongoDB extends MongoRepository<UserDAO, String>
     Optional<UserDAO> findByName(String name);
 
 
-    @Query(value = "{ 'username' : ?0, 'resultDAOS' : { $elemMatch : { 'language' : ?1, 'date': Date(?2) } } }",
+    @Query(value = "{ 'username' : ?0, 'resultDAOS' : { $elemMatch : { 'language' : ?1, 'date': ?2 } } }",
     fields = "{ 'resultDAOS' : 1 }", exists = true)
     boolean existResultToday(String logedUser, String Language, String date);
 

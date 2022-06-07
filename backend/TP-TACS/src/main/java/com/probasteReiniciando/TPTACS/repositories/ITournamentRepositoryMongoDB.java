@@ -36,9 +36,6 @@ public interface ITournamentRepositoryMongoDB extends MongoRepository<Tournament
     List<UserDAO> obtainParticipants(String tournamentId);
 
     //TODO
-    //void updateTournament(int tournamentId, Tournament tournament);
-
-    //TODO
     @Query(value = "{'owner': ?0}")
     List<TournamentDAO> findByOwner(String owner, int page, int limit);
 

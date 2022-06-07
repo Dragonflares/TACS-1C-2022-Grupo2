@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @Builder
 public class Result {
 
-    private String id;
     private String username;
     private Integer points;
     private Language language;

@@ -20,6 +20,6 @@ public class ResultDAO {
 
     private Integer points;
     private Language language;
-    private LocalDate date;
+    private String date;
 
 }
