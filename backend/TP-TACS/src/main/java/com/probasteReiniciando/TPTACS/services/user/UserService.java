@@ -1,5 +1,6 @@
 package com.probasteReiniciando.TPTACS.services.user;
 
+import com.github.rkumsher.date.DateUtils;
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.dao.ResultDAO;
 import com.probasteReiniciando.TPTACS.dao.UserDAO;
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -59,9 +60,12 @@ public class UserService {
 
     public Result createResult(String userLoggedIn, Result result) {
 
-        LocalTime midnight = LocalTime.MIDNIGHT;
-        LocalDate today = LocalDate.now(ZoneId.);
-        LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
+        Date in = new Date();
+        LocalDateTime d = LocalDateTime.ofInstant(DateUtils.atStartOfDay(in).toInstant(),
+                ZoneId.of("UTC"));
+        ZoneId zoneId = ZoneId.of("UTC");  //Zone information
+        ZonedDateTime zdtAtAmerica = d.atZone( zoneId );
+        ZonedDateTime today = zdtAtAmerica.withZoneSameLocal(ZoneOffset.UTC);
 
         UserDAO userDAO = userRepository.findByName(userLoggedIn).get();
         List<ResultDAO> resultsDAO = userDAO.getResultDAOS();
