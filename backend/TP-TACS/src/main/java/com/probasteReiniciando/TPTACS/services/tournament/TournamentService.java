@@ -1,6 +1,7 @@
 package com.probasteReiniciando.TPTACS.services.tournament;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
+import com.probasteReiniciando.TPTACS.dao.ResultDAO;
 import com.probasteReiniciando.TPTACS.dao.TournamentDAO;
 import com.probasteReiniciando.TPTACS.dao.UserDAO;
 import com.probasteReiniciando.TPTACS.domain.*;
@@ -96,7 +97,8 @@ public class TournamentService {
 
             if (tournament.getOwner().getUsername().equals(userLoggedIn)) {
 
-                tournamentRepository.addUser(tournament.getId(), user);
+                tournament.getParticipants().add(user);
+                tournamentRepository.save(modelMapper.map(tournament,TournamentDAO.class));
 
                 return modelMapper.mapList(tournamentRepository.findById(tournamentId).get().getParticipants(), User.class);
 
@@ -194,6 +196,7 @@ public class TournamentService {
 
         List<LocalDate> tournamentDates;
 
+
         if(currentDate.isBefore(tournamentStartDate))
             tournamentDates = new ArrayList<>();
         else {
@@ -203,13 +206,21 @@ public class TournamentService {
                 tournamentDates = tournamentStartDate.datesUntil(tournamentEndDate.plusDays(1)).toList();
         }
 
-        for (User participant : tournament.getParticipants()) {
+
+
+        List<String> idsParticipants = tournament.getParticipants().stream().map(User::getId).collect(Collectors.toList());
+
+        List<UserDAO> participantsDb = userRepository.findByIds(idsParticipants);
+
+        //TODO REFACTOR THIS SO MODEL MAPPER REALLY MAP ALSO THE RESULTS
+        for (UserDAO participant : participantsDb) {
+
 
             int points = 0;
 
             for(LocalDate localDateIndex : tournamentDates) {
 
-                Optional<Result> result = participant.getResults().stream().filter(r -> r.getDate().equals(localDateIndex)).findFirst();
+                Optional<ResultDAO> result = participant.getResultDAOS().stream().filter(r -> LocalDate.parse(r.getDate()).equals(localDateIndex)).findFirst();
 
                 if (result.isPresent())
                     points += result.get().getPoints();
@@ -218,7 +229,7 @@ public class TournamentService {
 
             }
 
-            positions.add(Position.builder().points(points).user(participant).build());
+            positions.add(Position.builder().points(points).user(modelMapper.map(participant,User.class)).build());
 
         }
 

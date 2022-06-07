@@ -27,7 +27,8 @@ public interface IUserRepositoryMongoDB extends MongoRepository<UserDAO, String>
     @Query(value = "{'id': ?0}")
     Optional<UserDAO> findById(int id);
 
-
+    @Query("{id: { $in: ?0 } })")
+    List<UserDAO> findByIds(List<String> ids);
 
 
 }
