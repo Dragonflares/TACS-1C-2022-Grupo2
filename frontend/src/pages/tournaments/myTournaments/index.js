@@ -56,10 +56,9 @@ export function MyTournaments () {
                 setData(p => (
                     {
                         ...p,
-                        elements: response.data.response,
+                        elements: response.data.response.elements,
                     }
                 ))
-
                 getTournamentsCount().then(
                     resp => {
                         setData(p => ({
@@ -69,7 +68,7 @@ export function MyTournaments () {
                     }
                 ).catch( e => {
                         toast.error(e.response.data.response.message);
-                    })         
+                    })    
             }
         ).catch(e => {
                 toast.error(e.response.data.response.message);

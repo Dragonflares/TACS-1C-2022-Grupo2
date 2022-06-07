@@ -52,7 +52,7 @@ export function PublicTournaments () {
                 setData(p => (
                     {
                         ...p,
-                        elements: response.data.response,
+                        elements: response.data.response.elements,
                     }
                 ))
 
