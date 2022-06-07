@@ -12,7 +12,8 @@ import com.probasteReiniciando.TPTACS.repositories.IUserRepositoryMongoDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,20 +59,18 @@ public class UserService {
 
     public Result createResult(String userLoggedIn, Result result) {
 
+        LocalTime midnight = LocalTime.MIDNIGHT;
+        LocalDate today = LocalDate.now(ZoneId.);
+        LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
 
         UserDAO userDAO = userRepository.findByName(userLoggedIn).get();
         List<ResultDAO> resultsDAO = userDAO.getResultDAOS();
 
-        boolean resultAlreadyCreated = false;
+        String dateString = today.format(DateTimeFormatter.ISO_DATE_TIME);
 
-        if(resultsDAO != null && !resultsDAO.isEmpty()) {
-            Result finalResult = result;
-            resultAlreadyCreated =
-                    resultsDAO.stream().filter(r -> r.getDate().equals(finalResult.getDate()) && r.getLanguage().equals(finalResult.getLanguage())).collect(Collectors.toList()).size() > 0;
+        var exist = userRepository.existResultToday(userLoggedIn, result.getLanguage().name(), dateString);
 
-        }
-
-        if(resultAlreadyCreated){
+        if(exist){
             throw new ResultAlreadyExistsException(userLoggedIn,result.getDate(),result.getLanguage());
         }
 
