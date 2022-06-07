@@ -3,6 +3,7 @@ package com.probasteReiniciando.TPTACS.controllers.tournament;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
+import com.probasteReiniciando.TPTACS.dao.TournamentDAO;
 import com.probasteReiniciando.TPTACS.domain.*;
 import com.probasteReiniciando.TPTACS.dto.PositionDto;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -47,10 +50,13 @@ public class TournamentControllerTest {
     @Test
     public void getPublicTournaments() throws Exception {
 
-        List<Tournament> expectedTournaments = List.of(Tournament.builder().name("TournamentExample").language(Language.ENGLISH).build());
+
+        List<TournamentDto> expectedTournaments = List.of(TournamentDto.builder().name("TournamentExample").language(Language.ENGLISH).build());
+        Page<TournamentDAO> page = new PageImpl<>(mapper.mapList(expectedTournaments,TournamentDAO.class));
+
 
         when(tournamentService.obtainTournaments(1, 5, Privacy.PUBLIC, "PEPE")).
-                thenReturn(expectedTournaments);
+                thenReturn(page);
 
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("offset", "1");
@@ -76,7 +82,7 @@ public class TournamentControllerTest {
 
         Tournament expectedTournament = Tournament.builder().name("TournamentExample").language(Language.ENGLISH).privacy(PUBLIC).build();
 
-        when(tournamentService.getTournamentById(5)).thenReturn(expectedTournament);
+        when(tournamentService.getTournamentById("5")).thenReturn(expectedTournament);
 
         MvcResult result = mockMvc
                 .perform(get("/tournaments/5").contentType("application/json"))
@@ -132,7 +138,7 @@ public class TournamentControllerTest {
 
         List<User> expectedParticipants = List.of(expectedParticipant);
 
-        when(tournamentService.addUser(1, expectedParticipant.getUsername(),"owner")).thenReturn(expectedParticipants);
+        when(tournamentService.addUser("1", expectedParticipant.getUsername(),"owner")).thenReturn(expectedParticipants);
 
         String body = objectMapper.writeValueAsString(mapper.map(expectedParticipant,UserDto.class));
 
@@ -159,7 +165,7 @@ public class TournamentControllerTest {
         Position position1 = Position.builder().points(120).user(user1).build();
         Position position2 = Position.builder().points(240).user(user2).build();
         List<Position> positionsExpected = List.of(position1,position2);
-        when(tournamentService.obtainPositions(1, Optional.empty())).thenReturn(positionsExpected);
+        when(tournamentService.obtainPositions("1", Optional.empty())).thenReturn(positionsExpected);
 
         MvcResult result = mockMvc
                 .perform(get("/tournaments/1/positions").contentType("application/json").characterEncoding("UTF-8"))
@@ -182,7 +188,7 @@ public class TournamentControllerTest {
 
         List<User> participantsExpected = List.of(User.builder().username("pepe").build(),User.builder().username("juan").build());
 
-        when(tournamentService.obtainParticipants(1, Optional.empty(), Optional.empty())).thenReturn(participantsExpected);
+        when(tournamentService.obtainParticipants("1", Optional.empty(), Optional.empty())).thenReturn(participantsExpected);
 
         MvcResult result = mockMvc
                 .perform(get("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8"))
@@ -206,7 +212,7 @@ public class TournamentControllerTest {
                 .language(Language.ENGLISH)
                 .privacy(Privacy.PUBLIC).build();
 
-        when(tournamentService.updateTournament(1, expectedTournament, "pepe")).thenReturn(expectedTournament);
+        when(tournamentService.updateTournament("1", expectedTournament, "pepe")).thenReturn(expectedTournament);
 
         String body = objectMapper.writeValueAsString(mapper.map(expectedTournament,TournamentDto.class));
 

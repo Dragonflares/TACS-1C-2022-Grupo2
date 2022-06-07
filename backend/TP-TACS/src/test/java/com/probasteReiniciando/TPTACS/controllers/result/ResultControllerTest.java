@@ -69,34 +69,7 @@ public class ResultControllerTest {
 
     }
 
-    @Test
-    public void modifyResult() throws Exception {
 
-        Result expectedResult = Result.builder().username("pepe").points(2).build();
-
-        when(userService.modifyResult("pepe", expectedResult, 1)).thenReturn(expectedResult);
-
-        String body = objectMapper.writeValueAsString(mapper.map(expectedResult, ResultDto.class));
-
-        MvcResult result = mockMvc
-                .perform(
-                        put("/results/1")
-                                .contentType("application/json")
-                                .characterEncoding("UTF-8")
-                                .content(body)
-                                .requestAttr("userAttributeName","pepe")
-                )
-                .andExpect(status().isOk())
-                .andDo(MockMvcResultHandlers.print())
-                .andReturn();
-
-        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
-        JsonNode data = jsonNode.get("response");
-        ResultDto actualResult = objectMapper.treeToValue(data, ResultDto.class);
-
-        Assertions.assertEquals(expectedResult, mapper.map(actualResult, Result.class));
-
-    }
 
     @Test
     public void getResults() throws Exception {
