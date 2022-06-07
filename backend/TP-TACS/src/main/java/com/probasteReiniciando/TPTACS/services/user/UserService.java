@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -60,7 +61,18 @@ public class UserService {
 
     public Result createResult(String userLoggedIn, Result result) {
 
-        if(userRepository.resultAlreadyCreated(userLoggedIn, result.getLanguage().name(), result.getDate())){
+        List<ResultDAO> resultsDAO = userRepository.findResultsByName(userLoggedIn);
+
+        boolean resultAlreadyCreated = false;
+
+        if(resultsDAO != null && !resultsDAO.isEmpty()) {
+            Result finalResult = result;
+            resultAlreadyCreated =
+                    resultsDAO.stream().filter(r -> r.getDate().equals(finalResult.getDate()) && r.getLanguage().equals(finalResult.getLanguage())).collect(Collectors.toList()).size() > 0;
+
+        }
+
+        if(resultAlreadyCreated){
             throw new ResultAlreadyExistsException(userLoggedIn,result.getDate(),result.getLanguage());
         }
 

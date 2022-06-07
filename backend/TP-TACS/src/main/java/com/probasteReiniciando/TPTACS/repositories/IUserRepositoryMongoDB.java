@@ -2,12 +2,11 @@ package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.dao.ResultDAO;
 import com.probasteReiniciando.TPTACS.dao.UserDAO;
-import com.probasteReiniciando.TPTACS.domain.Result;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,12 +16,14 @@ public interface IUserRepositoryMongoDB extends MongoRepository<UserDAO, String>
     @Query(value = "{'username': ?0}")
     Optional<UserDAO> findByName(String name);
 
+
+    @Query(value = "{'username': ?0}", fields = "{ 'results' : 1}")
+    List<ResultDAO> findResultsByName(String name);
+
     @Query(value = "{'id': ?0}")
     Optional<UserDAO> findById(int id);
 
 
-    @Query(value = "{'username': ?0, results: {'language' : ?1, 'date': ?2}}", exists = true)
-    boolean resultAlreadyCreated(String userLoggedIn, String language, LocalDate date);
 
 
 }
