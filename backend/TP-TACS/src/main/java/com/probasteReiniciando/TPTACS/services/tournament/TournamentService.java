@@ -11,6 +11,8 @@ import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.validators.TournamentValidator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -41,7 +43,11 @@ public class TournamentService {
 
         tournament.setOwner(owner);
 
-        tournament.setParticipants(new ArrayList<>());
+        List<User> participants = new ArrayList<>();
+
+        participants.add(owner);
+
+        tournament.setParticipants(participants);
 
         TournamentDAO tournamentDAO = modelMapper.map(tournament, TournamentDAO.class);
 
@@ -49,13 +55,13 @@ public class TournamentService {
 
     }
 
-    public List<Tournament> obtainTournaments(int page, int limit, Privacy privacy, String username) {
+    public Page<TournamentDAO> obtainTournaments(int page, int limit, Privacy privacy, String username) {
 
         return switch (privacy) {
 
-            case PUBLIC -> modelMapper.mapList(tournamentRepository.obtainPublicTournaments(page, limit),Tournament.class);
+            case PUBLIC -> tournamentRepository.obtainPublicTournaments(username, PageRequest.of(page - 1, limit));
 
-            case PRIVATE -> modelMapper.mapList(tournamentRepository.obtainPrivateTournaments(page, limit, username),Tournament.class);
+            case PRIVATE -> tournamentRepository.obtainPrivateTournaments(username, PageRequest.of(page - 1, limit));
 
         };
 
@@ -124,8 +130,6 @@ public class TournamentService {
             throw new UnAuthorizedException(userLoggedIn);
         }
 
-        //TODO
-        //updatedTournament.setId(tournamentId);
         tournamentRepository.save(modelMapper.map(updatedTournament,TournamentDAO.class));
 
         return modelMapper.map(tournamentRepository.obtainTournament(tournamentId).orElseThrow(() -> new TournamentNotFoundException(String.valueOf(tournamentId))),Tournament.class);

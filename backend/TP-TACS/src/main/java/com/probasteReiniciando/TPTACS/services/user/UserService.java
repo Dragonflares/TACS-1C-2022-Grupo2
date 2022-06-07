@@ -70,7 +70,7 @@ public class UserService {
         UserDAO userDAO = userRepository.findByName(userLoggedIn).get();
         List<ResultDAO> resultsDAO = userDAO.getResultDAOS();
 
-        String dateString = today.format(DateTimeFormatter.ISO_DATE_TIME);
+        String dateString = "today.format(DateTimeFormatter.ISO_DATE_TIME)";
 
         var exist = userRepository.existResultToday(userLoggedIn, result.getLanguage().name(), dateString);
 
