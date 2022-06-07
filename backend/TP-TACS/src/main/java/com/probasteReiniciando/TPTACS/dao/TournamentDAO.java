@@ -40,7 +40,6 @@ public class TournamentDAO {
     private UserDAO owner;
 
     @Builder.Default
-    @DBRef
     private List<UserDAO> participants = new ArrayList<>();
 
 

@@ -1,6 +1,7 @@
 package com.probasteReiniciando.TPTACS.repositories;
 
 import com.probasteReiniciando.TPTACS.dao.TournamentDAO;
+import com.probasteReiniciando.TPTACS.dao.UserDAO;
 import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -30,7 +31,7 @@ public interface ITournamentRepositoryMongoDB extends MongoRepository<Tournament
     void addUser(String tournamentId, User user);
 
     @Query(value = "{'id': ?0}", fields = "{ 'participants' : 1}")
-    List<User> obtainParticipants(String tournamentId, Optional<String> orderBy, Optional<String> order);
+    List<UserDAO> obtainParticipants(String tournamentId, Optional<String> orderBy, Optional<String> order);
 
     //TODO
     //void updateTournament(int tournamentId, Tournament tournament);
