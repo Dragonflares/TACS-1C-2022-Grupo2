@@ -1,4 +1,4 @@
-import React, {Component } from 'react'
+import React, {Component, useState, useCallback } from 'react'
 import { FormGroup, Modal, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form';
@@ -8,125 +8,115 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 
-export class SignUpPopUp extends Component {
+export function SignUpPopUp({show, onSetUser, onClose, onError, onSuccess }){
 
-  constructor(props){
-    super(props);
-    this.state = {
-      username : '',
-      password : '',
-      type : 'password',
-      validated : false
-    }
-  }
+  const [user, setUser] = useState({
+    username: '',
+    password: ''
+  })
+  const [type, setType] = useState('password');
+  const [validated, setValidated] = useState(false);
 
-  handleChange= (event) => {
-      const target = event.target;
-      const value = target.value;
-      const name = target.name;
-    
-      this.setState ({
-          [name] : value,
+  const handleChange = useCallback((e) => {
+      const { name, value } = e.target;
+
+      setUser({
+          ...prevState,
+          [name]: value
       });
-  }
+  });
 
-  showHide = () => {
-    this.setState({
-        type: this.state.type === 'text' ? 'password' : 'text'
-    });
-  }
+  const showHide = useCallback(() => {
+    const newType = type === 'text' ? 'password' : 'text';
+    setType(newType);
+  });
 
-  handleSave = (event) => {
-    const {username, password} = this.state;
+  const handleSave = useCallback((event) => {
+    const {username, password} = user;
 
     event.preventDefault();
     event.stopPropagation();
 
-    if(!this.state.validated){
-      this.setState({validated: !this.state.validated});
+    if(!validated){
+      setValidated(validated => !validated);
     }
 
     if(!username || !password || username === '' || password === '')
       return;
 
-    createUser({
-      username : username,
-      password : password
-    }).then(
+    createUser(user).then(
       () => {
-              this.props.setUser(username);
-              this.props.onSuccess();
+              onSetUser(username);
+              onSuccess();
               this.handleHide();
       }
     ).catch(e => {
-      this.props.onError(e);
+      onError(e);
     })
-  }
+  });
 
-  handleHide = () => {
-    this.setState({
+  const handleHide = useCallback(() => {
+    setUser({
       username : '',
-      password : '',
-      type : 'password',
-      validated: false
+      password : ''
     });
-    this.props.handleClose();
-  }
+    setType('password');
+    setValidated(false);
+    onClose();
+  });
 
-  render(){
 
-    return (
-      <>
-        <Modal show={this.props.show} onHide={this.handleHide} backdrop="static" centered>
-          <Modal.Header closeButton>
-            <Modal.Title>Create Account</Modal.Title>
-          </Modal.Header>
-          <Form noValidate validated={this.state.validated} onSubmit={this.handleSave}>
-            <Modal.Body>
-              <Form.Group as={Row} className='_6lux' controlId="formUsername">
-                <InputGroup>
-                    <FloatingLabel className='group-first-element'>
-                        <Form.Control name="username" type="text" placeholder="Username" required
-                            value={this.state.username} 
-                            onChange={this.handleChange}/>
-                        <Form.Text className="text-muted">
-                        </Form.Text>
-                        <label style={{paddingLeft:0, marginLeft: '1em'}}>UserName</label>   
-                    </FloatingLabel>
-                </InputGroup>
-              </Form.Group>
-              <Form.Group as={Row} className='_6lux' controlId="formPassword">
-                <InputGroup>
-                    <FloatingLabel className='group-first-element'> 
-                        <Form.Control className="form-control-rounded" 
-                            name="password" required
-                            id="password" type={this.state.type} placeholder="Password" 
-                            value={this.state.password} onChange={this.handleChange}/>                                               
-                        <label style={{paddingLeft:0, marginLeft: '1em'}}>Password</label>   
-                    </FloatingLabel>
-                    <Button variant="outline-secondary"
-                            onClick={this.showHide}
-                            size="sm">
-                            {
-                                this.state.type === 'text'?<AiFillEye color='black'/>:<AiFillEyeInvisible color='black'/>
-                            }
-                    </Button>
-                </InputGroup>
-              </Form.Group>              
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={this.handleHide}>
-                Close
-              </Button>
-              <Button variant="primary" type='submit'>
-                Save Changes
-              </Button>
-            </Modal.Footer>
-          </Form>
-        </Modal>
-      </>
-    );
-  }
+  return (
+    <>
+      <Modal show={show} onHide={handleHide} backdrop="static" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Create Account</Modal.Title>
+        </Modal.Header>
+        <Form noValidate validated={validated} onSubmit={handleSave}>
+          <Modal.Body>
+            <Form.Group as={Row} className='_6lux' controlId="formUsername">
+              <InputGroup>
+                  <FloatingLabel className='group-first-element'>
+                      <Form.Control name="username" type="text" placeholder="Username" required
+                          value={user.username} 
+                          onChange={handleChange}/>
+                      <Form.Text className="text-muted">
+                      </Form.Text>
+                      <label style={{paddingLeft:0, marginLeft: '1em'}}>UserName</label>   
+                  </FloatingLabel>
+              </InputGroup>
+            </Form.Group>
+            <Form.Group as={Row} className='_6lux' controlId="formPassword">
+              <InputGroup>
+                  <FloatingLabel className='group-first-element'> 
+                      <Form.Control className="form-control-rounded" 
+                          name="password" required
+                          id="password" type={type} placeholder="Password" 
+                          value={user.password} onChange={handleChange}/>
+                      <label style={{paddingLeft:0, marginLeft: '1em'}}>Password</label>   
+                  </FloatingLabel>
+                  <Button variant="outline-secondary"
+                          onClick={showHide}
+                          size="sm">
+                          {
+                              type === 'text'?<AiFillEye color='black'/>:<AiFillEyeInvisible color='black'/>
+                          }
+                  </Button>
+              </InputGroup>
+            </Form.Group>              
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleHide}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+    </>
+  );
 }
 
 export default SignUpPopUp

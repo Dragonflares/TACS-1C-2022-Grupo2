@@ -123,8 +123,8 @@ export function LogIn ({isLoged}){
                                                     Sign Up
                                                 </Button>
                                             </div>
-                                            <SignUpPopUp show={showModal} setUser={setUsername} 
-                                            handleClose={toggleSigIn} position="right center" onError={handleOnError} onSuccess={handleOnSuccess}/>
+                                            <SignUpPopUp show={showModal} onSetUser={setUsername} 
+                                            onClose={toggleSigIn} position="right center" onError={handleOnError} onSuccess={handleOnSuccess}/>
                                         </Row>                             
                                     </Card.Body>
                                 </Form>
