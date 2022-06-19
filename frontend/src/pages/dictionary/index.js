@@ -17,7 +17,10 @@ export function Dictionary(){
         search: '',
     });
 
-    const [result, setResult] = useState('');
+    const [result, setResult] = useState({
+        word: '',
+        meaning: ''
+    });
     const [languages, setLanguages] = useState([])
     
     useEffect(() => {
@@ -28,15 +31,17 @@ export function Dictionary(){
                 toast.error(e.response.data.response.message);
             })
         }
+
+        init();
     }, []);
 
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
 
-        setFormRequest({
+        setFormRequest(prevState => ({
             ...prevState,
             [name]: value
-        });
+        }));
     });
 
     const handleSubmit = useCallback((event) => {
@@ -44,12 +49,15 @@ export function Dictionary(){
         event.stopPropagation();
 
         getMeaning(formRequest.search.toLowerCase(), formRequest.language).then(response => {
-            setFormRequest({
+            setFormRequest(prevState => ({
                 ...prevState,
                 search: formRequest.search,
-            });
+            }));
 
-            setResult(response.data.response.phrase);
+            setResult({
+                word: formRequest.search,
+                meaning: response.data.response.phrase
+            });
         }).catch(e => {
             console.log(e)
             toast.error(e.response.data.response.message);
@@ -95,15 +103,15 @@ export function Dictionary(){
                         </Card.Body>
                     </Card>
                     {
-                        result !== ''?
+                        result.word !== ''?
                         <>
                             <Card  className="py-2">
                                 <Card.Body>
                                     <Card.Title>
-                                        {formRequest.search}
+                                        {result.word}
                                     </Card.Title>
                                     <Card.Text>
-                                        {result}
+                                        {result.meaning}
                                     </Card.Text>
                                 </Card.Body>
                             </Card>

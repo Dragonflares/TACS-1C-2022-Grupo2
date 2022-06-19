@@ -20,10 +20,10 @@ export function SignUpPopUp({show, onSetUser, onClose, onError, onSuccess }){
   const handleChange = useCallback((e) => {
       const { name, value } = e.target;
 
-      setUser({
-          ...prevState,
-          [name]: value
-      });
+      setUser(prevState => ({
+        ...prevState,
+        [name]: value
+    }));
   });
 
   const showHide = useCallback(() => {
@@ -48,7 +48,7 @@ export function SignUpPopUp({show, onSetUser, onClose, onError, onSuccess }){
       () => {
               onSetUser(username);
               onSuccess();
-              this.handleHide();
+              handleHide();
       }
     ).catch(e => {
       onError(e);
