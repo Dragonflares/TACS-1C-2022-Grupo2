@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, {  useCallback, useEffect, useReducer } from 'react'
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -12,21 +12,24 @@ import { getMeaning } from '../../services/dictionaryService';
 
 export function Dictionary(){
 
-    const [formRequest, setFormRequest] = useState({
-        language: 'ENGLISH',
-        search: '',
-    });
+    const initialValues = {
+        form: {
+            language: 'ENGLISH',
+            search: '',
+        },
+        result: {
+            word: '',
+            meaning: '' 
+        },
+        languages: []
+    }
 
-    const [result, setResult] = useState({
-        word: '',
-        meaning: ''
-    });
-    const [languages, setLanguages] = useState([])
+    const [state, dispatchState] = useReducer(reducer, initialValues); 
     
     useEffect(() => {
         const init = () => {
             getLanguages().then(response => {
-                setLanguages(response.data.response.languages);
+                dispatchState({type: 'setLanguages', value: response.data.response.languages});
             }).catch(e => {
                 toast.error(e.response.data.response.message);
             })
@@ -38,28 +41,21 @@ export function Dictionary(){
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
 
-        setFormRequest(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
+        dispatchState({type: 'setForm', prop: name, value: value});
     });
 
     const handleSubmit = useCallback((event) => {
         event.preventDefault();
         event.stopPropagation();
 
-        getMeaning(formRequest.search.toLowerCase(), formRequest.language).then(response => {
-            setFormRequest(prevState => ({
-                ...prevState,
-                search: formRequest.search,
-            }));
-
-            setResult({
-                word: formRequest.search,
+        getMeaning(state.form.search.toLowerCase(), state.form.language).then(response => {  
+            
+            dispatchState({type: 'setResult', value: {
+                word: state.form.search,
                 meaning: response.data.response.phrase
-            });
+            }})
+            
         }).catch(e => {
-            console.log(e)
             toast.error(e.response.data.response.message);
         })
     });
@@ -77,9 +73,9 @@ export function Dictionary(){
                                     <Col xs={12} md={3} className="py-1">
                                         <Form.Group controlId="languageControl">
                                             <Form.Select name='language' 
-                                                value={formRequest.language} 
+                                                value={state.form.language} 
                                                 onChange={handleChange}>
-                                                {languages.map(lang => (
+                                                {state.languages.map(lang => (
                                                     <option key={lang} value={lang}>{lang}</option>
                                                 ))}
                                             </Form.Select>
@@ -88,7 +84,7 @@ export function Dictionary(){
                                     <Col xs={12} md={7}  className="py-1">
                                         <Form.Group controlId="searchControl">
                                             <Form.Control type='text' name='search' placeholder='Word Search'
-                                                value={formRequest.search} 
+                                                value={state.form.search} 
                                                 onChange={handleChange}/>                                                    
                                             <Form.Text className="text-muted"></Form.Text>
                                         </Form.Group>
@@ -103,15 +99,15 @@ export function Dictionary(){
                         </Card.Body>
                     </Card>
                     {
-                        result.word !== ''?
+                        state.result.word !== ''?
                         <>
                             <Card  className="py-2">
                                 <Card.Body>
                                     <Card.Title>
-                                        {result.word}
+                                        {state.result.word}
                                     </Card.Title>
                                     <Card.Text>
-                                        {result.meaning}
+                                        {state.result.meaning}
                                     </Card.Text>
                                 </Card.Body>
                             </Card>
@@ -125,6 +121,27 @@ export function Dictionary(){
             <ToastContainer/>
         </div>
     );
+}
+
+function reducer(state, action){
+    switch(action.type){
+        case 'setForm': return {
+            ...state,
+            form: {
+                ...state.form,
+                [action.prop]: action.value
+            }
+        };
+        case 'setResult': return {
+            ...state,
+            result: action.value
+        };
+        case 'setLanguages': return {
+            ...state,
+            languages: action.value
+        };
+        default: throw new Error();
+    }
 }
 
 export default Dictionary
