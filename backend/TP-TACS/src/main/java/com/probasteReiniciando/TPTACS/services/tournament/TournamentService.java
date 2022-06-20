@@ -162,12 +162,6 @@ public class TournamentService {
         return tournament;
     }
 
-    public List<Tournament> obtainTorunamentsByPlayer(String userLoggedIn, int page, int limit) {
-
-        return modelMapper.mapList(tournamentRepository.findByOwner(userLoggedIn, page, limit),Tournament.class);
-
-    }
-
     public QuantityTournament getQuantityOfTournaments(Privacy privacy, String userLoggedIn) {
 
         Integer quantity = switch (privacy) {
