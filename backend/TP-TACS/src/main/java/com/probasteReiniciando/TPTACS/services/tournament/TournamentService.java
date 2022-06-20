@@ -200,22 +200,19 @@ public class TournamentService {
                 tournamentDates = tournamentStartDate.datesUntil(tournamentEndDate.plusDays(1)).toList();
         }
 
-
-
         List<String> idsParticipants = tournament.getParticipants().stream().map(User::getId).collect(Collectors.toList());
 
-        List<UserDAO> participantsDb = userRepository.findByIds(idsParticipants);
+        List<User> participantsDb = modelMapper.mapList(userRepository.findByIds(idsParticipants),User.class);
 
         //TODO REFACTOR THIS SO MODEL MAPPER REALLY MAP ALSO THE RESULTS
-        for (UserDAO participant : participantsDb) {
-
+        for (User participant : participantsDb) {
 
             int points = 0;
 
             for(LocalDate localDateIndex : tournamentDates) {
 
-                Optional<ResultDAO> result = participant.getResultDAOS().stream()
-                        .filter(r -> LocalDate.parse(r.getDate()).equals(localDateIndex) && r.getLanguage().equals(tournament.getLanguage()))
+                Optional<Result> result = participant.getResults().stream()
+                        .filter(r -> r.getDate().equals(localDateIndex) && r.getLanguage().equals(tournament.getLanguage()))
                         .findFirst();
 
                 if (result.isPresent())

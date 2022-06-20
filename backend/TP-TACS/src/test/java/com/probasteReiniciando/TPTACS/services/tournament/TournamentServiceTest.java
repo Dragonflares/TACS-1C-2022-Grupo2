@@ -5,7 +5,6 @@ import com.probasteReiniciando.TPTACS.dao.TournamentDAO;
 import com.probasteReiniciando.TPTACS.dao.UserDAO;
 import com.probasteReiniciando.TPTACS.domain.*;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
-import com.probasteReiniciando.TPTACS.repositories.ITournamentRepository;
 import com.probasteReiniciando.TPTACS.repositories.ITournamentRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepositoryMongoDB;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,25 +35,30 @@ public class TournamentServiceTest {
     @Test
     public void createTournament() throws TournamentBadRequestException {
 
+        UserDAO ownerDAO = UserDAO.builder().username("pepe").build();
+
+        User owner = modelMapper.map(ownerDAO, User.class);
+
         LocalDate startDate = LocalDate.now().plusDays(1);
         LocalDate endDate = startDate.plusDays(10);
         Tournament expectedTournament = Tournament.builder()
                 .name("Champions Wordle")
                 .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
-                .privacy(Privacy.PUBLIC).build();
+                .privacy(Privacy.PUBLIC)
+                .owner(owner)
+                .participants(List.of(owner))
+                .build();
+
+        when(userRepository.findByName(ownerDAO.getUsername())).thenReturn(Optional.of(ownerDAO));
 
         TournamentDAO expectedTournamentDAO = modelMapper.map(expectedTournament, TournamentDAO.class);
 
         when(tournamentRepository.save(expectedTournamentDAO)).thenReturn(expectedTournamentDAO);
 
-        UserDAO userLoggedIn = UserDAO.builder().username("pepe").build();
-
-        when(userRepository.findByName(userLoggedIn.getUsername())).thenReturn(Optional.of(userLoggedIn));
-
         TournamentService tournamentService = new TournamentService(tournamentRepository, userRepository);
 
-        Tournament actualTournament = tournamentService.createTournament(expectedTournament, userLoggedIn.getUsername());
+        Tournament actualTournament = tournamentService.createTournament(expectedTournament, ownerDAO.getUsername());
 
         Assertions.assertEquals(expectedTournament, actualTournament);
 
@@ -95,13 +100,18 @@ public class TournamentServiceTest {
                 .name("Champions Wordle")
                 .language(Language.ENGLISH)
                 .startDate(startDate).endDate(endDate)
-                .privacy(Privacy.PUBLIC).build();
+                .privacy(Privacy.PUBLIC)
+                .build();
+
+        TournamentDAO expectedTournament = TournamentDAO.builder()
+                .participants(expectedParticipantsDAO)
+                .build();
 
         when(userRepository.findByName(participant.getUsername())).thenReturn(Optional.of(participantDAO));
 
-        when(tournamentRepository.obtainParticipants(tournament.getId())).thenReturn(expectedParticipantsDAO);
-
         when(tournamentRepository.obtainTournament(tournament.getId())).thenReturn(Optional.of(tournament));
+
+        when(tournamentRepository.findById(tournament.getId())).thenReturn(Optional.of(expectedTournament));
 
         TournamentService tournamentService = new TournamentService(tournamentRepository, userRepository);
 
@@ -133,11 +143,15 @@ public class TournamentServiceTest {
                 .owner(owner)
                 .privacy(Privacy.PRIVATE).build();
 
+        TournamentDAO expectedTournament = TournamentDAO.builder()
+                .participants(expectedParticipantsDAO)
+                .build();
+
         when(userRepository.findByName(participant.getUsername())).thenReturn(Optional.of(participantDAO));
 
-        when(tournamentRepository.obtainParticipants(tournament.getId())).thenReturn(expectedParticipantsDAO);
-
         when(tournamentRepository.obtainTournament(tournament.getId())).thenReturn(Optional.of(tournament));
+
+        when(tournamentRepository.findById(tournament.getId())).thenReturn(Optional.of(expectedTournament));
 
         TournamentService tournamentService = new TournamentService(tournamentRepository, userRepository);
 
@@ -152,15 +166,15 @@ public class TournamentServiceTest {
 
         LocalDate startDate = LocalDate.now().minusDays(1);
 
-        Result result1 = Result.builder().points(2).date(startDate).build();
-        Result result2 = Result.builder().points(3).date(startDate.plusDays(1)).build();
-        Result result3 = Result.builder().points(6).date(startDate).build();
+        Result result1 = Result.builder().points(2).date(startDate).language(Language.SPANISH).build();
+        Result result2 = Result.builder().points(3).date(startDate.plusDays(1)).language(Language.SPANISH).build();
+        Result result3 = Result.builder().points(6).date(startDate).language(Language.SPANISH).build();
 
-        User user1 = User.builder().username("pepe").build();
+        User user1 = User.builder().username("pepe").id("1").results(new ArrayList<>()).build();
         user1.getResults().add(result1);
         user1.getResults().add(result2);
 
-        User user2 = User.builder().username("juan").build();
+        User user2 = User.builder().username("juan").id("2").results(new ArrayList<>()).build();
         user2.getResults().add(result3);
 
         Position position1Expected = Position.builder().user(user1).points(result1.getPoints() + result2.getPoints()).build();
@@ -172,11 +186,16 @@ public class TournamentServiceTest {
                 .id("1")
                 .startDate(startDate).endDate(startDate.plusDays(10))
                 .participants(List.of(user1, user2))
+                .language(Language.SPANISH)
                 .build();
 
         TournamentDAO tournamentDAO = modelMapper.map(tournament,TournamentDAO.class);
 
         when(tournamentRepository.obtainTournament(tournament.getId())).thenReturn(Optional.of(tournamentDAO));
+
+        List<UserDAO> participants = modelMapper.mapList(tournament.getParticipants(),UserDAO.class);
+
+        when(userRepository.findByIds(List.of(user1.getId(),user2.getId()))).thenReturn(participants);
 
         TournamentService tournamentService = new TournamentService(tournamentRepository, userRepository);
 
@@ -222,13 +241,15 @@ public class TournamentServiceTest {
         List<TournamentDAO> expectedPublicTournamentsDAO = modelMapper.mapList(expectedPublicTournaments,TournamentDAO.class);
         List<TournamentDAO> expectedPrivateTournamentsDAO = modelMapper.mapList(expectedPrivateTournaments,TournamentDAO.class);
 
-        when(tournamentRepository.obtainPublicTournaments("pepe", PageRequest.of(1, 1))).thenReturn(new PageImpl<>(expectedPublicTournamentsDAO));
-        when(tournamentRepository.obtainPrivateTournaments("pepe", PageRequest.of(1, 1))).thenReturn(new PageImpl<>(expectedPrivateTournamentsDAO));
+        int page = 1;
+
+        when(tournamentRepository.obtainPublicTournaments("pepe", PageRequest.of(page-1, 1))).thenReturn(new PageImpl<>(expectedPublicTournamentsDAO));
+        when(tournamentRepository.obtainPrivateTournaments("pepe", PageRequest.of(page-1, 1))).thenReturn(new PageImpl<>(expectedPrivateTournamentsDAO));
 
         TournamentService tournamentService = new TournamentService(tournamentRepository, userRepository);
 
-        List<TournamentDAO> actualPublicTournaments = tournamentService.obtainTournaments(1,1,Privacy.PUBLIC,"pepe").stream().toList();
-        List<TournamentDAO> actualPrivateTournaments = tournamentService.obtainTournaments(1,1,Privacy.PRIVATE,"pepe").stream().toList();
+        List<TournamentDAO> actualPublicTournaments = tournamentService.obtainTournaments(page,1,Privacy.PUBLIC,"pepe").stream().toList();
+        List<TournamentDAO> actualPrivateTournaments = tournamentService.obtainTournaments(page,1,Privacy.PRIVATE,"pepe").stream().toList();
 
         Assertions.assertEquals(expectedPublicTournaments,modelMapper.mapList(actualPublicTournaments,Tournament.class));
         Assertions.assertEquals(expectedPrivateTournaments,modelMapper.mapList(actualPrivateTournaments,Tournament.class));

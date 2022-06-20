@@ -9,12 +9,14 @@ import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import com.probasteReiniciando.TPTACS.exceptions.ResultAlreadyExistsException;
 import com.probasteReiniciando.TPTACS.exceptions.UserAlreadyExistsException;
+import com.probasteReiniciando.TPTACS.repositories.ITournamentRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.repositories.IUserRepositoryMongoDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +25,13 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    private IUserRepositoryMongoDB userRepository;
+    final private IUserRepositoryMongoDB userRepository;
 
+    final private ModelMapperTacs modelMapper = new ModelMapperTacs();
 
-    private ModelMapperTacs modelMapper = new ModelMapperTacs();
+    public UserService(IUserRepositoryMongoDB userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public Optional<User> findByUsername(String username) {
 
@@ -88,13 +93,24 @@ public class UserService {
 
     }
 
-    public List<Result> getResultsByUser(String userLoggedIn) {
-        return modelMapper.map(userRepository.findByName(userLoggedIn).get(),User.class).getResults();
-    }
-
     public List<Result> getTodayResultsByUser(String userLoggedIn) {
-        return modelMapper.mapList(userRepository.findByName(userLoggedIn).get().getResultDAOS().stream().filter(result -> result.getDate().equals(Instant.now().atZone(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE))).toList(),Result.class);
+
+        List<Result> results = new ArrayList<>();
+
+        Optional<UserDAO> userDAO = userRepository.findByName(userLoggedIn);
+
+        if (userDAO.isPresent()) {
+
+            List<ResultDAO> resultDAOS = userDAO.get().getResultDAOS()
+                    .stream()
+                    .filter(result -> result.getDate().equals(Instant.now().atZone(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE)))
+                    .toList();
+
+            results = modelMapper.mapList(resultDAOS, Result.class);
+
+        }
+
+        return results;
+
     }
-
-
 }
