@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from "react";
+import React, {useReducer, useCallback, useEffect} from "react";
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -12,20 +12,23 @@ import { getPublicTournaments } from "../../../services/tournamentService";
 import { getTournaments, getTournamentsCount } from "../../../services/userService";
 import { ToastContainer, toast } from 'react-toastify';
 
-export function MyTournaments () {
-    const pageSize = 10;
-    const [data, setData] = useState({
+const initialValues = {
+    data: {
         elements: [],
         count: 10,
-    });
-    const [show, setShow] = useState(false);
-    const [selected, setSelected] = useState(
-        {
-            id: 0,
-            name: '',
-            owner: {username: ''},
-        }
-    );
+    },
+    show: false,
+    selected: {
+        id: 0,
+        name: '',
+        owner: {username: ''},
+    }
+}
+
+export function MyTournaments () {
+    const pageSize = 10;
+
+    const [state, dispatch] = useReducer(reducer, initialValues);
 
     const headings = [
         {   
@@ -53,12 +56,10 @@ export function MyTournaments () {
     const getData = (page, pageSize) =>  {
         getTournaments(page, pageSize).then(
             response => {
-                setData(p => (
-                    {
-                        elements: response.data.response.elements,
-                        count: response.data.response.totalCount
-                    }
-                ))
+                dispatch({type: 'setData', value:{
+                    elements: response.data.response.elements,
+                    count: response.data.response.totalCount
+                }});
             }
         ).catch(e => {
                 toast.error(e.response.data.response.message);
@@ -78,12 +79,12 @@ export function MyTournaments () {
     });
 
     const handleRowClick = useCallback((element) => {
-        setSelected(element);
-        setShow(true);
+        dispatch({type: 'setSelected', value: element});
+        dispatch({type: 'toogleShow'});
     });
 
     const handleHide = useCallback(() => {
-        setShow(false);
+        dispatch({type: 'toogleShow'});
     });
 
     return (
@@ -100,11 +101,11 @@ export function MyTournaments () {
                             </Row>
                             <Row>
                                 {
-                                    data.count > 0 ?
+                                    state.data.count > 0 ?
                                     <>
                                         <PaginatedTable 
                                             headings={headings}
-                                            data={data}
+                                            data={state.data}
                                             pageSize={pageSize}
                                             onPageChange={handlePageChange}
                                             onClick={handleRowClick}
@@ -133,14 +134,31 @@ export function MyTournaments () {
                                 } 
                             </Row>                                                     
                         </Card.Body>
-                    </Card>
-                    
+                    </Card>                    
                 </Container>
             </Col>
-            <OptionsPopUp show={show} selected={selected} handleClose={handleHide}/>  
+            <OptionsPopUp show={state.show} selected={state.selected} handleClose={handleHide}/>  
             <ToastContainer/>
         </>
     )
+}
+
+function reducer(state, action){
+    switch(action.type){
+        case 'setData' : return{
+            ...state,
+            data: action.value
+        }
+        case 'toogleShow' : return{
+            ...state,
+            show: !state.show
+        }        
+        case 'setSelected' : return{
+            ...state,
+            selected: action.value
+        }
+        default: throw new Error();
+    }
 }
 
 export default MyTournaments;
