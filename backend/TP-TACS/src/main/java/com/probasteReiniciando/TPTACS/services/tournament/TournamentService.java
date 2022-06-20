@@ -220,7 +220,9 @@ public class TournamentService {
 
             for(LocalDate localDateIndex : tournamentDates) {
 
-                Optional<ResultDAO> result = participant.getResultDAOS().stream().filter(r -> LocalDate.parse(r.getDate()).equals(localDateIndex)).findFirst();
+                Optional<ResultDAO> result = participant.getResultDAOS().stream()
+                        .filter(r -> LocalDate.parse(r.getDate()).equals(localDateIndex) && r.getLanguage().equals(tournament.getLanguage()))
+                        .findFirst();
 
                 if (result.isPresent())
                     points += result.get().getPoints();
