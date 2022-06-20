@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useReducer} from 'react';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button'
@@ -15,33 +15,42 @@ import {auth, isAuthenticated} from '../../services/authService';
 
 export function LogIn ({isLoged}){
     
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [type, setType] = useState('password');
-    const [showModal, setShowModal] = useState(false);
-    const [validated, setValidated] = useState(false);
+    const initialValues = {
+        form: {
+            username: '',
+            password: '',
+        },
+        type: 'password',
+        showModal: false,
+        validated: false,
+    }
+
+    const [state, dispatch] = useReducer(reducer, initialValues);
+
 
     const showHide = useCallback(() => {
-        const newType = type === 'text' ? 'password' : 'text';
-        setType(newType);
+        dispatch({type: 'toggleType'});
+    });
+
+    const handleChange = useCallback((e) => {
+        const { name, value } = e.target;
+
+        dispatch({type: 'setForm', prop: name, value: value});
     });
 
     const handleSubmit = useCallback((event) => {       
         event.preventDefault();
         event.stopPropagation();
     
-        if(!validated){
-            setValidated(validated => !validated);
+        if(!state.validated){
+            dispatch({type: 'toggleValidated'});
         }
     
-        if(!username || !password || username === '' || password === '')
+        if(!state.form.username || !state.form.password || state.form.username === '' || state.form.password === '')
           return;  
 
-        auth({
-            username : username,
-            password : password
-        }).then(() => {
-                    isLoged();
+        auth(state.form).then(() => {
+                isLoged();
             }
         ).catch(e => {
             toast.error(e.response.data.response.message);
@@ -49,11 +58,11 @@ export function LogIn ({isLoged}){
     });
 
     const toggleSigIn = useCallback(() => {
-        setShowModal(showModal => !showModal);
+        dispatch({type: 'toggleModal'});
     });
 
     const handleOnSuccess = useCallback(() => {
-        toast.success("User successfully created!   Now you can login.");
+        toast.success("User successfully created! Now you can login.");
     })
 
     const handleOnError = useCallback((e) => {
@@ -79,14 +88,14 @@ export function LogIn ({isLoged}){
                                     <Card.Text><h3>Already Logged In</h3></Card.Text>
                                 </Card.Body>
                                 :
-                                <Form onSubmit={handleSubmit} noValidate validated={validated}>
+                                <Form onSubmit={handleSubmit} noValidate validated={state.validated}>
                                     <Card.Body>
                                         <Form.Group as={Row} className='_6lux' controlId="formUsername">
                                             <InputGroup>
                                                 <FloatingLabel className='group-first-element'>
                                                     <Form.Control name="username" type="text" placeholder="Username" required
-                                                        value={username} 
-                                                        onChange={(event) => {setUsername(event.target.value)}}/>
+                                                        value={state.form.username} 
+                                                        onChange={handleChange}/>
                                                     <Form.Text className="text-muted">
                                                     </Form.Text>
                                                     <label style={{paddingLeft:0, marginLeft: '1em'}}>UserName</label>   
@@ -98,16 +107,16 @@ export function LogIn ({isLoged}){
                                                 <FloatingLabel className='group-first-element'> 
                                                     <Form.Control className="form-control-rounded" 
                                                         name="password" required
-                                                        id="password" type={type} placeholder="Password" 
-                                                        value={password}                                                    
-                                                        onChange={(event) => {setPassword(event.target.value)}}/>                                               
+                                                        id="password" type={state.type} placeholder="Password" 
+                                                        value={state.form.password}                                                    
+                                                        onChange={handleChange}/>                                               
                                                     <label style={{paddingLeft:0, marginLeft: '1em'}}>Password</label>   
                                                 </FloatingLabel>
                                                 <Button variant="outline-secondary"
                                                         onClick={showHide}
                                                         size="sm">
                                                         {
-                                                            type === 'text'?<AiFillEye color='black'/>:<AiFillEyeInvisible color='black'/>
+                                                            state.type === 'text'?<AiFillEye color='black'/>:<AiFillEyeInvisible color='black'/>
                                                         }
                                                 </Button>
                                             </InputGroup>
@@ -123,7 +132,7 @@ export function LogIn ({isLoged}){
                                                     Sign Up
                                                 </Button>
                                             </div>
-                                            <SignUpPopUp show={showModal} onSetUser={setUsername} 
+                                            <SignUpPopUp show={state.showModal} onSetUser={(val) => {dispatch({type: 'setUsername', value: val})}} 
                                             onClose={toggleSigIn} position="right center" onError={handleOnError} onSuccess={handleOnSuccess}/>
                                         </Row>                             
                                     </Card.Body>
@@ -136,6 +145,42 @@ export function LogIn ({isLoged}){
             <ToastContainer/>   
         </div>
     );
+}
+
+function reducer (state, action){
+    switch(action.type){
+        case 'setForm' : return {
+            ...state,
+            form: {
+                ...state.form,
+                [action.prop]: action.value
+            }
+        };
+        case 'setUsername': return {
+            ...state,
+            form: {
+                ...state.form,
+                username: action.value
+            }
+        }
+        case 'toggleType' : {
+            const newType = state.type === 'text' ? 'password' : 'text';
+            return {
+                ...state,
+                type: newType
+            };
+        }
+        case 'toggleModal': return {
+            ...state,
+            showModal: !state.showModal
+        };
+        case 'toggleValidated': return {
+            ...state,
+            validated: !state.validated
+        }
+
+        default: throw new Error();
+    }
 }
 
 export default LogIn

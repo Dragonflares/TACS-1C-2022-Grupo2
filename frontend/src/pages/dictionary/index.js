@@ -24,12 +24,12 @@ export function Dictionary(){
         languages: []
     }
 
-    const [state, dispatchState] = useReducer(reducer, initialValues); 
+    const [state, dispatch] = useReducer(reducer, initialValues); 
     
     useEffect(() => {
         const init = () => {
             getLanguages().then(response => {
-                dispatchState({type: 'setLanguages', value: response.data.response.languages});
+                dispatch({type: 'setLanguages', value: response.data.response.languages});
             }).catch(e => {
                 toast.error(e.response.data.response.message);
             })
@@ -41,7 +41,7 @@ export function Dictionary(){
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
 
-        dispatchState({type: 'setForm', prop: name, value: value});
+        dispatch({type: 'setForm', prop: name, value: value});
     });
 
     const handleSubmit = useCallback((event) => {
@@ -50,7 +50,7 @@ export function Dictionary(){
 
         getMeaning(state.form.search.toLowerCase(), state.form.language).then(response => {  
             
-            dispatchState({type: 'setResult', value: {
+            dispatch({type: 'setResult', value: {
                 word: state.form.search,
                 meaning: response.data.response.phrase
             }})
