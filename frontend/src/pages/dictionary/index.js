@@ -10,19 +10,19 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import { getMeaning } from '../../services/dictionaryService';
 
-export function Dictionary(){
+const initialValues = {
+    form: {
+        language: 'ENGLISH',
+        search: '',
+    },
+    result: {
+        word: '',
+        meaning: '' 
+    },
+    languages: []
+}
 
-    const initialValues = {
-        form: {
-            language: 'ENGLISH',
-            search: '',
-        },
-        result: {
-            word: '',
-            meaning: '' 
-        },
-        languages: []
-    }
+export function Dictionary(){
 
     const [state, dispatch] = useReducer(reducer, initialValues); 
     

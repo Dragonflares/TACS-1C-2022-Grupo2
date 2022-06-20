@@ -7,25 +7,25 @@ import { getLanguages } from '../../services/languageService';
 import { getHelperWord } from '../../services/helperService';
 import { ToastContainer, toast } from 'react-toastify';
 
-export function Helper() {
-
-    const initialValues = {
-        form: {
-            greenWords: {
-                0:'',
-                1:'',
-                2:'',
-                3:'',
-                4:''
-            },
-            yellowWords: '',
-            greyWords: '',
-            language: 'ENGLISH',
+const initialValues = {
+    form: {
+        greenWords: {
+            0:'',
+            1:'',
+            2:'',
+            3:'',
+            4:''
         },
-        data: '',
-        searchExecuted: false,
-        languages: []
-    }
+        yellowWords: '',
+        greyWords: '',
+        language: 'ENGLISH',
+    },
+    data: '',
+    searchExecuted: false,
+    languages: []
+}
+
+export function Helper() {   
 
     const [state, dispatch] = useReducer(reducer, initialValues); 
 

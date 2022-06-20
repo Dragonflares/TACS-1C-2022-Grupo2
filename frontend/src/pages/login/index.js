@@ -13,17 +13,17 @@ import { ToastContainer, toast } from 'react-toastify';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import {auth, isAuthenticated} from '../../services/authService';
 
+const initialValues = {
+    form: {
+        username: '',
+        password: '',
+    },
+    type: 'password',
+    showModal: false,
+    validated: false,
+}
+
 export function LogIn ({isLoged}){
-    
-    const initialValues = {
-        form: {
-            username: '',
-            password: '',
-        },
-        type: 'password',
-        showModal: false,
-        validated: false,
-    }
 
     const [state, dispatch] = useReducer(reducer, initialValues);
 
