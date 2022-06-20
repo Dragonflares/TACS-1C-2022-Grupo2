@@ -23,7 +23,7 @@ public class ResultController {
     @Autowired
     private ModelMapperTacs modelMapper;
 
-    @GetMapping(path= "/user",produces = "application/json")
+    @GetMapping(produces = "application/json")
     public List<ResultDto> getResults(@RequestAttribute(name="userAttributeName") String userLoggedIn) {
         return modelMapper.mapList(userService.getTodayResultsByUser(userLoggedIn),ResultDto.class);
     }
