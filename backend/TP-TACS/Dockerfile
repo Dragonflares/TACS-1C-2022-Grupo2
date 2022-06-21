@@ -5,7 +5,7 @@ RUN gradle clean build --no-daemon -x test
 
 
 FROM openjdk:18-jdk-alpine
-EXPOSE 8080
+EXPOSE 4000
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/app.jar
 ENTRYPOINT ["java","-jar","/app/app.jar"]

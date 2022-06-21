@@ -29,12 +29,12 @@ public class DictionaryController {
     @Autowired
     private ModelMapperTacs modelMapper;
 
-    @GetMapping(path="/meanings", produces = "application/json")
+    @GetMapping(path="/api/meanings", produces = "application/json")
     public WordDto wordDefinition(@RequestParam String word, @RequestParam String language) throws  JsonProcessingException {
         return dictionaryService.findWord(word,Language.getLanguage(validateLanguage(language)));
     }
 
-    @GetMapping(path="/languages", produces = "application/json")
+    @GetMapping(path="/api/languages", produces = "application/json")
     public LanguagesDto getLanguages() throws  JsonProcessingException {
         return LanguagesDto.builder().languages(Arrays.asList(Language.values())).build();
     }

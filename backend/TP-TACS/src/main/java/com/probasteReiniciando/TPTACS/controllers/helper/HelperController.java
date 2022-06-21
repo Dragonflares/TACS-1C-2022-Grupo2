@@ -16,7 +16,7 @@ public class HelperController {
     @Autowired
     HelperService helperService;
 
-    @PostMapping(path="/help", produces = "application/json")
+    @PostMapping(path="/api/help", produces = "application/json")
     public List<WordDto> help(@RequestBody HelpDto helpDto) throws JsonProcessingException {
         return helperService.wordSearch(helpDto);
     }

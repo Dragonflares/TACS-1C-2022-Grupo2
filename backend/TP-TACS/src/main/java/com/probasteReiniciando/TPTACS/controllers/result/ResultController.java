@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @Slf4j
-@RequestMapping({ "/results" })
+@RequestMapping({ "/api/results" })
 public class ResultController {
 
     @Autowired

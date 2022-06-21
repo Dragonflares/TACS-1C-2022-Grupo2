@@ -25,7 +25,7 @@ public class PingControllerTest {
     @Test
     public void ping() throws Exception {
         this.mockMvc
-                .perform(get("/ping").contentType("application/json"))
+                .perform(get("/api/ping").contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(CoreMatchers.containsString("HelloWorld"))); // we check that the Body of the answer contains our expectation
     }

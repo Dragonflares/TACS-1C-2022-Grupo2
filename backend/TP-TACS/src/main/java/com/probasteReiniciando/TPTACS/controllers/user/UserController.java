@@ -13,7 +13,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin()
 @Slf4j
-@RequestMapping({"/user"})
+@RequestMapping({"/api/user"})
 public class UserController {
 
     @Autowired

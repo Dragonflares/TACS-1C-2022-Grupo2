@@ -40,7 +40,7 @@ export function Tournament ({redirectFromRoot}) {
     });
 
     useEffect(() => {
-        const init =  () => {
+        const Init =  () => {
             if(!useValidateMode(action)){
                 redirectFromRoot('error');
             }
@@ -58,9 +58,10 @@ export function Tournament ({redirectFromRoot}) {
             })
 
             if(action !== 'create'){
-                if(!useValidateNumericId(id)){
-                    redirectFromRoot('error');
-                }
+
+                // if(!useValidateNumericId(id)){
+                //     redirectFromRoot('error');
+                // }
     
                 getTournament(id).then(
                     response => {
@@ -82,7 +83,7 @@ export function Tournament ({redirectFromRoot}) {
             }
         }
 
-        init();
+        Init();
     }, []);
 
     const handleTournamentChange = useCallback((e) =>{
