@@ -64,7 +64,7 @@ public class TournamentControllerTest {
 
 
         MvcResult result = mockMvc
-                .perform(get("/api/tournaments").contentType("application/json").params(requestParams).requestAttr("userAttributeName","PEPE"))
+                .perform(get("/tournaments").contentType("application/json").params(requestParams).requestAttr("userAttributeName","PEPE"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -85,7 +85,7 @@ public class TournamentControllerTest {
         when(tournamentService.getTournamentById("5")).thenReturn(expectedTournament);
 
         MvcResult result = mockMvc
-                .perform(get("/api/tournaments/5").contentType("application/json"))
+                .perform(get("/tournaments/5").contentType("application/json"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -113,7 +113,7 @@ public class TournamentControllerTest {
 
         MvcResult result = mockMvc
                 .perform(
-                        post("/api/tournaments")
+                        post("/tournaments")
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .content(body)
@@ -143,7 +143,7 @@ public class TournamentControllerTest {
         String body = objectMapper.writeValueAsString(mapper.map(expectedParticipant,UserDto.class));
 
         MvcResult result = mockMvc
-                .perform(post("/api/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8").content(body)
+                .perform(post("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8").content(body)
                         .requestAttr("userAttributeName","owner"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
@@ -168,7 +168,7 @@ public class TournamentControllerTest {
         when(tournamentService.obtainPositions("1", Optional.empty())).thenReturn(positionsExpected);
 
         MvcResult result = mockMvc
-                .perform(get("/api/tournaments/1/positions").contentType("application/json").characterEncoding("UTF-8"))
+                .perform(get("/tournaments/1/positions").contentType("application/json").characterEncoding("UTF-8"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -191,7 +191,7 @@ public class TournamentControllerTest {
         when(tournamentService.obtainParticipants("1", Optional.empty(), Optional.empty())).thenReturn(participantsExpected);
 
         MvcResult result = mockMvc
-                .perform(get("/api/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8"))
+                .perform(get("/tournaments/1/participants").contentType("application/json").characterEncoding("UTF-8"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -218,7 +218,7 @@ public class TournamentControllerTest {
 
         MvcResult result = mockMvc
                 .perform(
-                        patch("/api/tournaments/1")
+                        patch("/tournaments/1")
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .content(body)

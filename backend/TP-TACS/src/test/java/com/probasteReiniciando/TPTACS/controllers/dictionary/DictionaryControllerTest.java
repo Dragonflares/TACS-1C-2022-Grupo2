@@ -56,7 +56,7 @@ public class DictionaryControllerTest {
 
 
         MvcResult result = mockMvc
-                .perform(get("/api/meanings").contentType("application/json").params(requestParams))
+                .perform(get("/meanings").contentType("application/json").params(requestParams))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
