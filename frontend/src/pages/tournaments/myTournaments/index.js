@@ -21,7 +21,7 @@ const initialValues = {
     selected: {
         id: 0,
         name: '',
-        owner: {username: ''},
+        owner: false,
     }
 }
 

@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { getLanguages } from "../../services/languageService";
-import { getDailyResults, createDailyResults, getUserDataStruct } from "../../services/userService";
+import { getDailyResults, createDailyResults } from "../../services/userService";
 import { ToastContainer, toast } from 'react-toastify';
 
 

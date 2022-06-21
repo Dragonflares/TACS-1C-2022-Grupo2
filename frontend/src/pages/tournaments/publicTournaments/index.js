@@ -7,8 +7,7 @@ import Image from 'react-bootstrap/Image';
 import { Row } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { PaginatedTable } from "../../../shared/components/paginatedTable";
-import { addParticipants, getPublicTournaments, getPublicTournamentsCount } from "../../../services/tournamentService";
-import { getUserDataStruct } from '../../../services/userService'
+import { addParticipantsSelf, getPublicTournaments, getPublicTournamentsCount } from "../../../services/tournamentService";
 import { ToastContainer, toast } from 'react-toastify';
 
 const initialValues = {
@@ -20,7 +19,7 @@ const initialValues = {
     selected: {
         id: 0,
         name: '',
-        owner: {username: ''},
+        owner:  false,
     }
 }
 
@@ -86,7 +85,7 @@ export function PublicTournaments () {
     });
 
     const handleJoin = useCallback(() => {
-        addParticipants(state.selected.id,getUserDataStruct()).then(
+        addParticipantsSelf(state.selected.id).then(
             response => {
                 toast.success(`Successfully joined ${state.selected.name}!`);
                 dispatch({type: 'resetSelected'});
@@ -174,10 +173,7 @@ function reducer(state, action){
         }
         case 'resetSelected': return {
             ...state,
-            selected: {
-                id: 0,
-                name: ''
-            }
+            selected: initialValues.selected
         }
         case 'setSelected' : return{
             ...state,
