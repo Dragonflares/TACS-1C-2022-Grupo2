@@ -14,7 +14,6 @@ export function auth(data){
         (response) => {
             if(response.status === 200){
                 sessionStorage.setItem('jwt', response.data.response.token);
-                sessionStorage.setItem('loggedUser', data.username)
                 return {
                     status :response.status
                 }            
@@ -30,5 +29,4 @@ export function auth(data){
 
 export function logOut() {
     sessionStorage.removeItem('jwt');
-    sessionStorage.removeItem('loggedUser');
 }

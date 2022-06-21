@@ -48,11 +48,11 @@ export default function Positions(){
     };
 
     useEffect(() => {
-        const init = async () => {
+        const Init = async () => {
             getData();
         };
 
-        init();
+        Init();
     }, []);
 
     const handleRowClick = useCallback((element) => {
@@ -78,7 +78,7 @@ export default function Positions(){
                                         />
                                     </>
                                     :
-                                    <h3>NO SIGNED PARTICIPANTS</h3>
+                                    <>NO SIGNED PARTICIPANTS</>
                                 }   
                             </Row>                                                     
                         </Card.Body>

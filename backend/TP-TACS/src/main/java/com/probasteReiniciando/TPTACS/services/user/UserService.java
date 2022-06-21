@@ -78,13 +78,14 @@ public class UserService {
         //String dateString = "today.format(DateTimeFormatter.ISO_DATE_TIME)";
 
 
-        String dateString = Instant.now().atZone(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        String dateString = Instant.now().atZone(ZoneOffset.systemDefault()).format(DateTimeFormatter.ISO_LOCAL_DATE);
         var exist = userRepository.existResultToday(userLoggedIn, result.getLanguage().name(), dateString);
 
         if(exist){
             throw new ResultAlreadyExistsException(userLoggedIn,result.getDate(),result.getLanguage());
         }
 
+        result.setUsername(userLoggedIn);
         ResultDAO resultDAO = modelMapper.map(result,ResultDAO.class);
         userDAO.getResultDAOS().add(resultDAO);
         userRepository.save(userDAO);

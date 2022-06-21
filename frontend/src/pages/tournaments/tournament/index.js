@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { createTournament, updateTournament, getTournament, deleteTournament } from "../../../services/tournamentService";
 import { useValidateMode } from "../../../shared/hooks/validateModeHook";
@@ -12,70 +12,75 @@ import { getPrivacies } from "../../../services/privacyService";
 import { ToastContainer, toast } from 'react-toastify';
 import { getLanguages } from "../../../services/languageService";
 
-export function Tournament ({redirectFromRoot}) {
-    const {action, id} = useParams();
-    let tzoffset = (new Date()).getTimezoneOffset() * 60000;
+let tzoffset = (new Date()).getTimezoneOffset() * 60000;
 
-    const today = new Date(Date.now() - tzoffset).toISOString().slice(0,10);
-    const tomorrow = new Date(Date.now() - tzoffset);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const pastTomorrow = new Date(Date.now() - tzoffset);
-    pastTomorrow.setDate(pastTomorrow.getDate() + 2);
+const today = new Date(Date.now() - tzoffset).toISOString().slice(0,10);
+const tomorrow = new Date(Date.now() - tzoffset);
+tomorrow.setDate(tomorrow.getDate() + 1);
+const pastTomorrow = new Date(Date.now() - tzoffset);
+pastTomorrow.setDate(pastTomorrow.getDate() + 2);
 
-    const tomorrowS = tomorrow.toISOString().slice(0,10);
-    const pastTomorrowS = pastTomorrow.toISOString().slice(0,10);
+const tomorrowS = tomorrow.toISOString().slice(0,10);
+const pastTomorrowS = pastTomorrow.toISOString().slice(0,10);
 
-    const [validated, setValidated] = useState(false);
-    const [privacies, setPrivacies] = useState([]);
-    const [languages, setLanguages] = useState([]);
-    const [validDate, setValidDate] = useState({
-    });
-    const [validName, setValidName] = useState({});
-    const [tournament, setTournament] = useState({
+const initialValues = {
+    validated: false,
+    privacies: [],
+    languages: [],
+    validDate: {},
+    validName: {},
+    form: {
         name: '',
         language: 'ENGLISH',
         startDate: today,
         endDate: tomorrowS,
         privacy: 'PRIVATE'
-    });
+    }
+}
+
+export function Tournament ({redirectFromRoot}) {
+    const {action, id} = useParams();
+
+    const [state, dispatch] = useReducer(reducer, initialValues);
 
     useEffect(() => {
         const Init =  () => {
-            if(!useValidateMode(action)){
+            const validMode = useValidateMode(action);
+
+            if(!validMode){
                 redirectFromRoot('error');
             }
-            
+
             getLanguages().then(response => {
-                setLanguages(response.data.response.languages);
+                dispatch({type: 'setLanguages', value: response.data.response.languages});
             }).catch(e => {
                 toast.error(e.response.data.response.message);
             })
 
             getPrivacies().then(response => {
-                    setPrivacies(response.data.response.privacys);
+                dispatch({type: 'setPrivacies', value: response.data.response.privacys});
             }).catch(e => {
                 toast.error(e.response.data.response.message);
             })
 
             if(action !== 'create'){
-
-                // if(!useValidateNumericId(id)){
-                //     redirectFromRoot('error');
-                // }
+                if(!useValidateNumericId(id)){
+                    redirectFromRoot('error');
+                }
     
                 getTournament(id).then(
                     response => {
-                            if(tournament.startDate < today){
+                            if(state.form.startDate < today){
                                 redirectFromRoot('error');
                             }
 
-                            setTournament({
+                            dispatch({type: 'setTournament', value: {
                                 name: response.data.response.name,
                                 language: response.data.response.language,
                                 startDate: response.data.response.startDate,
                                 endDate: response.data.response.endDate,
                                 privacy: response.data.response.privacy,
-                            });
+                            }});
                     }
                 ).catch(e => {
                     toast.error(e.response.data.response.message);
@@ -88,54 +93,43 @@ export function Tournament ({redirectFromRoot}) {
 
     const handleTournamentChange = useCallback((e) =>{
         const { name, value } = e.target;
-        setTournament(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
+        
+        dispatch({type: 'setForm', prop: name, value: value});
     });
 
     const handleSubmit = useCallback((event) => {       
         event.preventDefault();
         event.stopPropagation();
 
-        if(!validated){
-            setValidated(validated => !validated);
+        if(!state.validated){
+            dispatch({type: 'toggleValidated'});
         }
 
-        if(tournament.name === '' || !tournament.startDate || !tournament.endDate)
+        if(state.form.name === '' || !state.form.startDate || !state.form.endDate)
         {
             toast.error("Fill required fields");
 
             return;
         }
 
-        if(tournament.endDate < tournament.startDate || tournament.startDate < today){
-            setValidated(false);
-            setValidName({
-                isValid: true,
-                isInvalid: false,
-            });
-            setValidDate({
-                isValid: false,
-                isInvalid: true,
-            });
+        if(state.form.endDate < state.form.startDate || state.form.startDate < today){
+            dispatch({type: 'toggleValidated'});
+            dispatch({type: 'toggleValidateDateInput'});
+
             toast.error("Dates invalid!");
             return;
         }else{
-            setValidName({
-            });
-            setValidDate({
-            });
+            dispatch({type: 'toggleValidateDateInput'});
         }
 
         if(action  === 'create') {
-            createTournament(tournament).then(response => {
+            createTournament(state.form).then(response => {
                     redirectFromRoot(`tournament/edit/${response.data.response.id}`);
             }).catch(e => {
                 toast.error(e.response.data.response.message);
             })
         }else{
-            updateTournament(id, tournament).then(() => {
+            updateTournament(id, state.form).then(() => {
                     redirectFromRoot(`tournament/edit/${id}`);
             }).catch(e => { 
                 toast.error(e.response.data.response.message);
@@ -157,7 +151,7 @@ export function Tournament ({redirectFromRoot}) {
                 <Card>
                     <Card.Header>
                         <Card.Title>
-                            {action.toUpperCase()} {action !== 'create' ? tournament.name : ''}
+                            {action.toUpperCase()} {action !== 'create' ? state.form.name : ''}
                         </Card.Title>    
                     </Card.Header>
                     <Card.Body>
@@ -167,7 +161,7 @@ export function Tournament ({redirectFromRoot}) {
                             className="mb-3"
                         >
                             <Tab eventKey={'data'} title={'Tournament Data'}>
-                                <Form onSubmit={handleSubmit} noValidate validated={validated}>
+                                <Form onSubmit={handleSubmit} noValidate validated={state.validated}>
                                     <Row>
                                         <Col md={6} xs={12}>
                                             <Form.Group className='_6lux' controlId="formTournamentName">
@@ -175,9 +169,9 @@ export function Tournament ({redirectFromRoot}) {
                                                     <FloatingLabel className='group-first-element'>
                                                         <Form.Control name="name" type="text" placeholder="Name" required
                                                             readOnly={action === 'view' || action === 'delete'}
-                                                            value={tournament.name} 
+                                                            value={state.form.name} 
                                                             onChange={handleTournamentChange}
-                                                            {...validName}/>
+                                                            {...state.validName}/>
                                                         <Form.Text className="text-muted">
                                                         </Form.Text>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>Name</label>   
@@ -194,9 +188,9 @@ export function Tournament ({redirectFromRoot}) {
                                                             <Form.Select 
                                                                 name="language" required
                                                                 readOnly={action === 'view' || action === 'delete'}
-                                                                value={tournament.language} 
+                                                                value={state.form.language} 
                                                                 onChange={handleTournamentChange}>
-                                                                    {languages.map(lang => (
+                                                                    {state.languages.map(lang => (
                                                                          <option key={lang} value={lang}>{lang}</option>
                                                                     ))}
                                                             </Form.Select>
@@ -205,7 +199,7 @@ export function Tournament ({redirectFromRoot}) {
                                                                 <Form.Control 
                                                                     name="language" type="text"
                                                                     readOnly={true}
-                                                                    value={tournament.language} />
+                                                                    value={state.form.language} />
                                                                 <Form.Text className="text-muted">
                                                                 </Form.Text>
                                                             </>
@@ -223,10 +217,10 @@ export function Tournament ({redirectFromRoot}) {
                                                             action === 'create' || action === 'edit' ? 
                                                             <Form.Select name="privacy" required
                                                                 readOnly={action === 'view' || action === 'delete'}
-                                                                value={tournament.privacy} 
+                                                                value={state.form.privacy} 
                                                                 onChange={handleTournamentChange}>
                                                                     {
-                                                                        privacies.map(p => (
+                                                                        state.privacies.map(p => (
                                                                             <option key={p} value={p}>{p}</option>
                                                                         ))
                                                                     }
@@ -236,7 +230,7 @@ export function Tournament ({redirectFromRoot}) {
                                                                 <Form.Control 
                                                                     name="privacy" type="text"
                                                                     readOnly={true}
-                                                                    value={tournament.privacy} />
+                                                                    value={state.form.privacy} />
                                                                 <Form.Text className="text-muted">
                                                                 </Form.Text>
                                                             </>
@@ -254,9 +248,9 @@ export function Tournament ({redirectFromRoot}) {
                                                     <FloatingLabel className='group-first-element'>
                                                         <Form.Control name="startDate" type="date" placeholder="Start Date" required
                                                             readOnly={action === 'view' || action === 'delete'}
-                                                            value={tournament.startDate}
+                                                            value={state.form.startDate}
                                                             onChange={handleTournamentChange}
-                                                            {...validDate}/>
+                                                            {...state.validDate}/>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>Start Date</label>   
                                                     </FloatingLabel>
                                                 </InputGroup>
@@ -268,9 +262,9 @@ export function Tournament ({redirectFromRoot}) {
                                                     <FloatingLabel className='group-first-element'>
                                                         <Form.Control name="endDate" type="date" placeholder="End Date" required
                                                             readOnly={action === 'view' || action === 'delete'}
-                                                            value={tournament.endDate}
+                                                            value={state.form.endDate}
                                                             onChange={handleTournamentChange}
-                                                            {...validDate}/>
+                                                            {...state.validDate}/>
                                                         <label style={{paddingLeft:0, marginLeft: '1em'}}>End Date</label>   
                                                     </FloatingLabel>
                                                 </InputGroup>
@@ -322,6 +316,56 @@ export function Tournament ({redirectFromRoot}) {
             <ToastContainer/>
         </Container>        
     );
+}
+
+function reducer(state, action){
+    switch(action.type){
+        case 'setForm' : return {
+            ...state,
+            form: {
+                ...state.form,
+                [action.prop]: action.value
+            }
+        }
+        case 'setTournament': return {
+            ...state,
+            form: action.value
+        }
+        case 'toggleValidated': return {
+            ...state,
+            validated: !state.validated
+        }
+        case 'toggleValidateDateInput': {
+            if(state.validDate['isValid'] !== undefined){
+                return {
+                    ...state,
+                    validDate: {},
+                    validName: {}
+                }
+            }else{
+                return {
+                    ...state,
+                    validDate: {
+                        isValid: false,
+                        isInvalid: true,
+                    },
+                    validName: {
+                        isValid: true,
+                        isInvalid: false,
+                    }
+                }
+            }
+        }
+        case 'setPrivacies': return {
+            ...state,
+            privacies: action.value
+        }
+        case 'setLanguages': return {
+            ...state,
+            languages: action.value
+        }
+        default: throw new Error();
+    }
 }
 
 export default Tournament;

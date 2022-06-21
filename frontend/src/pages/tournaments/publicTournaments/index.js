@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from "react";
+import React, {useReducer, useCallback, useEffect} from "react";
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -7,23 +7,24 @@ import Image from 'react-bootstrap/Image';
 import { Row } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { PaginatedTable } from "../../../shared/components/paginatedTable";
-import { addParticipants, getPublicTournaments, getPublicTournamentsCount } from "../../../services/tournamentService";
-import { getUserDataStruct } from '../../../services/userService'
+import { addParticipantsSelf, getPublicTournaments, getPublicTournamentsCount } from "../../../services/tournamentService";
 import { ToastContainer, toast } from 'react-toastify';
+
+const initialValues = {
+    data: {
+        elements: [],
+        count: 10,
+    },
+    show: false,
+    selected: {
+        id: 0,
+        name: '',
+        owner:  false,
+    }
+}
 
 export function PublicTournaments () {
     const pageSize = 10;
-    const [data, setData] = useState({
-        elements: [],
-        count: 10,
-    });
-    const [show, setShow] = useState(false);
-    const [selected, setSelected] = useState(
-        {
-            id: 0,
-            name: ''
-        }
-    );
 
     const headings = [
         {   
@@ -44,17 +45,16 @@ export function PublicTournaments () {
         }
     ];
 
+    const [state, dispatch] = useReducer(reducer, initialValues);
+
     const getData = (page, pageSize) =>  {
         getPublicTournaments(page, pageSize).then(
             response => {
-                console.log(response)
 
-                setData(p => (
-                    {
-                        elements: response.data.response.elements,
-                        count: response.data.response.totalCount
-                    }
-                ))
+                dispatch({type: 'setData', value:{
+                    elements: response.data.response.elements,
+                    count: response.data.response.totalCount
+                }});
      
             }
         ).catch( e => {
@@ -63,11 +63,11 @@ export function PublicTournaments () {
     };
 
     useEffect(() => {
-        const init = async () => {
+        const Init = async () => {
             getData(1, pageSize);
         };
 
-        init();
+        Init();
     }, []);
 
     const handlePageChange = useCallback(async (page, pageSize) => {
@@ -75,34 +75,28 @@ export function PublicTournaments () {
     });
 
     const handleRowClick = useCallback((element) => {
-        setShow(true);
-        setSelected(element);
+        dispatch({type: 'setSelected', value: element});
+        dispatch({type: 'toogleShow'});
     });
 
     const handleHide = useCallback(() => {
-        setShow(false);
-        setSelected( {
-            id: 0,
-            name: ''
-        });
+        dispatch({type: 'toogleShow'});
+        dispatch({type: 'resetSelected'});
     });
 
     const handleJoin = useCallback(() => {
-        addParticipants(selected.id,getUserDataStruct()).then(
+        addParticipantsSelf(state.selected.id).then(
             response => {
-                toast.success(`Successfully joined ${selected.name}!`);
-                setSelected( {
-                    id: 0,
-                    name: ''
-                });
+                toast.success(`Successfully joined ${state.selected.name}!`);
+                dispatch({type: 'resetSelected'});
             }
         ).catch(
             e => {            
                 toast.error(e.response.data.response.message)
             }
         ).finally(() => {
-            //REFRESH TABLE?
-            setShow(false);
+            dispatch({type: 'toogleShow'});
+
         });
     });
 
@@ -114,11 +108,11 @@ export function PublicTournaments () {
                         <Card.Body>
                             <Card.Title>Public Tournaments</Card.Title>
                             {
-                                data.count > 0 ?
+                                state.data.count > 0 ?
                                     <>
                                         <PaginatedTable 
                                             headings={headings}
-                                            data={data}
+                                            data={state.data}
                                             pageSize={pageSize}
                                             onPageChange={handlePageChange}
                                             onClick={handleRowClick}
@@ -149,9 +143,9 @@ export function PublicTournaments () {
                     </Card>
                 </Container>        
             </Col>
-            <Modal size="sm" show={show} onHide={handleHide} backdrop="static" centered>
+            <Modal size="sm" show={state.show} onHide={handleHide} backdrop="static" centered>
                 <Modal.Header>
-                    <Modal.Title>Join Tournament {selected.name}</Modal.Title>
+                    <Modal.Title>Join Tournament {state.selected.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Footer>
                     <Button variant="danger"  type={'button'} onClick={handleHide}>
@@ -165,6 +159,28 @@ export function PublicTournaments () {
             <ToastContainer/>
         </>
     )
+}
+
+function reducer(state, action){
+    switch(action.type){
+        case 'setData' : return{
+            ...state,
+            data: action.value
+        }
+        case 'toogleShow' : return{
+            ...state,
+            show: !state.show
+        }
+        case 'resetSelected': return {
+            ...state,
+            selected: initialValues.selected
+        }
+        case 'setSelected' : return{
+            ...state,
+            selected: action.value
+        }
+        default: throw new Error();
+    }
 }
 
 export default PublicTournaments;
