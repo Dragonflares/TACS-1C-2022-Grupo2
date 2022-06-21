@@ -43,7 +43,7 @@ public class HelperControllerTest {
         when(helperService.wordSearch(HelpDto.builder().build())).thenReturn(wordsTest);
 
         String object = objectMapper.writeValueAsString(HelpDto.builder().build());
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/help")
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/help")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(object);

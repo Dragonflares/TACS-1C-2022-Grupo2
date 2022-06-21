@@ -40,7 +40,7 @@ public class JwtAuthenticationController {
 	@Autowired
 	private ModelMapperTacs modelMapper;
 
-	@RequestMapping(value = "/api/accesstoken", method = RequestMethod.POST)
+	@RequestMapping(value = "/accesstoken", method = RequestMethod.POST)
 	public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
 			throws Exception {
 
@@ -54,7 +54,7 @@ public class JwtAuthenticationController {
 		return new JwtResponse(token);
 	}
 
-	@RequestMapping(value = "/api/authorization", method = RequestMethod.POST)
+	@RequestMapping(value = "/authorization", method = RequestMethod.POST)
 	public UserLoginDto saveUser(@RequestBody UserLoginDto user) throws Exception {
 		return modelMapper.map(userDetailsService.save(user), UserLoginDto.class);
 	}

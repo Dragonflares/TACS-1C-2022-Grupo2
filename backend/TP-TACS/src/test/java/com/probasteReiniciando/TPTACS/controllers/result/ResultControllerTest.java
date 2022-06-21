@@ -51,7 +51,7 @@ public class ResultControllerTest {
 
         MvcResult result = mockMvc
                 .perform(
-                        post("/api/results")
+                        post("/results")
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .content(body)
@@ -82,7 +82,7 @@ public class ResultControllerTest {
 
         MvcResult result = mockMvc
                 .perform(
-                        get("/api/results/user")
+                        get("/results/user")
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .requestAttr("userAttributeName","pepe")

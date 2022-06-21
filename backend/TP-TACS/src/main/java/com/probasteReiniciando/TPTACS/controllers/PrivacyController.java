@@ -12,7 +12,7 @@ import java.util.Arrays;
 @CrossOrigin()
 public class PrivacyController {
 
-    @RequestMapping({ "/api/privacy" })
+    @RequestMapping({ "/privacy" })
     public PrivacysDto privacy() {
         return PrivacysDto.builder().privacys(Arrays.asList(Privacy.values())).build();
     }

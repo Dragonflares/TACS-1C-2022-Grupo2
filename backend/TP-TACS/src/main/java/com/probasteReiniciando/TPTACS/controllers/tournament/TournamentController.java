@@ -17,7 +17,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin()
 @Slf4j
-@RequestMapping({ "/api/tournaments" })
+@RequestMapping({ "/tournaments" })
 public class TournamentController {
 
     @Autowired
@@ -58,12 +58,12 @@ public class TournamentController {
                 PagedListDto.class);
     }
 
-    @GetMapping(path = "/api/quantity" ,produces = "application/json")
+    @GetMapping(path = "/quantity" ,produces = "application/json")
     public QuantityTournamentDto quantityTournaments (@RequestParam(defaultValue = "PUBLIC") Privacy privacy, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
         return  modelMapper.map(tournamentService.getQuantityOfTournaments(privacy, userLoggedIn),QuantityTournamentDto.class);
     }
 
-    @GetMapping(path = "/api/metadata" ,produces = "application/json")
+    @GetMapping(path = "/metadata" ,produces = "application/json")
     public TournamentsMetadataDto obtainTournamentsMetadata (@RequestAttribute(name="userAttributeName") String userLoggedIn) {
 
         return modelMapper.map(tournamentService.obtainTournamentMetadata(userLoggedIn),TournamentsMetadataDto.class);
@@ -71,12 +71,12 @@ public class TournamentController {
     }
 
 
-    @GetMapping(path="/api/{id}", produces = "application/json")
+    @GetMapping(path="/{id}", produces = "application/json")
     public TournamentDto singleTournaments(@PathVariable String id)  {
         return  modelMapper.map(tournamentService.getTournamentById(id),TournamentDto.class);
     }
 
-    @PostMapping(path="/api/{tournamentId}/participants", produces = "application/json")
+    @PostMapping(path="/{tournamentId}/participants", produces = "application/json")
     public List<UserDto> addParticipants(@PathVariable String tournamentId, @RequestBody UserDto user, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
         return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn),UserDto.class);
     }
@@ -87,21 +87,21 @@ public class TournamentController {
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
-    @GetMapping(path="/api/{tournamentId}/participants", produces = "application/json")
+    @GetMapping(path="/{tournamentId}/participants", produces = "application/json")
     public List<UserDto> obtainParticipants(@PathVariable String tournamentId, @RequestParam Optional<String> orderBy, @RequestParam Optional<String> order) {
 
         return modelMapper.mapList(tournamentService.obtainParticipants(tournamentId, orderBy, order),UserDto.class);
 
     }
 
-    @GetMapping(path="/api/{tournamentId}/positions", produces = "application/json")
+    @GetMapping(path="/{tournamentId}/positions", produces = "application/json")
     public List<PositionDto> obtainPositions(@PathVariable String tournamentId, @RequestParam Optional<String> order) {
 
         return modelMapper.mapList(tournamentService.obtainPositions(tournamentId, order),PositionDto.class);
 
     }
 
-    @PatchMapping(path="/api/{tournamentId}", produces = "application/json")
+    @PatchMapping(path="/{tournamentId}", produces = "application/json")
     public TournamentDto updateTournament
             (@PathVariable String tournamentId, @RequestBody TournamentDto tournamentDto, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
 
