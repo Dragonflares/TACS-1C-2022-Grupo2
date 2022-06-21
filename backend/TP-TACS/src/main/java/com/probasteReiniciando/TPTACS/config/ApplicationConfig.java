@@ -1,8 +1,10 @@
 package com.probasteReiniciando.TPTACS.config;
 
 import com.probasteReiniciando.TPTACS.dao.ResultDAO;
+import com.probasteReiniciando.TPTACS.dao.UserDAO;
 import com.probasteReiniciando.TPTACS.domain.Result;
 import com.probasteReiniciando.TPTACS.domain.Tournament;
+import com.probasteReiniciando.TPTACS.domain.User;
 import com.probasteReiniciando.TPTACS.dto.ResultDto;
 import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
@@ -26,7 +28,8 @@ public class ApplicationConfig {
         this.resultDtoMapping(modelMapper);
         this.resultDAOMapping(modelMapper);
         this.resultFromDAOMapping(modelMapper);
-
+        this.userDAOMapping(modelMapper);
+        this.userFromDAOMapping(modelMapper);
         return modelMapper;
     }
 
@@ -68,23 +71,7 @@ public class ApplicationConfig {
         ;
     }
 
-    private String formatDateToString(LocalDate source) {
-        return source.format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
-    }
-
-
-
-
-
-
     private void resultFromDAOMapping(ModelMapperTacs modelMapper) {
-
-        Provider<LocalDate> localDateProvider = new AbstractProvider<LocalDate>() {
-            @Override
-            public LocalDate get() {
-                return LocalDate.now();
-            }
-        };
 
         Converter<String, LocalDate> toStringDate = new AbstractConverter<String, LocalDate>() {
             @Override
@@ -103,6 +90,30 @@ public class ApplicationConfig {
         ;
         modelMapper.addConverter(toStringDate);
     }
+
+    private String formatDateToString(LocalDate source) {
+        return source.format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
+    }
+
+    private void userDAOMapping(ModelMapperTacs modelMapper) {
+        modelMapper.createTypeMap(User.class, UserDAO.class)
+                .addMappings(mapper -> mapper.map(User::getId, UserDAO::setId))
+                .addMappings(mapper -> mapper.map(User::getUsername, UserDAO::setUsername))
+                .addMappings(mapper -> mapper.map(User::getPassword, UserDAO::setPassword))
+                .addMappings(mapper -> mapper.map(User::getResults, UserDAO::setResultDAOS))
+        ;
+    }
+
+    private void userFromDAOMapping(ModelMapperTacs modelMapper) {
+
+        modelMapper.createTypeMap(UserDAO.class, User.class)
+                .addMappings(mapper -> mapper.map(UserDAO::getId, User::setId))
+                .addMappings(mapper -> mapper.map(UserDAO::getUsername, User::setUsername))
+                .addMappings(mapper -> mapper.map(UserDAO::getPassword, User::setPassword))
+                .addMappings(mapper -> mapper.map(UserDAO::getResultDAOS, User::setResults))
+        ;
+    }
+
 
     private LocalDate formatStringToDate(String source) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-mm-dd");

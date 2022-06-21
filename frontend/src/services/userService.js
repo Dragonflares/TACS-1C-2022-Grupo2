@@ -37,7 +37,7 @@ export async function getTournamentsCount(){
 }
 
 export async function getDailyResults(){
-    return get(`${resultSubResource}/${resource}`);
+    return get(`${resultSubResource}/`);
 }
 
 export async function createDailyResults(data){
