@@ -30,7 +30,7 @@ export function Helper() {
     const [state, dispatch] = useReducer(reducer, initialValues); 
 
     useEffect(() => {
-        const init = () => {
+        const Init = () => {
             getLanguages().then(response => {
                 dispatch({type: 'setLanguages', value: response.data.response.languages});
             }).catch(e => {
@@ -38,7 +38,7 @@ export function Helper() {
             })
         }
 
-        init();
+        Init();
     }, [])
 
     const getWord = () => {
@@ -188,7 +188,7 @@ export function Helper() {
                         </Card.Body>
                     </Card>
                     {
-                            state.data != "" ?
+                            state.data !== "" ?
                             <>
                                 <Card  className="py-2">
                                     <Card.Body>
@@ -226,7 +226,8 @@ export function Helper() {
 }
 
 function reducer(state, action){
-    
+    var regex = /^[A-Za-z]*$/
+
     switch (action.type) {
         case 'setLanguage': return {
             ...state,
@@ -247,7 +248,6 @@ function reducer(state, action){
         }
         case 'setYellowWords': {
             
-            var regex = /^[A-Za-z]*$/
             if(!regex.test(action.value))
                 return state;
 
@@ -260,7 +260,6 @@ function reducer(state, action){
             };
         }
         case 'setGreyWords': {
-            var regex = /^[A-Za-z]*$/
             if(!regex.test(action.value))
                 return state;
             

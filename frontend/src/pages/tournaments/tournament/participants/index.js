@@ -42,10 +42,10 @@ export default function Participants({id , action}){
     };
 
     useEffect(() => {
-        const init = () => {
+        const Init = () => {
             getData();
         };
-        init();
+        Init();
     }, []);
 
 

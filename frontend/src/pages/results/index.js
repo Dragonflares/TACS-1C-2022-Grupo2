@@ -23,7 +23,7 @@ const initialValues = {
 export function Results () {
     const [state, dispatch] = useReducer(reducer, initialValues);
 
-    const init = () => {
+    const Init = () => {
         getLanguages().then(response => {
             dispatch({type: 'setLanguages', value: response.data.response.languages});
         }).catch(e => {
@@ -42,7 +42,7 @@ export function Results () {
     };
 
     useEffect(() => {
-        init();
+        Init();
     }, []);
 
     const handleSubmit = useCallback((event) => {       
@@ -60,13 +60,12 @@ export function Results () {
         let tzoffset = (new Date()).getTimezoneOffset() * 60000;
 
         createDailyResults({
-            user: getUserDataStruct(),
             language: state.form.language,
             date: (new Date(Date.now() - tzoffset)).toISOString().slice(0, 10),
             points: state.form.result
         }).then(() => {
             toast.success("result created");
-                init();
+            Init();
         }).catch( e => {
             toast.error(e.response.data.response.message);
         })

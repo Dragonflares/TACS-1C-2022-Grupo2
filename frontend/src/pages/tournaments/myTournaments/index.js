@@ -67,11 +67,11 @@ export function MyTournaments () {
     };
 
     useEffect(() => {
-        const init = async () => {
+        const Init = async () => {
             getData(1, pageSize);
         };
 
-        init();
+        Init();
     }, []);
 
     const handlePageChange = useCallback(async (page, pageSize) => {

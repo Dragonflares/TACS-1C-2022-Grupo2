@@ -27,7 +27,7 @@ export function Dictionary(){
     const [state, dispatch] = useReducer(reducer, initialValues); 
     
     useEffect(() => {
-        const init = () => {
+        const Init = () => {
             getLanguages().then(response => {
                 dispatch({type: 'setLanguages', value: response.data.response.languages});
             }).catch(e => {
@@ -35,7 +35,7 @@ export function Dictionary(){
             })
         }
 
-        init();
+        Init();
     }, []);
 
     const handleChange = useCallback((e) => {

@@ -44,8 +44,10 @@ export function Tournament ({redirectFromRoot}) {
     const [state, dispatch] = useReducer(reducer, initialValues);
 
     useEffect(() => {
-        const init =  () => {
-            if(!useValidateMode(action)){
+        const Init =  () => {
+            const validMode = useValidateMode(action);
+
+            if(!validMode){
                 redirectFromRoot('error');
             }
             
@@ -86,7 +88,7 @@ export function Tournament ({redirectFromRoot}) {
             }
         }
 
-        init();
+        Init();
     }, []);
 
     const handleTournamentChange = useCallback((e) =>{
