@@ -9,6 +9,7 @@ import com.probasteReiniciando.TPTACS.dto.JwtResponse;
 import com.probasteReiniciando.TPTACS.dto.user.UserDto;
 import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
 import com.probasteReiniciando.TPTACS.exceptions.UserNotFoundException;
+import com.probasteReiniciando.TPTACS.services.session.SessionService;
 import com.probasteReiniciando.TPTACS.services.user.JwtUserDetailsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class JwtAuthenticationController {
 	@Autowired
 	private ModelMapperTacs modelMapper;
 
+	@Autowired
+	private SessionService sessionService;
+
 	@RequestMapping(value = "/accesstoken", method = RequestMethod.POST)
 	public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
 			throws Exception {
@@ -50,6 +54,8 @@ public class JwtAuthenticationController {
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
+
+		sessionService.save(authenticationRequest.getUsername(),token);
 
 		return new JwtResponse(token);
 	}
