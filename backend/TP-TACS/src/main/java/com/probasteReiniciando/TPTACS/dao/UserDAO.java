@@ -27,6 +27,8 @@ public class UserDAO {
 
     private String password;
 
+    private Boolean isAdmin;
+
     private List<ResultDAO> resultDAOS = new ArrayList<>();
 
 

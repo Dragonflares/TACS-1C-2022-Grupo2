@@ -1,8 +1,10 @@
 package com.probasteReiniciando.TPTACS.config;
 
+import com.probasteReiniciando.TPTACS.services.user.BlackListingService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -21,6 +23,9 @@ public class JwtTokenUtil implements Serializable {
 	public static final long JWT_TOKEN_VALIDITY = 5*60*60;
 
 	private final String SECRET = "mySecretKey";
+
+	@Autowired
+	private BlackListingService blackListingService;
 
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
@@ -70,6 +75,6 @@ public class JwtTokenUtil implements Serializable {
 
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = getUsernameFromToken(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) && blackListingService.getJwtBlackList(token) == null);
 	}
 }

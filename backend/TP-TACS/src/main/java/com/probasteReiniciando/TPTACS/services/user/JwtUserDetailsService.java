@@ -49,4 +49,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 				bcryptEncoder.encode(user.getPassword())));
 	}
 
+	public void saveAdmin(UserLoginDto user)  {
+
+		userService.saveAdmin(new UserLoginDto(user.getUsername(),
+				bcryptEncoder.encode(user.getPassword())));
+	}
+
 }

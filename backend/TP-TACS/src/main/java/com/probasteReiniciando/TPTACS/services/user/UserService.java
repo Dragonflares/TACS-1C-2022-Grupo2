@@ -63,6 +63,23 @@ public class UserService {
 
     }
 
+    public void saveAdmin(UserLoginDto userParam)  {
+
+        if (findByUsername(userParam.getUsername()).isEmpty()) {
+
+
+            User newUser = User.builder()
+                    .username(userParam.getUsername())
+                    .password(userParam.getPassword())
+                    .isAdmin(true)
+                    .build();
+
+            userRepository.save(modelMapper.map(newUser, UserDAO.class));
+
+        }
+
+    }
+
     public Result createResult(String userLoggedIn, Result result) {
 
 /*        Date in = new Date();

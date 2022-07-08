@@ -18,6 +18,8 @@ public class User {
 
     private String password;
 
+    private Boolean isAdmin = false;
+
     @EqualsAndHashCode.Exclude
     private Integer discordId;
     

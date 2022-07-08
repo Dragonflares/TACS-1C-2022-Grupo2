@@ -1,5 +1,8 @@
 package com.probasteReiniciando.TPTACS.config;
 
+import com.probasteReiniciando.TPTACS.dto.user.UserLoginDto;
+import com.probasteReiniciando.TPTACS.services.user.JwtUserDetailsService;
+import com.probasteReiniciando.TPTACS.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
+
+	@Autowired
+	private  JwtUserDetailsService userDetailsService;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -74,6 +80,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		userDetailsService.saveAdmin(UserLoginDto.builder().username("admin").password("admin").build());
+
 	}
 
 	@Override
