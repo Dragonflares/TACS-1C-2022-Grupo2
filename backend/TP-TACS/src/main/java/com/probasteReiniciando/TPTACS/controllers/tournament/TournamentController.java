@@ -33,14 +33,26 @@ public class TournamentController {
     }
 
     @GetMapping(produces = "application/json")
-    public PagedListDto<TournamentDto> obtainTournaments (@RequestParam(defaultValue = "1")  int page, @RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "PUBLIC") Privacy privacy, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
+    public PagedListDto<TournamentTableDto> obtainTournaments (@RequestParam(defaultValue = "1")  int page, @RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "PUBLIC") Privacy privacy, @RequestAttribute(name="userAttributeName") String userLoggedIn) {
         validateParamsPagination(page,limit);
 
         var tournaments = tournamentService.obtainTournaments(page, limit, privacy, userLoggedIn);
 
         return  modelMapper.map(
-                new PagedListDto<TournamentDto>(
-                        modelMapper.mapList(tournaments.getContent(), TournamentDto.class),
+                // si saben usar el mapper para que me deje meter la condicion
+                new PagedListDto<TournamentTableDto>(
+                        tournaments.getContent().stream().map(p ->
+                        {
+                            return new TournamentTableDto(
+                                    p.getId(),
+                                    p.getName(),
+                                    p.getLanguage(),
+                                    p.getStartDate(),
+                                    p.getEndDate(),
+                                    p.getPrivacy(),
+                                    p.getOwner().getUsername().equals(userLoggedIn)
+                            );
+                        }).toList(),
                         tournaments.getTotalElements()
                 ),
                 PagedListDto.class);
@@ -67,6 +79,11 @@ public class TournamentController {
     @PostMapping(path="/{tournamentId}/participants", produces = "application/json")
     public List<UserDto> addParticipants(@PathVariable String tournamentId, @RequestBody UserDto user, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
         return  modelMapper.mapList(tournamentService.addUser(tournamentId, user.getUsername(), userLoggedIn),UserDto.class);
+    }
+
+    @PostMapping(path="/{tournamentId}/participants/self", produces = "application/json")
+    public List<UserDto> addSelf(@PathVariable String tournamentId, @RequestAttribute(name="userAttributeName") String userLoggedIn)  {
+        return  modelMapper.mapList(tournamentService.addUser(tournamentId, userLoggedIn, userLoggedIn),UserDto.class);
     }
 
     //Si no ponen el orderby ni el order, la query sirve para ver los participantes
