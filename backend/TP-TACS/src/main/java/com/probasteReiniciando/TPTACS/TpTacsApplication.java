@@ -10,7 +10,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @SpringBootApplication
-@DependsOn("jedisConnectionFactory")
 public class TpTacsApplication {
 
 

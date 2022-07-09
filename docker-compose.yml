@@ -1,13 +1,5 @@
 version: '3'
-services:
-  mongodb:
-    image: mongo:5.0.3
-    ports:
-      - "27017:27017"
-  redis:
-    image: redis:7.0.2
-    ports:
-      - "6379:6379"        
+services:       
   backend:
     build:
       context: ./backend/TP-TACS
@@ -15,11 +7,6 @@ services:
     image: backend 
     ports:
       - '4000:4000'
-    environment:
-      - spring.data.mongodb.host=mongodb
-    depends_on:
-      - mongodb
-      - redis
   frontend:
     build: 
       context: ./frontend

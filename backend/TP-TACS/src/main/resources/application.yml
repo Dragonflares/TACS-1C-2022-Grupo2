@@ -7,8 +7,9 @@ spring:
   cache:
     type: redis
   redis:
-    host: localhost
-    port: 6379
+    host: redis-12579.c85.us-east-1-2.ec2.cloud.redislabs.com
+    port: 12579
+    password: AfymxFNhu3wM9K4ObBib24M9OFwdHxj3
 springdoc:
   api-docs:
     path: /api-docs
