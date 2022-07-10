@@ -19,6 +19,7 @@ const initialValues = {
         yellowWords: '',
         greyWords: '',
         language: 'ENGLISH',
+        fromDictionary: false,
     },
     data: '',
     searchExecuted: false,
@@ -66,6 +67,12 @@ export function Helper() {
         dispatch({type: 'setLanguage', value: value});
     })
 
+    const handleDictSwitchChange = useCallback((event) => {
+        const value = event.target.value === 'on';
+
+        dispatch({type: 'setFromDictionary', value: value});
+    })
+
     const handlegreyWordsChange = useCallback((event) => {
         const value = event.target.value;
         dispatch({type: 'setGreyWords', value: value});
@@ -109,7 +116,7 @@ export function Helper() {
                             <Form>
                                 <Row>
                                     <Row>
-                                        <Col className="py-1">
+                                        <Col md={6} xs={12} className="py-1">
                                             <Row>
                                             <Form.Group controlId="yellowWordsControl">
                                                 <Form.Control type='text' name='yellowWords' placeholder='Yellow Letters'
@@ -127,7 +134,7 @@ export function Helper() {
                                             </Form.Group>
                                             </Row>
                                         </Col>
-                                        <Col className="py-1">
+                                        <Col md={4} xs={12}  className="py-1">
                                             <Form.Group className='_6lux' controlId="formHelperLang">
                                                 <InputGroup>
                                                     <FloatingLabel className='group-first-element'>
@@ -143,6 +150,20 @@ export function Helper() {
                                                         }
                                                         <label style={{ paddingLeft: 0, marginLeft: '1em' }}>Language</label>
                                                     </FloatingLabel>
+                                                </InputGroup>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={2} xs={12} className="py-1">
+                                            <Form.Group>
+                                                <InputGroup className='form-check-input-group'>
+                                                    <Form.Check 
+                                                            type="switch"
+                                                            id="dict"
+                                                            name="fromDictionary"
+                                                            className='form-switch-md'
+                                                            onChange={handleDictSwitchChange}
+                                                        />
+                                                    <label >Use Dictionary</label>
                                                 </InputGroup>
                                             </Form.Group>
                                         </Col>
@@ -278,6 +299,13 @@ function reducer(state, action){
         case 'toggleSearch': return {
             ...state,
             searchExecuted: !state.searchExecuted
+        }
+        case 'setFromDictionary': return {
+            ...state,
+            form: {
+                ...state.form,
+                fromDictionary: action.value
+            }
         }
         case 'setLanguages': return {
             ...state,
