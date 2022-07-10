@@ -17,4 +17,17 @@ public enum Language {
         }
         return language;
     }
+
+    public static Language getValueOfCode(String code){
+        Language language = SPANISH;
+        switch (code){
+            case "es":
+                language = SPANISH;
+                break;
+            case "en":
+                language = ENGLISH;
+                break;
+        }
+        return language;
+    }
 }
