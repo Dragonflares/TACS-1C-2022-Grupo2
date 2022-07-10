@@ -4,17 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.dao.WordScoreDAO;
 import com.probasteReiniciando.TPTACS.domain.Language;
-import com.probasteReiniciando.TPTACS.domain.WordScore;
-import com.probasteReiniciando.TPTACS.dto.PagedListDto;
-import com.probasteReiniciando.TPTACS.dto.TournamentDto;
 import com.probasteReiniciando.TPTACS.dto.WordDto;
 import com.probasteReiniciando.TPTACS.exceptions.DictionaryBadRequestException;
 import com.probasteReiniciando.TPTACS.exceptions.WordNotFoundException;
-import com.probasteReiniciando.TPTACS.repositories.IUserRepositoryMongoDB;
 import com.probasteReiniciando.TPTACS.repositories.IWordScoreRepositoryMongoDB;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -64,15 +58,6 @@ public class DictionaryService {
             throw new DictionaryBadRequestException("Order by " + orderBy + " not supported");
         }
 
-    }
-
-
-    public static void main(String[] args) {
-        String s = "SPANISH";
-
-        Language l = Language.valueOf(s);
-
-        System.out.println(l);
     }
 
 }
