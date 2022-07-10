@@ -68,7 +68,7 @@ export function Helper() {
     })
 
     const handleDictSwitchChange = useCallback((event) => {
-        const value = event.target.value === 'on';
+        const value = event.target.checked;
 
         dispatch({type: 'setFromDictionary', value: value});
     })
