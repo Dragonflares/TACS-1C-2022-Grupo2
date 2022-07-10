@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useReducer, useCallback, useEffect } from 'react'
 import {
     Tabs, Tab, Card, Container, Row, Button,
     Col, Form, InputGroup, FloatingLabel
@@ -7,37 +7,48 @@ import { getLanguages } from '../../services/languageService';
 import { getHelperWord } from '../../services/helperService';
 import { ToastContainer, toast } from 'react-toastify';
 
+const initialValues = {
+    form: {
+        greenWords: {
+            0:'',
+            1:'',
+            2:'',
+            3:'',
+            4:''
+        },
+        yellowWords: '',
+        greyWords: '',
+        language: 'ENGLISH',
+    },
+    data: '',
+    searchExecuted: false,
+    languages: []
+}
 
-const englishLang = 'ENGLISH';
-const spanishLang = 'SPANISH';
+export function Helper() {   
 
-export function Helper() {
-    const [data, setData] = useState("")
-    const [language, setLanguage] = useState('ENGLISH')
-    const [greenWords, setGreenWords] = useState({
-        0:'',
-        1:'',
-        2:'',
-        3:'',
-        4:''
-    })
-    const [yellowWords, setYellowWords] = useState('')
-    const [greyWords, setGreyWords] = useState('')
-    const [searchExecuted, setSearch] = useState(false)
+    const [state, dispatch] = useReducer(reducer, initialValues); 
+
+    useEffect(() => {
+        const Init = () => {
+            getLanguages().then(response => {
+                dispatch({type: 'setLanguages', value: response.data.response.languages});
+            }).catch(e => {
+                toast.error(e.response.data.response.message);
+            })
+        }
+
+        Init();
+    }, [])
 
     const getWord = () => {
-        getHelperWord({
-            language: language,
-            greenWords: greenWords,
-            yellowWords: yellowWords,
-            greyWords: greyWords
-        }).then(
+        getHelperWord(state.form).then(
             response => {
                     var finalPhrase = ''
                     response.data.response.forEach(element => {
                         finalPhrase += element.phrase + ','
                     })
-                    setData(finalPhrase)
+                    dispatch({type: 'setData', value: finalPhrase});
             }
         ).catch( e => {
             toast.error(e.response.data.response.message);
@@ -46,32 +57,23 @@ export function Helper() {
 
     const handleSubmit = () => {
         getWord()
-        setSearch(true)
+        dispatch({type: 'toggleSearch'});
     }
 
     const handleLanguageChange = useCallback((event) => {
-        const target = event.target;
-        const value = target.value;
+        const value = event.target.value;
 
-        setLanguage(value)
+        dispatch({type: 'setLanguage', value: value});
     })
 
     const handlegreyWordsChange = useCallback((event) => {
-        const target = event.target;
-        const value = target.value;
-        var regex = /^[A-Za-z]*$/
-        if(!regex.test(value))
-            return
-        setGreyWords(value)
+        const value = event.target.value;
+        dispatch({type: 'setGreyWords', value: value});
     })
 
     const handleyellowWordsChange = useCallback((event) => {
-        const target = event.target;
-        const value = target.value;
-        var regex = /^[A-Za-z]*$/
-        if(!regex.test(value))
-            return
-        setYellowWords(value)
+        const value = event.target.value;
+        dispatch({type: 'setYellowWords', value: value});
     })
 
     const handleGreenLetters0 = useCallback((event) => {
@@ -91,12 +93,9 @@ export function Helper() {
     }) 
 
     function ManageGreenWord(event, columnName){
-        const target = event.target;
-        const value = target.value;
+        const value = event.target.value;
 
-        var GreenLetters = greenWords
-        GreenLetters[columnName] = value
-        setGreenWords(GreenLetters)
+        dispatch({type: 'setGreenWords', column: columnName, value: value});
     }
 
 
@@ -114,7 +113,7 @@ export function Helper() {
                                             <Row>
                                             <Form.Group controlId="yellowWordsControl">
                                                 <Form.Control type='text' name='yellowWords' placeholder='Yellow Letters'
-                                                    value={yellowWords}
+                                                    value={state.form.yellowWords}
                                                     onChange={handleyellowWordsChange} />
                                                 <Form.Text className="text-muted"></Form.Text>
                                             </Form.Group>
@@ -122,7 +121,7 @@ export function Helper() {
                                             <Row>
                                             <Form.Group controlId="greyWordsControl">
                                                 <Form.Control type='text' name='greyWords' placeholder='Grey letters'
-                                                    value={greyWords}
+                                                    value={state.form.greyWords}
                                                     onChange={handlegreyWordsChange} />
                                                 <Form.Text className="text-muted"></Form.Text>
                                             </Form.Group>
@@ -135,10 +134,11 @@ export function Helper() {
                                                         {
                                                             <Form.Select
                                                                 name="language" required
-                                                                value={language}
+                                                                value={state.form.language}
                                                                 onChange={handleLanguageChange}>
-                                                                <option value={englishLang}>ENGLISH</option>
-                                                                <option value={spanishLang}>SPANISH</option>
+                                                                {state.languages.map(lang => (
+                                                                    <option key={lang} value={lang}>{lang}</option>
+                                                                ))}
                                                             </Form.Select>
                                                         }
                                                         <label style={{ paddingLeft: 0, marginLeft: '1em' }}>Language</label>
@@ -154,32 +154,32 @@ export function Helper() {
 
                                     <Row>
                                         <Col className="py-1">
-                                            <input name = 'GreenLetter0' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            <input name = 'GreenLetter0' type="text" maxLength="1"  className="form-control form-control-sm small-input"
                                             onChange = {handleGreenLetters0}
                                             />
                                         </Col>
                                         <Col  className="py-1">
-                                            <input name = 'GreenLetter1' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            <input name = 'GreenLetter1' type="text" maxLength="1"  className="form-control form-control-sm small-input"
                                             onChange = {handleGreenLetters1}
                                             />
                                         </Col>
                                         <Col  className="py-1">
-                                            <input name = 'GreenLetter2' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            <input name = 'GreenLetter2' type="text" maxLength="1"  className="form-control form-control-sm small-input"
                                             onChange = {handleGreenLetters2}
                                             />
                                         </Col>
                                         <Col  className="py-1">
-                                            <input name = 'GreenLetter3' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            <input name = 'GreenLetter3' type="text" maxLength="1"  className="form-control form-control-sm small-input"
                                             onChange = {handleGreenLetters3}
                                             />
                                         </Col>
                                         <Col  className="py-1">
-                                            <input name = 'GreenLetter4' type="text" maxlength="1"  class="form-control form-control-sm small-input"
+                                            <input name = 'GreenLetter4' type="text" maxLength="1"  className="form-control form-control-sm small-input"
                                             onChange = {handleGreenLetters4}
                                             />
                                         </Col>                                        
                                     </Row>
-                                    <div class="col-xs-1 text-center">
+                                    <div className="col-xs-1 text-center">
                                         <br></br>
                                             <Button type="button" onClick={handleSubmit}>Search</Button>
                                     </div>
@@ -188,7 +188,7 @@ export function Helper() {
                         </Card.Body>
                     </Card>
                     {
-                            data != "" ?
+                            state.data !== "" ?
                             <>
                                 <Card  className="py-2">
                                     <Card.Body>
@@ -196,12 +196,12 @@ export function Helper() {
                                             {"Possible Words"}
                                         </Card.Title>
                                         <Card.Text>
-                                            {data}
+                                            {state.data}
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
                             </>
-                            : searchExecuted ?
+                            : state.searchExecuted ?
                             <>
                                 <Card  className="py-2">
                                     <Card.Body>
@@ -223,6 +223,68 @@ export function Helper() {
             <ToastContainer/>
         </div>
     )
+}
+
+function reducer(state, action){
+    var regex = /^[A-Za-z]*$/
+
+    switch (action.type) {
+        case 'setLanguage': return {
+            ...state,
+            form: {
+                ...state.form,
+                language: action.value
+            }
+        }
+        case 'setGreenWords': return {
+            ...state,
+            form: {
+                ...state.form,
+                greenWords: {
+                    ...state.form.greenWords,
+                    [action.column]: action.value,
+                }
+            }
+        }
+        case 'setYellowWords': {
+            
+            if(!regex.test(action.value))
+                return state;
+
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    yellowWords: action.value
+                }
+            };
+        }
+        case 'setGreyWords': {
+            if(!regex.test(action.value))
+                return state;
+            
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    greyWords: action.value
+               }
+            };
+        }
+        case 'setData': return {
+            ...state,
+            data: action.value
+        }
+        case 'toggleSearch': return {
+            ...state,
+            searchExecuted: !state.searchExecuted
+        }
+        case 'setLanguages': return {
+            ...state,
+            languages: action.value
+        }
+        default: throw new Error();
+    }
 }
 
 export default Helper;

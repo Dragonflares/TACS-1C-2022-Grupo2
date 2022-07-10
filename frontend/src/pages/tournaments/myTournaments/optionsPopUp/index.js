@@ -23,7 +23,7 @@ export default function OptionsPopUp({selected, show, handleClose}) {
                             <Button as={Link} to={`/positions/${selected.id}`}  variant="success">Positions</Button>
                         </Row>
                         {
-                            (sessionStorage.getItem('loggedUser') === selected.owner.username 
+                            (selected.owner
                             && selected.startDate >= today.toISOString().slice(0, 10))?
                             <>
                                 <Row className="_6lux">

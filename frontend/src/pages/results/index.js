@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from "react";
+import React, {useReducer, useCallback, useEffect} from "react";
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -6,62 +6,66 @@ import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { getLanguages } from "../../services/languageService";
-import { getDailyResults, createDailyResults, getUserDataStruct } from "../../services/userService";
+import { getDailyResults, createDailyResults } from "../../services/userService";
 import { ToastContainer, toast } from 'react-toastify';
 
-export function Results () {
-    const [language, setLanguage] = useState('ENGLISH');
-    const [result, setResult] = useState(0);
-    const [validated, setValidated] = useState(false);
-    const [languages, setLanguages] = useState([]);
-    const [results, setResults] = useState([]);
 
-    const init = () => {
+const initialValues = {
+    form: {
+        language: 'ENGLISH',
+        result: 0,
+    },
+    validated: false,
+    results: [],
+    languages: []
+}
+
+export function Results () {
+    const [state, dispatch] = useReducer(reducer, initialValues);
+
+    const Init = () => {
         getLanguages().then(response => {
-                setLanguages(response.data.response.languages);
+            dispatch({type: 'setLanguages', value: response.data.response.languages});
         }).catch(e => {
             toast.error(e.response.data.response.message);
         })
 
+        /*
         getDailyResults().then(response => {
             if(!response.data){
-                setResults(response.data);
+                dispatch({type: 'setResults', value: response.data.response.results});
             }
         }).catch(e => {
             toast.error(e.response.data.response.message);
         })
+        */
     };
 
     useEffect(() => {
-        init();
+        Init();
     }, []);
 
     const handleSubmit = useCallback((event) => {       
         event.preventDefault();
         event.stopPropagation();
-        console.log("handleSubmit ")
 
-/*         if(!validated){
-            setValidated(validated => !validated);
-        } */
-        console.log(language);
-        console.log(result);
+        if(!state.validated){
+            dispatch({type: 'toggleValidated'});
+        }
 
-        if(!language || !result || language === '') {
+        if(!state.form.language || !state.form.result || state.form.language === '') {
           return;
         }
-          console.log("before createDailyResults ")
 
         let tzoffset = (new Date()).getTimezoneOffset() * 60000;
 
         createDailyResults({
-            user: getUserDataStruct(),
-            language: language,
+            language: state.form.language,
             date: (new Date(Date.now() - tzoffset)).toISOString().slice(0, 10),
-            points: result
+            points: state.form.result
         }).then(() => {
             toast.success("result created");
-                init();
+            Init();
         }).catch( e => {
             toast.error(e.response.data.response.message);
         })
@@ -69,12 +73,13 @@ export function Results () {
 
     const handleLangChange = useCallback((event) => {
         const  value = event.target.value;
-        if(results.length > 0) {
-            const langResult = results.find((r) => (r.lang === value));
-            setResult(langResult.result);
-        } else {
-            setLanguage(value);
-        }
+        if(state.results.length > 0) {
+            const langResult = state.results.find((r) => (r.lang === value));
+            dispatch({type: 'setResult', value: langResult});
+        } 
+        
+        dispatch({type: 'setValidated', value: false});
+        dispatch({type: 'setLanguage', value: value});
     });
 
     return(
@@ -84,14 +89,14 @@ export function Results () {
                         <Card  className="py-2">
                             <Card.Body>
                                 <Card.Title>Add Result</Card.Title>
-                                <Form onSubmit={handleSubmit} noValidate validated={validated}>
+                                <Form onSubmit={handleSubmit} noValidate validated={state.validated}>
                                     <Row>
                                         <Col xs={12} md={3} className="py-1">
                                             <Form.Group controlId="languageControl">
                                                 <Form.Select name='language' 
-                                                    value={language} 
+                                                    value={state.form.language} 
                                                     onChange={handleLangChange}>
-                                                    {languages.map(lang => (
+                                                    {state.languages.map(lang => (
                                                         <option key={lang} value={lang}>{lang}</option>
                                                     ))}
                                                 </Form.Select>
@@ -100,8 +105,8 @@ export function Results () {
                                         <Col xs={12} md={7}  className="py-1">
                                             <Form.Group controlId="searchControl">
                                                 <Form.Control type='number' name='result' placeholder='Result'
-                                                    value={result} min={0} max={7}
-                                                    onChange={(event) => {setResult(event.target.value)}}/>
+                                                    value={state.result} min={0} max={7}
+                                                    onChange={(event) => {dispatch({type: 'setResult', value:event.target.value})}}/>
                                                 <Form.Text className="text-muted"></Form.Text>
                                             </Form.Group>
                                         </Col>
@@ -119,6 +124,42 @@ export function Results () {
                 </Col>
             </div>
     );
+}
+
+function reducer(state, action){
+    switch(action.type){
+        case 'setLanguage': return {
+            ...state,
+            form: {
+                ...state.form,
+                language: action.value
+            }
+        }
+        case 'setResult': return {
+            ...state,
+            form: {
+                ...state.form,
+                result: action.value
+            }
+        }
+        case 'setResults': return {
+            ...state,
+            results: action.value
+        }
+        case 'toggleValidated': return {
+            ...state,
+            validated: !state.validated
+        }
+        case 'setValidated': return {
+            ...state,
+            validated: action.value
+        }
+        case 'setLanguages': return {
+            ...state,
+            languages: action.value
+        }
+        default: throw new Error();
+    }
 }
 
 export default Results

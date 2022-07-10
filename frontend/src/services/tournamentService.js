@@ -51,6 +51,10 @@ export async function addParticipants(tournamentId, data){
     return post(`${resource}/${tournamentId}/${participantsSubResource}`, data);
 }
 
+export async function addParticipantsSelf(tournamentId, data){
+    return post(`${resource}/${tournamentId}/${participantsSubResource}/self`);
+}
+
 export async function getPositions(tournamentId){
     return get(`${resource}/${tournamentId}/${positionsSubResource}`);
 }
