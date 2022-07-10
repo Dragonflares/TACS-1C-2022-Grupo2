@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
 import com.probasteReiniciando.TPTACS.domain.Language;
 import com.probasteReiniciando.TPTACS.dto.LanguagesDto;
+import com.probasteReiniciando.TPTACS.dto.PagedListDto;
 import com.probasteReiniciando.TPTACS.dto.WordDto;
+import com.probasteReiniciando.TPTACS.dto.WordScoreDto;
 import com.probasteReiniciando.TPTACS.exceptions.DictionaryBadRequestException;
 import com.probasteReiniciando.TPTACS.exceptions.TournamentBadRequestException;
 import com.probasteReiniciando.TPTACS.exceptions.WordNotFoundException;
@@ -45,6 +47,21 @@ public class DictionaryController {
             throw new DictionaryBadRequestException(messageError);
         }
         return Language.valueOf(language);
+    }
+
+    @GetMapping(path="/words", produces = "application/json")
+    private PagedListDto<WordScoreDto> obtainWords(@RequestParam Language language,@RequestParam String orderBy, @RequestParam(defaultValue = "1")  int page,
+                                                   @RequestParam(defaultValue = "5") int limit) {
+
+        var words = dictionaryService.obtainWords(language,orderBy,page,limit);
+
+        return  modelMapper.map(
+                new PagedListDto<WordScoreDto>(
+                        modelMapper.mapList(words.getContent(), WordScoreDto.class),
+                        words.getTotalElements()
+                ),
+                PagedListDto.class);
+
     }
 
 
