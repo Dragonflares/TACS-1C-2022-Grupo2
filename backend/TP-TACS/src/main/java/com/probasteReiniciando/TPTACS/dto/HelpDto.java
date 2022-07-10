@@ -15,5 +15,5 @@ public class HelpDto {
     private  String yellowWords;
     private  String greyWords;
     private  HashMap<Integer,String> greenWords;
-
+    private  Boolean fromDictionary;
 }

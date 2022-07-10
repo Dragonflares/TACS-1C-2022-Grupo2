@@ -60,4 +60,7 @@ public class DictionaryService {
 
     }
 
+    public  Boolean exist (String name, String language) throws  JsonProcessingException{
+        return wordFinder.findWord(name,language).isPresent();
+    }
 }
