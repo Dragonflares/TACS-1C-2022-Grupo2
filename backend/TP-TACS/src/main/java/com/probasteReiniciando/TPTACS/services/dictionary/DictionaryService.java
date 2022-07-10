@@ -22,4 +22,7 @@ public class DictionaryService {
         return WordDto.builder().phrase(wordFinder.findWord(name,language).orElseThrow(() -> new WordNotFoundException(name))).build();
     }
 
+    public  Boolean exist (String name, String language) throws  JsonProcessingException{
+        return wordFinder.findWord(name,language).isPresent();
+    }
 }
