@@ -9,6 +9,10 @@ import com.probasteReiniciando.TPTACS.exceptions.DictionaryBadRequestException;
 import com.probasteReiniciando.TPTACS.exceptions.WordNotFoundException;
 import com.probasteReiniciando.TPTACS.repositories.IWordScoreRepositoryMongoDB;
 import lombok.Data;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.probasteReiniciando.TPTACS.dao.*;
+import com.probasteReiniciando.TPTACS.repositories.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -16,8 +20,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Data
+
 @Service
 public class DictionaryService {
+
+    @Autowired
+    private IDictionaryCacheRepository dictionaryCacheRepository;
 
     private  WordFinder wordFinder;
 
@@ -32,7 +40,17 @@ public class DictionaryService {
 
     public WordDto findWord(String name,String language) throws JsonProcessingException {
 
-        WordDto wordDto =  WordDto.builder().phrase(wordFinder.findWord(name,language).orElseThrow(() -> new WordNotFoundException(name))).build();
+        Optional<DictionaryCacheDao> cacheSearch = getDefinition(name);
+
+        WordDto wordDto;
+
+        if(cacheSearch.isEmpty()){
+            wordDto = WordDto.builder().phrase(wordFinder.findWord(name,language).orElseThrow(() -> new WordNotFoundException(name))).build();
+            saveDefinition(name, wordDto.getPhrase());
+
+        }else{
+            wordDto = WordDto.builder().phrase(cacheSearch.get().getDefinition()).build();
+        }
 
         Optional<WordScoreDAO> optionalWordScore = wordScoreRepository.obtainWordScore(name, Language.getValueOfCode(language));
 
@@ -63,4 +81,14 @@ public class DictionaryService {
     public  Boolean exist (String name, String language) throws  JsonProcessingException{
         return wordFinder.findWord(name,language).isPresent();
     }
+
+    public void saveDefinition(String word, String definition) {
+        dictionaryCacheRepository.save(DictionaryCacheDao.builder().word(word).definition(definition).expiration(180000L).build());
+
+    }
+
+    public Optional<DictionaryCacheDao> getDefinition(String word) {
+        return dictionaryCacheRepository.findById(word);
+    }
+
 }

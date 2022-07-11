@@ -66,4 +66,12 @@ public class DictionaryServiceTest {
 
     }
 
+    @Test
+    public void dictTest () throws Exception {
+
+        DictionaryService dictionaryService = new DictionaryService(webWordFinder, wordScoreRepository);
+        WordDto test = dictionaryService.findWord("cat","en");
+
+    }
+
 }
