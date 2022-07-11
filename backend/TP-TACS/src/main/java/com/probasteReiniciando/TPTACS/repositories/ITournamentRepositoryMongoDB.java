@@ -45,6 +45,7 @@ public interface ITournamentRepositoryMongoDB extends MongoRepository<Tournament
     @Query(value = "{'participants': { $elemMatch : { 'username' : ?0 }  } }")
     Page<TournamentDAO> obtainPrivateTournaments(String username, Pageable pageable);
 
-
+    @Query(value = "{'privacy': 'PUBLIC'}")
+    Page<TournamentDAO> obtainAllPublicTournaments(Pageable pageable);
 
 }

@@ -1,7 +1,6 @@
 package com.probasteReiniciando.TPTACS.services.tournament;
 
 import com.probasteReiniciando.TPTACS.config.ModelMapperTacs;
-import com.probasteReiniciando.TPTACS.dao.ResultDAO;
 import com.probasteReiniciando.TPTACS.dao.TournamentDAO;
 import com.probasteReiniciando.TPTACS.dao.UserDAO;
 import com.probasteReiniciando.TPTACS.domain.*;
@@ -66,6 +65,39 @@ public class TournamentService {
 
         };
 
+    }
+
+    public List<Position> obtainAllParticipantsInPublicTournaments(Optional<String> order){
+
+        int page = 1;
+
+        Boolean control = true;
+        List<Position> tournamentPositions = new ArrayList<>();
+
+        while(control) {
+            Page<TournamentDAO> tournaments = tournamentRepository.obtainAllPublicTournaments(PageRequest.of(page - 1, 5));
+            page++;
+            control = tournaments.hasNext();
+            for(TournamentDAO tournament : tournaments) {
+                List<Position> positions = obtainPositions(tournament.getId(),order);
+                for(Position position : positions){
+                    Optional<Position> positionFound = tournamentPositions.stream().filter(x -> x.getUser().getUsername().equals(position.getUser().getUsername())).findFirst();
+                    if(positionFound.isEmpty()){
+                        tournamentPositions.add(position);
+                    } else {
+                        positionFound.get().setPoints(positionFound.get().getPoints().intValue() + position.getPoints().intValue());
+                    }
+                }
+            }
+        }
+
+        tournamentPositions = tournamentPositions.stream().sorted(PositionComparator.getInstance()).collect(Collectors.toList());
+
+        if(order.isPresent() && "desc".equals(order.get())){
+            Collections.reverse(tournamentPositions);
+        }
+
+        return tournamentPositions.stream().limit(10).collect(Collectors.toList());
     }
 
     public Tournament getTournamentById(String id) {
